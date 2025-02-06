@@ -1,2 +1,2 @@
-# DSM
-Repositorio para la asignatura Despliegue de servicios multimedia
+# Ejercicio Boostrap
+Repositorio para el ejercicio de entrenamiento con Boostrap
