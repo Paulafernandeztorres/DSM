@@ -187,57 +187,53 @@
     </div>
 
     <div class="container-lg p-4 text-center">
-
-        <!-- Botones para desplegar curiosidades -->
-        <p class="d-inline-flex gap-2">
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidad1"
-                aria-expanded="false" aria-controls="curiosidad1">
-                Curiosidad 1
-            </button>
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidad2"
-                aria-expanded="false" aria-controls="curiosidad2">
-                Curiosidad 2
-            </button>
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidad3"
-                aria-expanded="false" aria-controls="curiosidad3">
-                Curiosidad 3
-            </button>
-        </p>
-
-        <!-- Contenedores con curiosidades en la misma fila -->
-        <div class="row">
-            <div class="col-12 col-md-4">
-                <div class="collapse multi-collapse" id="curiosidad1">
-                    <div class="card card-body shadow w-100">
-                        <h4>El origen de los encierros</h4>
-                        <p>Los encierros de San Fermín, una de las tradiciones más famosas, tienen su origen en el siglo
-                            XVI.
-                            Se realizaban para trasladar los toros desde los corrales hasta la plaza de toros.</p>
+        <h2 class="text-danger fw-bold">Curiosidades de Pamplona</h2>
+        <div class="accordion" id="curiosidadesAccordion">
+            
+            <!-- Curiosidad 1 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidad1" aria-expanded="true" aria-controls="curiosidad1">
+                        El origen de los encierros
+                    </button>
+                </h2>
+                <div id="curiosidad1" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#curiosidadesAccordion">
+                    <div class="accordion-body">
+                        <p>Los encierros de San Fermín, una de las tradiciones más famosas, tienen su origen en el siglo XIII cuando los pastores trasladaban los toros a pie hacia la plaza.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4">
-                <div class="collapse multi-collapse" id="curiosidad2">
-                    <div class="card card-body shadow w-100">
-                        <h4>La Catedral de Pamplona</h4>
-                        <p>La Catedral de Pamplona es conocida por su arquitectura gótica y su impresionante claustro,
-                            que
-                            data del siglo XIV.</p>
+            
+            <!-- Curiosidad 2 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidad2" aria-expanded="false" aria-controls="curiosidad2">
+                        Hemingway y Pamplona
+                    </button>
+                </h2>
+                <div id="curiosidad2" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#curiosidadesAccordion">
+                    <div class="accordion-body">
+                        <p>El escritor Ernest Hemingway popularizó internacionalmente los Sanfermines gracias a su novela "Fiesta" (The Sun Also Rises), publicada en 1926.</p>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4">
-                <div class="collapse multi-collapse" id="curiosidad3">
-                    <div class="card card-body shadow w-100">
-                        <h4>El Parque Yamaguchi</h4>
-                        <p>El Parque Yamaguchi es un jardín japonés que simboliza la relación de Pamplona con la ciudad
-                            de
-                            Yamaguchi en Japón, como un signo de amistad entre ambas ciudades.</p>
+            
+            <!-- Curiosidad 3 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#curiosidad3" aria-expanded="false" aria-controls="curiosidad3">
+                        La muralla de Pamplona
+                    </button>
+                </h2>
+                <div id="curiosidad3" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#curiosidadesAccordion">
+                    <div class="accordion-body">
+                        <p>La ciudad de Pamplona conserva gran parte de su muralla medieval, que data del siglo XVI y es una de las mejor conservadas de España.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    
 
     <div class="container-lg p-4">
         <div class="card h-100 shadow p-4">
