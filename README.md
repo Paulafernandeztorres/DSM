@@ -1,2 +1,2 @@
-# Ejercicio Boostrap
-Repositorio para el ejercicio de entrenamiento con Boostrap
+# Ejercicio React
+Repositorio para el ejercicio de entrenamiento con React
