@@ -1,42 +1,91 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+body {
+  background: #f8f9fa;
+  color: #333;
+  font-family: "Arial", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.calculator {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   text-align: center;
+  max-width: 350px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+h2 {
+  color: #0077b6;
+  font-size: 1.8em;
+  margin-bottom: 10px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.inputs {
+  margin-bottom: 15px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+input {
+  width: 140px;
+  padding: 10px;
+  margin: 5px;
+  text-align: center;
+  font-size: 1.2em;
+  border: 2px solid #0077b6;
+  border-radius: 8px;
+  outline: none;
+  background: #f1f1f1;
+  color: #333;
+  transition: 0.3s;
 }
 
-.card {
-  padding: 2em;
+input:focus {
+  border-color: #00a8e8;
+  background: white;
 }
 
-.read-the-docs {
-  color: #888;
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.buttons button {
+  font-size: 1.5em;
+  margin: 5px;
+  padding: 18px 25px; /* Aumentamos el ancho y el alto de los botones */
+  cursor: pointer;
+  border: none;
+  background: #0077b6;
+  color: white;
+  border-radius: 8px;
+  transition: 0.3s;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.buttons button:hover {
+  background: #00a8e8;
+}
+
+.buttons .active {
+  background: #00a8e8;
+  color: white;
+}
+
+.result-box {
+  margin-top: 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+  background: #0077b6;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.result {
+  font-weight: bold;
+  color: #ffcc00;
 }

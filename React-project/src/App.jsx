@@ -1,35 +1,92 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [numA, setNumA] = useState("");
+  const [numB, setNumB] = useState("");
+  const [operation, setOperation] = useState(null);
+  const [result, setResult] = useState(null);
+
+  // Recalcular el resultado cada vez que numA, numB u operation cambien
+  useEffect(() => {
+    if (numA && numB && operation) {
+      const a = parseFloat(numA);
+      const b = parseFloat(numB);
+      let resultado;
+
+      switch (operation) {
+        case "+":
+          resultado = a + b;
+          break;
+        case "-":
+          resultado = a - b;
+          break;
+        case "×":
+          resultado = a * b;
+          break;
+        case "÷":
+          resultado = b !== 0 ? a / b : "Error";
+          break;
+        default:
+          resultado = "Error";
+      }
+
+      setResult(resultado);
+    }
+  }, [numA, numB, operation]); // Dependencias: se recalcula cada vez que cambian los números o la operación
+
+  const handleCalculate = (op) => {
+    if (numA === "" || numB === "") return;
+    setOperation(op);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="calculator">
+      <h2>CALCULADORA</h2>
+      <div className="inputs">
+        <input
+          type="number"
+          placeholder="Número A"
+          value={numA}
+          onChange={(e) => setNumA(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Número B"
+          value={numB}
+          onChange={(e) => setNumB(e.target.value)}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+
+      <div className="buttons">
+        {["+", "-", "×", "÷"].map((op) => (
+          <button
+            key={op}
+            className={operation === op ? "active" : ""}
+            onClick={() => handleCalculate(op)}
+          >
+            {op}
+          </button>
+        ))}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <Resultado result={result} numA={numA} numB={numB} operation={operation} />
+    </div>
+  );
 }
 
-export default App
+function Resultado({ result, numA, numB, operation }) {
+  return (
+    <div className="result-box">
+      {operation ? (
+        <h3>
+          {numA} {operation} {numB} = <span className="result">{result}</span>
+        </h3>
+      ) : (
+        <h5>Ingresa números y elige una operación</h5>
+      )}
+    </div>
+  );
+}
+
+export default App;
