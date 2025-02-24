@@ -43,6 +43,7 @@ function App() {
   return (
     <div className="calculator">
       <h2>CALCULADORA</h2>
+      <h3>Ingresar Números</h3>
       <div className="inputs">
         <input
           type="number"
@@ -58,6 +59,7 @@ function App() {
         />
       </div>
 
+      <h3>Seleccionar Operación</h3>
       <div className="buttons">
         {["+", "-", "×", "÷"].map((op) => (
           <button
@@ -70,6 +72,7 @@ function App() {
         ))}
       </div>
 
+      <h3>Resultado</h3>
       <Resultado result={result} numA={numA} numB={numB} operation={operation} />
     </div>
   );
