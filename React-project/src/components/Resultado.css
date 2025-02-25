@@ -1,0 +1,13 @@
+.result-box {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #0077b6;
+  }
+  
+  .result {
+    font-weight: bold;
+    color: #ff8800;
+  }
+  

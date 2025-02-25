@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import Resultado from "./components/Resultado";
 
 function App() {
   const [numA, setNumA] = useState("");
   const [numB, setNumB] = useState("");
   const [operation, setOperation] = useState(null);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState("");
 
-  // Recalcular el resultado cada vez que numA, numB u operation cambien
   useEffect(() => {
-    if (numA && numB && operation) {
-      const a = parseFloat(numA);
-      const b = parseFloat(numB);
+    const a = parseFloat(numA);
+    const b = parseFloat(numB);
+
+    if (!isNaN(a) && !isNaN(b) && operation) {
       let resultado;
 
       switch (operation) {
@@ -30,15 +31,11 @@ function App() {
         default:
           resultado = "Error";
       }
-
       setResult(resultado);
+    } else {
+      setResult(numA || numB || ""); // Si no hay operación, muestra numA o numB
     }
-  }, [numA, numB, operation]); // Dependencias: se recalcula cada vez que cambian los números o la operación
-
-  const handleCalculate = (op) => {
-    if (numA === "" || numB === "") return;
-    setOperation(op);
-  };
+  }, [numA, numB, operation]); // Se ejecuta al cambiar cualquier número u operación
 
   return (
     <div className="calculator">
@@ -65,7 +62,7 @@ function App() {
           <button
             key={op}
             className={operation === op ? "active" : ""}
-            onClick={() => handleCalculate(op)}
+            onClick={() => setOperation(op)}
           >
             {op}
           </button>
@@ -74,20 +71,6 @@ function App() {
 
       <h3>Resultado</h3>
       <Resultado result={result} numA={numA} numB={numB} operation={operation} />
-    </div>
-  );
-}
-
-function Resultado({ result, numA, numB, operation }) {
-  return (
-    <div className="result-box">
-      {operation ? (
-        <h3>
-          {numA} {operation} {numB} = <span className="result">{result}</span>
-        </h3>
-      ) : (
-        <h5>Ingresa números y elige una operación</h5>
-      )}
     </div>
   );
 }
