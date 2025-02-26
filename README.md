@@ -1,2 +1,2 @@
-# DSM
-Repositorio para la asignatura Despliegue de servicios multimedia
+# Proyecto Webapp en React 2025
+Repositorio para el proyecto en React 2025
