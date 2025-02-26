@@ -4,6 +4,8 @@ import "../styles/Header.css";
 function Header() {
   return (
     <header className="header">
+      <h2>NFT MarketPlace</h2>
+      
     </header>
   );
 }
