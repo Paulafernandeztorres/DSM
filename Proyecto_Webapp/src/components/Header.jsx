@@ -1,6 +1,6 @@
 import "../styles/Header.css";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom'; 
 import { FaShoppingCart } from "react-icons/fa"; // Ícono de carrito
 
 function Header() {

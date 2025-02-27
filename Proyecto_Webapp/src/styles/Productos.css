@@ -1,0 +1,47 @@
+.productos-container {
+    padding: 20px;
+  }
+  
+  .productos-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  .card-img-top {
+    height: 250px; /* Aumentamos la altura para hacer la imagen más alargada */
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .card-body {
+    text-align: center;
+  }
+  
+  button {
+    width: 40px;  /* Aumentamos el tamaño de los botones */
+    height: 40px;
+    font-size: 20px;
+    display: inline-block;
+    text-align: center;
+    line-height: 36px; /* Centrar el texto dentro de los botones */
+    margin: 0 5px;  /* Añadimos espacio entre los botones */
+  }
+  
+  span {
+    font-size: 18px;
+    line-height: 40px; /* Centrar el contador con respecto a los botones */
+    display: inline-block;
+    width: 40px; /* Aseguramos que el contador tenga el mismo ancho que los botones */
+  }
+  
