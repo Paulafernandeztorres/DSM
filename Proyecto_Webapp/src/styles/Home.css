@@ -1,0 +1,11 @@
+.fadeInUp {
+    visibility: visible;
+    animation-duration: 1s;
+    animation-delay: 0.7s;
+  }
+  
+  .fadeInRight{
+      visibility: visible;
+      animation-duration: 1s;
+      animation-delay: 0.8s;
+  }

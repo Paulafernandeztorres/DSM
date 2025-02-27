@@ -1,4 +1,4 @@
-import "../../styles/homePage/mainInfo.css";
+import "../styles/Home.css";
 
 function MainInfo() {
   return (
@@ -115,7 +115,7 @@ function MainInfo() {
             data-wow-delay=".8s"
           >
             <img
-              src="../../../public/header-right.png"
+              src="../../../header-right.png"
               alt=""
               className="responsive-fluid"
             />
