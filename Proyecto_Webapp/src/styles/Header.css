@@ -1,6 +1,57 @@
 .header {
-    padding: 0.5rem;
-    background-color: #86aede;
-    text-align: center;
-    color: aliceblue;
-  }
+  background-color: #005b96; /* Azul medio */
+  color: #ffffff;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav .nav-item {
+  margin-right: 15px;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #e0e0e0; /* Gris claro */
+  font-weight: normal;
+  transition: color 0.2s ease-in-out;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.nav a:hover {
+  color: #ffffff; /* Blanco al pasar el ratón */
+}
+
+.nav .dropdown-item {
+  color: #005b96; /* Azul oscuro para los ítems del desplegable */
+  background-color: #ffffff; /* Fondo blanco para los ítems */
+  transition: background-color 0.3s ease-in-out; /* Transición suave en el fondo */
+}
+
+.nav .dropdown-item:hover {
+  background-color: #0077cc; /* Azul suave de fondo cuando el ratón pasa por encima */
+  color: #ffffff; /* El texto cambia a blanco cuando el ratón pasa */
+}
+
+.cart-count {
+  background-color: #ff6f61;
+  color: #ffffff;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 14px;
+  text-align: center;
+}
