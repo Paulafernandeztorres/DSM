@@ -9,6 +9,7 @@ import Productos from './components/Productos';
 
 function App() {
   const [productosFirebase, setproductosFirebase] = useState([]);
+  const [carrito, setCarrito] = useState({});
 
   useEffect(() => {
     axios.get('https://proyecto-webapp-573f0-default-rtdb.europe-west1.firebasedatabase.app/Productos.json')
@@ -27,12 +28,32 @@ function App() {
       .catch((error) => { console.log('¡Se ha producido un error!') });
   }, []);
 
+  const agregarAlCarrito = (productoId) => {
+    setCarrito(prevCarrito => {
+      const nuevoCarrito = { ...prevCarrito };
+      nuevoCarrito[productoId] = (nuevoCarrito[productoId] || 0) + 1;
+      return nuevoCarrito;
+    });
+  };
+
+  const eliminarDelCarrito = (productoId) => {
+    setCarrito(prevCarrito => {
+      const nuevoCarrito = { ...prevCarrito };
+      if (nuevoCarrito[productoId] > 1) {
+        nuevoCarrito[productoId] -= 1;
+      } else {
+        delete nuevoCarrito[productoId];
+      }
+      return nuevoCarrito;
+    });
+  };
+
   return (
     <>
-      <Header />
+      <Header carrito={carrito} />
       <Routes>
         <Route path="/" element={<Home />} /> 
-        <Route path="/productos" element={<Productos productosFirebase={productosFirebase} />} />
+        <Route path="/productos" element={<Productos productosFirebase={productosFirebase} agregarAlCarrito={agregarAlCarrito} eliminarDelCarrito={eliminarDelCarrito} carrito={carrito} />} />
       </Routes>
       <Footer />
     </>

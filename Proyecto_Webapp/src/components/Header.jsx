@@ -3,7 +3,9 @@ import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link } from 'react-router-dom'; 
 import { FaShoppingCart } from "react-icons/fa"; // Ícono de carrito
 
-function Header() {
+function Header({ carrito }) {
+  const totalItems = Object.values(carrito).reduce((acc, item) => acc + item, 0);
+
   return (
     <header className="header">
       <h2>NFT MarketPlace</h2>
@@ -30,7 +32,7 @@ function Header() {
         <Nav.Item>
           <Link to="/carrito">
             <FaShoppingCart size={24} color="#ffffff" />
-            <span className="cart-count">3</span> {/* Este número debe ser dinámico según la cantidad de productos en el carrito */}
+            <span className="cart-count">{totalItems}</span>
           </Link>
         </Nav.Item>
       </Nav>

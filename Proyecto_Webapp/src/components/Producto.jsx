@@ -1,29 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, Button, Col } from 'react-bootstrap';
 import "../styles/Producto.css";
 
-function Producto({ producto }) {
-  const [carrito, setCarrito] = useState({});
-
-  const agregarAlCarrito = () => {
-    setCarrito(prevCarrito => {
-      const nuevoCarrito = { ...prevCarrito };
-      nuevoCarrito[producto.id] = (nuevoCarrito[producto.id] || 0) + 1;
-      return nuevoCarrito;
-    });
-  };
-
-  const eliminarDelCarrito = () => {
-    setCarrito(prevCarrito => {
-      const nuevoCarrito = { ...prevCarrito };
-      if (nuevoCarrito[producto.id] > 1) {
-        nuevoCarrito[producto.id] -= 1;
-      } else {
-        delete nuevoCarrito[producto.id];
-      }
-      return nuevoCarrito;
-    });
-  };
+function Producto({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
+  const cantidad = carrito[producto.id] || 0;
 
   return (
     <Col sm={12} md={6} lg={4} className="mb-4">
@@ -33,9 +13,9 @@ function Producto({ producto }) {
           <Card.Title>{producto.nombre}</Card.Title>
           <Card.Text>${producto.precio}</Card.Text>
           <div className="d-flex justify-content-between">
-            <Button variant="primary" onClick={agregarAlCarrito}>+</Button>
-            <span>{carrito[producto.id] || 0}</span>
-            <Button variant="danger" onClick={eliminarDelCarrito}>-</Button>
+            <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
+            <span>{cantidad}</span>
+            <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
           </div>
         </Card.Body>
       </Card>
