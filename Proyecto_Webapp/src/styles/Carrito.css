@@ -1,0 +1,57 @@
+.carrito-container {
+    margin-top: 20px;
+  }
+  
+  .carrito-title {
+    text-align: center;
+    color: #4CAF50;
+    margin-bottom: 40px;
+  }
+  
+  .list-group-item {
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: all 0.3s ease;
+  }
+  
+  .product-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  
+  .product-name {
+    flex: 2;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .product-quantity {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin: 0 10px;  
+    font-weight: bold;  
+    padding: 0 8px; 
+  }
+  
+  .delete-button {
+    flex: 1;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+  }
+  
+  .delete-button:hover {
+    background-color: #ff4d4d;
+    transform: scale(1.05);
+  }

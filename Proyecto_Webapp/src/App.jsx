@@ -6,6 +6,7 @@ import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./components/Home.jsx";
 import Productos from './components/Productos';
+import Carrito from './components/Carrito';
 
 function App() {
   const [productosFirebase, setproductosFirebase] = useState([]);
@@ -48,12 +49,21 @@ function App() {
     });
   };
 
+  const eliminarProductoDelCarrito = (productoId) => {
+    setCarrito(prevCarrito => {
+      const nuevoCarrito = { ...prevCarrito };
+      delete nuevoCarrito[productoId];
+      return nuevoCarrito;
+    });
+  };
+
   return (
     <>
       <Header carrito={carrito} />
       <Routes>
-        <Route path="/" element={<Home />} /> 
+        <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos productosFirebase={productosFirebase} agregarAlCarrito={agregarAlCarrito} eliminarDelCarrito={eliminarDelCarrito} carrito={carrito} />} />
+        <Route path="/carrito" element={<Carrito carrito={carrito} productosFirebase={productosFirebase} agregarAlCarrito={agregarAlCarrito} eliminarDelCarrito={eliminarDelCarrito} eliminarProductoDelCarrito={eliminarProductoDelCarrito}/>} />
       </Routes>
       <Footer />
     </>

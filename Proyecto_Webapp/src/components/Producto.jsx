@@ -13,9 +13,9 @@ function Producto({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
           <Card.Title>{producto.nombre}</Card.Title>
           <Card.Text>${producto.precio}</Card.Text>
           <div className="d-flex justify-content-between">
-            <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
-            <span>{cantidad}</span>
             <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
+            <span>{cantidad}</span>
+            <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
           </div>
         </Card.Body>
       </Card>
