@@ -1,12 +1,32 @@
-import React from 'react';
-import { Container, Row } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Row, Form } from 'react-bootstrap';
 import Producto from "./Producto";
+import "../styles/Productos.css";
 
 function Productos({ productosFirebase, agregarAlCarrito, eliminarDelCarrito, carrito }) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredProductos = productosFirebase.filter(producto =>
+    producto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Container className="productos-container">
+      <Form.Group controlId="search" className="mb-4">
+        <Form.Control
+          type="text"
+          placeholder="Buscar productos por nombre"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="search-input"
+        />
+      </Form.Group>
       <Row>
-        {productosFirebase.map(producto => (
+        {filteredProductos.map(producto => (
           <Producto key={producto.id} producto={producto} agregarAlCarrito={agregarAlCarrito} eliminarDelCarrito={eliminarDelCarrito} carrito={carrito} />
         ))}
       </Row>

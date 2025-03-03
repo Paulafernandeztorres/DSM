@@ -1,0 +1,16 @@
+.productos-container {
+  padding: 20px;
+}
+
+.search-input {
+  border-radius: 5px;
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
