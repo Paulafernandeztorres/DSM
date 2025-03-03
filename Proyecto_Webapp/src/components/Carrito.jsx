@@ -7,27 +7,34 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
 
   return (
     <Container>
-      <h1>Carrito de Compras</h1>
-      <ListGroup>
-        {productosEnCarrito.map(producto => (
-          <ListGroup.Item key={producto.id} className="d-flex align-items-center">
-            <Image src={producto.imagen} rounded style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
-            <span style={{ flex: 2, marginLeft: '15px' }}>{producto.nombre}</span>
-            <div className="d-flex align-items-center">
-              <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
-              <span style={{ margin: '0 10px' }}>{carrito[producto.id]}</span>
-              <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
-            </div>
-            <Button 
-              variant="danger" 
-              onClick={() => eliminarProductoDelCarrito(producto.id)} 
-              style={{ flex: 1, padding: '6px 12px' }} 
-            >
-              Eliminar
-            </Button>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+      <h2>Mi Carrito</h2>
+      {productosEnCarrito.length === 0 ? (
+        <div className="no-products">
+          <p>No tienes productos en tu carrito aún.</p>
+          <p>¡Añade algunos para comenzar tu compra!</p>
+        </div>
+      ) : (
+        <ListGroup>
+          {productosEnCarrito.map(producto => (
+            <ListGroup.Item key={producto.id} className="d-flex align-items-center">
+              <Image src={producto.imagen} rounded style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+              <span style={{ flex: 2, marginLeft: '15px' }}>{producto.nombre}</span>
+              <div className="d-flex align-items-center">
+                <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
+                <span style={{ margin: '0 10px' }}>{carrito[producto.id]}</span>
+                <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
+              </div>
+              <Button 
+                variant="danger" 
+                onClick={() => eliminarProductoDelCarrito(producto.id)} 
+                style={{ flex: 1, padding: '6px 12px' }} 
+              >
+                Eliminar
+              </Button>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      )}
     </Container>
   );
 }

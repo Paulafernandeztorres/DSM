@@ -1,47 +1,47 @@
 .carrito-container {
     margin-top: 20px;
-  }
-  
-  .carrito-title {
+}
+
+.carrito-title {
     text-align: center;
     color: #4CAF50;
     margin-bottom: 40px;
-  }
-  
-  .list-group-item {
+}
+
+.list-group-item {
     border-radius: 10px;
     margin-bottom: 10px;
     background-color: #f9f9f9;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 15px;
     transition: all 0.3s ease;
-  }
-  
-  .product-image {
+}
+
+.product-image {
     width: 60px;
     height: 60px;
     object-fit: cover;
     margin-right: 15px;
-  }
-  
-  .product-name {
+}
+
+.product-name {
     flex: 2;
     font-weight: bold;
     font-size: 16px;
     color: #333;
-  }
-  
-  .product-quantity {
+}
+
+.product-quantity {
     flex: 1;
     text-align: center;
     font-size: 16px;
     color: #555;
-    margin: 0 10px;  
-    font-weight: bold;  
-    padding: 0 8px; 
-  }
-  
-  .delete-button {
+    margin: 0 10px;
+    font-weight: bold;
+    padding: 0 8px;
+}
+
+.delete-button {
     flex: 1;
     padding: 5px 16px;
     border-radius: 20px;
@@ -49,9 +49,35 @@
     font-size: 14px;
     transition: all 0.3s ease;
     border: none;
-  }
-  
-  .delete-button:hover {
+}
+
+.delete-button:hover {
     background-color: #ff4d4d;
     transform: scale(1.05);
+}
+
+.no-products {
+    text-align: center;
+    padding: 30px;
+    border: 2px dashed #bbb; /* Borde punteado */
+    background-color: #f9f9f9; /* Fondo gris claro */
+    border-radius: 8px; /* Bordes redondeados */
+    margin-top: 20px;
+  }
+  
+  .no-products p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .no-products p:first-child {
+    font-weight: bold;
+    font-size: 22px;
+  }
+  
+  .no-products p:last-child {
+    color: #0077cc;
+    font-size: 16px;
+    font-style: italic;
   }

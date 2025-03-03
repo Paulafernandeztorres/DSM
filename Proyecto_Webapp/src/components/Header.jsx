@@ -8,7 +8,11 @@ function Header({ carrito }) {
 
   return (
     <header className="header">
-      <h2>NFT MarketPlace</h2>
+      <div className="header-title-container">
+        <img src="icon.png" alt="Logo" className="header-logo" />
+        <h2>NFT MarketPlace</h2>
+      </div>
+
       <Nav className="justify-content-end">
         <Nav.Item>
           <Link to="/">Inicio</Link>
@@ -26,9 +30,8 @@ function Header({ carrito }) {
           <Link to="/mis-nfts">Mis NFTs</Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/crear">Crear</Link>
+          <Link to="/login">Login</Link>
         </Nav.Item>
-        {/* Ícono de carrito de compras */}
         <Nav.Item>
           <Link to="/carrito">
             <FaShoppingCart size={24} color="#ffffff" />

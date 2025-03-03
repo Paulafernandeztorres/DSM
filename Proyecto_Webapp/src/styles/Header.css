@@ -1,11 +1,22 @@
 .header {
-  background-color: #005b96; /* Azul medio */
+  background-color: #7795aa; /* Azul medio */
   color: #ffffff;
   padding: 15px 30px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Esto sigue separando los elementos, pero vamos a organizarlo mejor */
   align-items: center;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  width: 40px; 
+  height: auto;
+  margin-right: 10px; /* Espacio entre la imagen y el título */
 }
 
 .header h2 {
@@ -25,7 +36,7 @@
 
 .nav a {
   text-decoration: none;
-  color: #e0e0e0; /* Gris claro */
+  color: #ffffff; /* Gris claro */
   font-weight: normal;
   transition: color 0.2s ease-in-out;
   padding: 5px 10px;

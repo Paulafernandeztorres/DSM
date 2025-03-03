@@ -25,6 +25,7 @@ function Productos({ productosFirebase, agregarAlCarrito, eliminarDelCarrito, ca
           className="search-input"
         />
       </Form.Group>
+      <h2>Productos disponibles:</h2>
       <Row>
         {filteredProductos.map(producto => (
           <Producto key={producto.id} producto={producto} agregarAlCarrito={agregarAlCarrito} eliminarDelCarrito={eliminarDelCarrito} carrito={carrito} />
