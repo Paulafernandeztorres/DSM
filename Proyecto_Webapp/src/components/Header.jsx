@@ -1,6 +1,7 @@
 import "../styles/Header.css";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Nav, NavDropdown } from "react-bootstrap";
 import { Link } from 'react-router-dom'; 
+import PropTypes from 'prop-types';
 import { FaShoppingCart } from "react-icons/fa"; // Ícono de carrito
 
 function Header({ carrito }) {
@@ -42,5 +43,8 @@ function Header({ carrito }) {
     </header>
   );
 }
+Header.propTypes = {
+  carrito: PropTypes.object.isRequired,
+};
 
 export default Header;

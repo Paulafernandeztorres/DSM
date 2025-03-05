@@ -1,9 +1,17 @@
-import React from 'react';
-import { Container, Row, Col, Button, ListGroup, Image } from 'react-bootstrap';
-import '../styles/Carrito.css';
+import { Container, Button, ListGroup, Image } from "react-bootstrap";
+import PropTypes from "prop-types";
+import "../styles/Carrito.css";
 
-function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarrito, eliminarProductoDelCarrito }) {
-  const productosEnCarrito = productosFirebase.filter(producto => carrito[producto.id]);
+function Carrito({
+  carrito,
+  productosFirebase,
+  agregarAlCarrito,
+  eliminarDelCarrito,
+  eliminarProductoDelCarrito,
+}) {
+  const productosEnCarrito = productosFirebase.filter(
+    (producto) => carrito[producto.id]
+  );
 
   return (
     <Container>
@@ -39,5 +47,12 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
     </Container>
   );
 }
+Carrito.propTypes = {
+  carrito: PropTypes.object.isRequired,
+  productosFirebase: PropTypes.array.isRequired,
+  agregarAlCarrito: PropTypes.func.isRequired,
+  eliminarDelCarrito: PropTypes.func.isRequired,
+  eliminarProductoDelCarrito: PropTypes.func.isRequired,
+};
 
 export default Carrito;
