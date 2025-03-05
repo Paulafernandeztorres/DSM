@@ -23,20 +23,47 @@ function Carrito({
         </div>
       ) : (
         <ListGroup>
-          {productosEnCarrito.map(producto => (
-            <ListGroup.Item key={producto.id} className="d-flex align-items-center">
-              <Image src={producto.imagen} rounded style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
-              <span style={{ flex: 2, marginLeft: '15px' }}>{producto.nombre}</span>
-              <div className="d-flex align-items-center justify-content-center" style={{ flex: 1 }}>
-                <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
-                <span className="product-quantity" style={{ margin: '0 10px', textAlign: 'center' }}>{carrito[producto.id]}</span>
-                <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
+          {productosEnCarrito.map((producto) => (
+            <ListGroup.Item
+              key={producto.id}
+              className="d-flex align-items-center"
+            >
+              <Image
+                src={producto.imagen}
+                rounded
+                style={{ width: "50px", height: "50px", objectFit: "cover" }}
+              />
+              <span style={{ flex: 2, marginLeft: "15px" }}>
+                {producto.nombre}
+              </span>
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{ flex: 1 }}
+              >
+                <Button
+                  variant="danger"
+                  onClick={() => eliminarDelCarrito(producto.id)}
+                >
+                  -
+                </Button>
+                <span
+                  className="product-quantity"
+                  style={{ margin: "0 10px", textAlign: "center" }}
+                >
+                  {carrito[producto.id]}
+                </span>
+                <Button
+                  variant="primary"
+                  onClick={() => agregarAlCarrito(producto.id)}
+                >
+                  +
+                </Button>
               </div>
-              <Button 
-                variant="danger" 
-                onClick={() => eliminarProductoDelCarrito(producto.id)} 
+              <Button
+                variant="danger"
+                onClick={() => eliminarProductoDelCarrito(producto.id)}
                 className="delete-button"
-                style={{ marginLeft: 'auto' }}
+                style={{ marginLeft: "auto" }}
               >
                 Eliminar
               </Button>
