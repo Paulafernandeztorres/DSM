@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Container, Button, ListGroup, Image, Modal } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import '../styles/Carrito.css';

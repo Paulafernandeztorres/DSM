@@ -26,6 +26,7 @@ function App() {
             nombre: response.data[key].nombre,
             precio: response.data[key].precio,
             imagen: response.data[key].imagen,
+            descripcion: response.data[key].descripcion,
           });
         }
         setproductosFirebase(productosArray);

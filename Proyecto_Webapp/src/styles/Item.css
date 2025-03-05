@@ -49,3 +49,7 @@
     display: inline-block;
     width: 40px; 
   }
+
+  .modal-close-button {
+    width: 100px;
+  }
