@@ -1,17 +1,28 @@
-import { Container, Button, ListGroup, Image } from "react-bootstrap";
-import PropTypes from "prop-types";
-import "../styles/Carrito.css";
+import React, { useState } from 'react';
+import { Container, Button, ListGroup, Image, Modal } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import '../styles/Carrito.css';
 
-function Carrito({
-  carrito,
-  productosFirebase,
-  agregarAlCarrito,
-  eliminarDelCarrito,
-  eliminarProductoDelCarrito,
-}) {
-  const productosEnCarrito = productosFirebase.filter(
-    (producto) => carrito[producto.id]
-  );
+function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarrito, eliminarProductoDelCarrito }) {
+  const [showModal, setShowModal] = useState(false);
+  const [productoAEliminar, setProductoAEliminar] = useState(null);
+
+  const handleShowModal = (productoId) => {
+    setProductoAEliminar(productoId);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setProductoAEliminar(null);
+  };
+
+  const handleConfirmDelete = () => {
+    eliminarProductoDelCarrito(productoAEliminar);
+    handleCloseModal();
+  };
+
+  const productosEnCarrito = productosFirebase.filter(producto => carrito[producto.id]);
 
   return (
     <Container>
@@ -23,47 +34,20 @@ function Carrito({
         </div>
       ) : (
         <ListGroup>
-          {productosEnCarrito.map((producto) => (
-            <ListGroup.Item
-              key={producto.id}
-              className="d-flex align-items-center"
-            >
-              <Image
-                src={producto.imagen}
-                rounded
-                style={{ width: "50px", height: "50px", objectFit: "cover" }}
-              />
-              <span style={{ flex: 2, marginLeft: "15px" }}>
-                {producto.nombre}
-              </span>
-              <div
-                className="d-flex align-items-center justify-content-center"
-                style={{ flex: 1 }}
-              >
-                <Button
-                  variant="danger"
-                  onClick={() => eliminarDelCarrito(producto.id)}
-                >
-                  -
-                </Button>
-                <span
-                  className="product-quantity"
-                  style={{ margin: "0 10px", textAlign: "center" }}
-                >
-                  {carrito[producto.id]}
-                </span>
-                <Button
-                  variant="primary"
-                  onClick={() => agregarAlCarrito(producto.id)}
-                >
-                  +
-                </Button>
+          {productosEnCarrito.map(producto => (
+            <ListGroup.Item key={producto.id} className="d-flex align-items-center">
+              <Image src={producto.imagen} rounded style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+              <span style={{ flex: 2, marginLeft: '15px' }}>{producto.nombre}</span>
+              <div className="d-flex align-items-center justify-content-center" style={{ flex: 1 }}>
+                <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
+                <span className="product-quantity" style={{ margin: '0 10px', textAlign: 'center' }}>{carrito[producto.id]}</span>
+                <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
               </div>
-              <Button
-                variant="danger"
-                onClick={() => eliminarProductoDelCarrito(producto.id)}
+              <Button 
+                variant="danger" 
+                onClick={() => handleShowModal(producto.id)} 
                 className="delete-button"
-                style={{ marginLeft: "auto" }}
+                style={{ marginLeft: 'auto' }}
               >
                 Eliminar
               </Button>
@@ -71,9 +55,29 @@ function Carrito({
           ))}
         </ListGroup>
       )}
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar eliminación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          ¿Estás seguro de que deseas eliminar este producto del carrito?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal} className="modal-button">
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete} className="modal-button">
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Button className="buy-button">Realizar compra</Button>
     </Container>
   );
 }
+
 Carrito.propTypes = {
   carrito: PropTypes.object.isRequired,
   productosFirebase: PropTypes.array.isRequired,
