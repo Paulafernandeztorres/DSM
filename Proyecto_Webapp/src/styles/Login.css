@@ -6,3 +6,12 @@
   border-radius: 5px;
   background-color: #fff;
 }
+
+.login-button {
+  background-color: #7795aa;
+  border: none;
+}
+
+.login-button:hover {
+  background-color: #56a2d8;
+}
