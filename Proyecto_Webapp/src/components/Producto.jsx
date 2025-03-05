@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Button, Col } from 'react-bootstrap';
+import { Card, Button, Col } from "react-bootstrap";
+import PropTypes from "prop-types";
 import "../styles/Producto.css";
 
 function Producto({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
@@ -13,14 +13,35 @@ function Producto({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
           <Card.Title>{producto.nombre}</Card.Title>
           <Card.Text>${producto.precio}</Card.Text>
           <div className="d-flex justify-content-between">
-            <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
+            <Button
+              variant="danger"
+              onClick={() => eliminarDelCarrito(producto.id)}
+            >
+              -
+            </Button>
             <span>{cantidad}</span>
-            <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
+            <Button
+              variant="primary"
+              onClick={() => agregarAlCarrito(producto.id)}
+            >
+              +
+            </Button>
           </div>
         </Card.Body>
       </Card>
     </Col>
   );
 }
+Producto.propTypes = {
+  producto: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    nombre: PropTypes.string.isRequired,
+    precio: PropTypes.number.isRequired,
+    imagen: PropTypes.string.isRequired,
+  }).isRequired,
+  agregarAlCarrito: PropTypes.func.isRequired,
+  eliminarDelCarrito: PropTypes.func.isRequired,
+  carrito: PropTypes.object.isRequired,
+};
 
 export default Producto;
