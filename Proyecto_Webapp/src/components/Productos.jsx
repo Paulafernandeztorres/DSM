@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Form } from "react-bootstrap";
-import Producto from "./Producto";
+import Item from "./Item";
 import "../styles/Productos.css";
 
 function Productos({
@@ -34,7 +34,7 @@ function Productos({
       <h2>Productos disponibles:</h2>
       <Row>
         {filteredProductos.map((producto) => (
-          <Producto
+          <Item
             key={producto.id}
             producto={producto}
             agregarAlCarrito={agregarAlCarrito}

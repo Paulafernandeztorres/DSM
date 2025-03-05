@@ -1,8 +1,8 @@
 import { Card, Button, Col } from "react-bootstrap";
 import PropTypes from "prop-types";
-import "../styles/Producto.css";
+import "../styles/Item.css";
 
-function Producto({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
+function Item({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
   const cantidad = carrito[producto.id] || 0;
 
   return (
@@ -32,7 +32,7 @@ function Producto({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
     </Col>
   );
 }
-Producto.propTypes = {
+Item.propTypes = {
   producto: PropTypes.shape({
     id: PropTypes.number.isRequired,
     nombre: PropTypes.string.isRequired,
@@ -44,4 +44,4 @@ Producto.propTypes = {
   carrito: PropTypes.object.isRequired,
 };
 
-export default Producto;
+export default Item;
