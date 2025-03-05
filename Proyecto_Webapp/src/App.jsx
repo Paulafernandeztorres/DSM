@@ -7,6 +7,7 @@ import Footer from "./components/Footer.jsx";
 import Home from "./components/Home.jsx";
 import Productos from "./components/Productos";
 import Carrito from "./components/Carrito";
+import Login from "./components/Login";
 
 function App() {
   const [productosFirebase, setproductosFirebase] = useState([]);
@@ -67,6 +68,7 @@ function App() {
       <Header carrito={carrito} />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/Login" element={<Login />} />
         <Route
           path="/productos"
           element={
