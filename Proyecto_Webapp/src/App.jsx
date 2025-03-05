@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import axios from "axios";
 import "./App.css";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
@@ -8,32 +7,21 @@ import Home from "./components/Home.jsx";
 import Productos from "./components/Productos";
 import Carrito from "./components/Carrito";
 import Login from "./components/Login";
+import { getProductos } from "./utils/firebase.utils";
 
 function App() {
   const [productosFirebase, setproductosFirebase] = useState([]);
   const [carrito, setCarrito] = useState({});
 
   useEffect(() => {
-    axios
-      .get(
-        "https://proyecto-webapp-573f0-default-rtdb.europe-west1.firebasedatabase.app/Productos.json"
-      )
-      .then((response) => {
-        let productosArray = [];
-        for (let key in response.data) {
-          productosArray.push({
-            id: key,
-            nombre: response.data[key].nombre,
-            precio: response.data[key].precio,
-            imagen: response.data[key].imagen,
-            descripcion: response.data[key].descripcion,
-          });
-        }
-        setproductosFirebase(productosArray);
-      })
-      .catch((error) => {
-        console.error("Error fetching data: ", error);
-      });
+    const fetchProductos = async () => {
+      const productosArray = await getProductos();
+      setproductosFirebase(productosArray);
+    };
+
+    fetchProductos().catch((error) => {
+      console.error("Error fetching data: ", error);
+    });
   }, []);
 
   const agregarAlCarrito = (productoId) => {

@@ -9,8 +9,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getDatabase, ref, get } from "firebase/database";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -30,12 +29,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Firebase Auth provider
 const provider = new GoogleAuthProvider();
-
-// whenever a user interacts with the provider, we force them to select an account
 provider.setCustomParameters({
   prompt: "select_account ",
 });
@@ -56,4 +51,28 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   return await signInWithEmailAndPassword(auth, email, password);
+};
+
+// Function to get products from Realtime Database
+export const getProductos = async () => {
+  const db = getDatabase();
+  const productosRef = ref(db, "Productos");
+  const snapshot = await get(productosRef);
+  if (snapshot.exists()) {
+    const productosData = snapshot.val();
+    let productosArray = [];
+    for (let key in productosData) {
+      productosArray.push({
+        id: key,
+        nombre: productosData[key].nombre,
+        precio: productosData[key].precio,
+        imagen: productosData[key].imagen,
+        descripcion: productosData[key].descripcion,
+      });
+    }
+    return productosArray;
+  } else {
+    console.error("No data available");
+    return [];
+  }
 };
