@@ -1,8 +1,5 @@
-.footer {
-    padding: 0.5rem;
-    margin: 1rem 0;
-    border-radius: 12px;
-    background-color: #860000;
-    text-align: center;
-    color: aliceblue;
-  }
+footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 10px 0;
+}
