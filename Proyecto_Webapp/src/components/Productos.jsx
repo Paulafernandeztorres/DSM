@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
-import { Container, Row, Form } from 'react-bootstrap';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { Container, Row, Form } from "react-bootstrap";
 import Producto from "./Producto";
 import "../styles/Productos.css";
 
-function Productos({ productosFirebase, agregarAlCarrito, eliminarDelCarrito, carrito }) {
-  const [searchTerm, setSearchTerm] = useState('');
+function Productos({
+  productosFirebase,
+  agregarAlCarrito,
+  eliminarDelCarrito,
+  carrito,
+}) {
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredProductos = productosFirebase.filter(producto =>
+  const filteredProductos = productosFirebase.filter((producto) =>
     producto.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -27,12 +33,34 @@ function Productos({ productosFirebase, agregarAlCarrito, eliminarDelCarrito, ca
       </Form.Group>
       <h2>Productos disponibles:</h2>
       <Row>
-        {filteredProductos.map(producto => (
-          <Producto key={producto.id} producto={producto} agregarAlCarrito={agregarAlCarrito} eliminarDelCarrito={eliminarDelCarrito} carrito={carrito} />
+        {filteredProductos.map((producto) => (
+          <Producto
+            key={producto.id}
+            producto={producto}
+            agregarAlCarrito={agregarAlCarrito}
+            eliminarDelCarrito={eliminarDelCarrito}
+            carrito={carrito}
+          />
         ))}
       </Row>
     </Container>
   );
 }
+Productos.propTypes = {
+  productosFirebase: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      nombre: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  agregarAlCarrito: PropTypes.func.isRequired,
+  eliminarDelCarrito: PropTypes.func.isRequired,
+  carrito: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      cantidad: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+};
 
 export default Productos;
