@@ -17,7 +17,7 @@ function Item({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
           <Card.Img variant="top" src={producto.imagen} />
           <Card.Body>
             <Card.Title>{producto.nombre}</Card.Title>
-            <Card.Text>${producto.precio}</Card.Text>
+            <Card.Text>{producto.precio}€</Card.Text>
             <div className="d-flex justify-content-between">
               <Button variant="danger" onClick={(e) => { e.stopPropagation(); eliminarDelCarrito(producto.id); }}>-</Button>
               <span>{cantidad}</span>
@@ -33,7 +33,7 @@ function Item({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
         </Modal.Header>
         <Modal.Body>
           <img src={producto.imagen} alt={producto.nombre} style={{ width: '100%', marginBottom: '20px' }} />
-          <p><strong>Precio:</strong> ${producto.precio}</p>
+          <p><strong>Precio:</strong> €{producto.precio}</p>
           <p><strong>Descripción:</strong> {producto.descripcion}</p>
         </Modal.Body>
         <Modal.Footer>
