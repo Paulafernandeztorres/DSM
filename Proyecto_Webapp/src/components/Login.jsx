@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import {
@@ -12,6 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVariant, setAlertVariant] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -99,6 +101,15 @@ const Login = () => {
           className="w-100"
         >
           <FaGoogle className="me-2" /> Iniciar Sesión con Google
+        </Button>
+      </div>
+      <div className="text-center mt-3">
+        <Button
+          variant="link"
+          onClick={() => navigate("/registro")}
+          className="w-100"
+        >
+          ¿No tienes cuenta? Regístrate
         </Button>
       </div>
     </Container>
