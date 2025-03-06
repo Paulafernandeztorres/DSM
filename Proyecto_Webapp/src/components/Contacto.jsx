@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Container, Form, Button, Alert } from 'react-bootstrap';
-import '../styles/Contacto.css';
+import { useState } from "react";
+import { Container, Form, Button, Alert } from "react-bootstrap";
+import "../styles/Contacto.css";
 
 function Contacto() {
-  const [nombre, setNombre] = useState('');
-  const [email, setEmail] = useState('');
-  const [mensaje, setMensaje] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [mensaje, setMensaje] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
 
@@ -14,9 +14,9 @@ function Contacto() {
     if (nombre && email && mensaje) {
       setShowSuccess(true);
       setShowError(false);
-      setNombre('');
-      setEmail('');
-      setMensaje('');
+      setNombre("");
+      setEmail("");
+      setMensaje("");
     } else {
       setShowError(true);
       setShowSuccess(false);
@@ -26,9 +26,24 @@ function Contacto() {
   return (
     <Container className="contacto-container">
       <h2>Contacto</h2>
-      <p>Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.</p>
-      {showSuccess && <Alert variant="success">¡Mensaje enviado con éxito!</Alert>}
-      {showError && <Alert variant="danger">Por favor, rellena todos los campos.</Alert>}
+      <p>
+        Si tienes alguna pregunta o necesitas más información, no dudes en
+        contactarnos.
+      </p>
+      {showSuccess && (
+        <Alert
+          variant="success"
+          onClose={() => setShowSuccess(false)}
+          dismissible
+        >
+          ¡Mensaje enviado con éxito!
+        </Alert>
+      )}
+      {showError && (
+        <Alert variant="danger" onClose={() => setShowError(false)} dismissible>
+          Por favor, rellena todos los campos.
+        </Alert>
+      )}
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formNombre">
           <Form.Label>Nombre</Form.Label>

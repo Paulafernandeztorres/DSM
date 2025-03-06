@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, push, update } from "firebase/database";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -75,4 +75,19 @@ export const getProductos = async () => {
     console.error("No data available");
     return [];
   }
+};
+
+// Function to create a new order in the Realtime Database
+export const createPedido = async (pedido) => {
+  const db = getDatabase();
+  const pedidosRef = ref(db, "Pedidos");
+  const newPedidoRef = await push(pedidosRef, pedido);
+  return newPedidoRef.key;
+};
+
+// Function to update an order with its ID in the Realtime Database
+export const updatePedidoWithId = async (pedidoId) => {
+  const db = getDatabase();
+  const pedidoRef = ref(db, `Pedidos/${pedidoId}`);
+  await update(pedidoRef, { id: pedidoId });
 };
