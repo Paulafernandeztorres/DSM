@@ -1,27 +1,30 @@
+import { useNavigate } from 'react-router-dom';
 import "../styles/Home.css";
 
-function MainInfo() {
+function Home() {
+  const navigate = useNavigate();
+
+  const handleVerMasClick = () => {
+    navigate('/productos');
+  };
+
   return (
-    <div className="container mainInfo">
-      <div className="row">
-        <div className="col-md-6 col-sm-12 pb-30">
-          <div className="header-left">
-            <h1>¡Bienvenido a la tienda de NFTs!</h1>
-            <p>
-              En nuestra tienda encontrarás una amplia variedad de NFTs para
-              coleccionar. ¡No te quedes sin el tuyo!
-            </p>
-            <button className="btn">Ver más</button>
-          </div>
+    <div className="home-container">
+      <div className="home-content">
+        <div className="home-text">
+          <h1>¡Bienvenido a la tienda de NFTs!</h1>
+          <p>
+            En nuestra tienda encontrarás una amplia variedad de NFTs para
+            coleccionar. ¡No te quedes sin el tuyo!
+          </p>
+          <button className="btn btn-primary" onClick={handleVerMasClick}>Ver más</button>
         </div>
-        <div className="col-md-6 col-sm-12">
-          <div className="header-right">
-            <img src="../../../header-right.png" alt="" />
-          </div>
+        <div className="home-image">
+          <img src="header-right.png" alt="NFTs" />
         </div>
       </div>
     </div>
   );
 }
 
-export default MainInfo;
+export default Home;

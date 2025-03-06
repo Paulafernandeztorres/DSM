@@ -4,7 +4,7 @@
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 .login-button {
@@ -13,5 +13,5 @@
 }
 
 .login-button:hover {
-  background-color: #56a2d8;
+  background-color: #5678a0;
 }

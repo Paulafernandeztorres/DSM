@@ -2,12 +2,6 @@
     margin-top: 20px;
 }
 
-.carrito-title {
-    text-align: center;
-    color: #4CAF50;
-    margin-bottom: 40px;
-}
-
 .list-group-item {
     border-radius: 10px;
     margin-bottom: 10px;
@@ -87,7 +81,7 @@
 }
 
 .buy-button:hover {
-    background-color: #56a2d8;
+    background-color: #5678a0;
 }
 
 .modal-button {

@@ -50,7 +50,7 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
   }, 0);
 
   return (
-    <Container>
+    <Container className="carrito-container">
       <h2>Mi Carrito</h2>
       {productosEnCarrito.length === 0 ? (
         <div className="no-products">
