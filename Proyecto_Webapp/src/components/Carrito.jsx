@@ -6,32 +6,41 @@ import OrderDetails from './OrderDetails';
 import ShippingInfo from './ShippingInfo';
 
 function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarrito, eliminarProductoDelCarrito }) {
-  const [showModal, setShowModal] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
+  const [showShippingInfo, setShowShippingInfo] = useState(false);
   const [productoAEliminar, setProductoAEliminar] = useState(null);
 
-  const handleShowModal = (productoId) => {
+  const handleShowDeleteModal = (productoId) => {
     setProductoAEliminar(productoId);
-    setShowModal(true);
+    setShowDeleteModal(true);
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
     setProductoAEliminar(null);
   };
 
   const handleConfirmDelete = () => {
     eliminarProductoDelCarrito(productoAEliminar);
-    handleCloseModal();
+    handleCloseDeleteModal();
   };
 
-  const handleShowForm = () => {
-    setShowForm(true);
-    setShowModal(false);
+  const handleShowOrderDetails = () => {
+    setShowOrderDetails(true);
   };
 
-  const handleCloseForm = () => {
-    setShowForm(false);
+  const handleCloseOrderDetails = () => {
+    setShowOrderDetails(false);
+  };
+
+  const handleShowShippingInfo = () => {
+    setShowShippingInfo(true);
+    setShowOrderDetails(false);
+  };
+
+  const handleCloseShippingInfo = () => {
+    setShowShippingInfo(false);
   };
 
   const productosEnCarrito = productosFirebase.filter(producto => carrito[producto.id]);
@@ -63,7 +72,7 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
                 <span style={{ flex: 1, textAlign: 'right', marginRight: '20px' }}>€{(producto.precio * carrito[producto.id]).toFixed(2)}</span>
                 <Button 
                   variant="danger" 
-                  onClick={() => handleShowModal(producto.id)} 
+                  onClick={() => handleShowDeleteModal(producto.id)} 
                   className="delete-button"
                   style={{ marginLeft: 'auto' }}
                 >
@@ -78,7 +87,7 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
         </>
       )}
 
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar eliminación</Modal.Title>
         </Modal.Header>
@@ -86,7 +95,7 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
           ¿Estás seguro de que deseas eliminar este producto del carrito?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal} className="modal-button">
+          <Button variant="secondary" onClick={handleCloseDeleteModal} className="modal-button">
             Cancelar
           </Button>
           <Button variant="danger" onClick={handleConfirmDelete} className="modal-button">
@@ -95,20 +104,23 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
         </Modal.Footer>
       </Modal>
 
-      <Button className="buy-button" onClick={() => setShowModal(true)}>Realizar compra</Button>
+      <Button className="buy-button" onClick={handleShowOrderDetails}>Realizar compra</Button>
 
       <OrderDetails
-        show={showModal}
-        handleClose={handleCloseModal}
+        show={showOrderDetails}
+        handleClose={handleCloseOrderDetails}
         productosEnCarrito={productosEnCarrito}
         carrito={carrito}
         totalCost={totalCost}
-        handleShowForm={handleShowForm}
+        handleShowForm={handleShowShippingInfo}
       />
 
       <ShippingInfo
-        show={showForm}
-        handleClose={handleCloseForm}
+        show={showShippingInfo}
+        handleClose={handleCloseShippingInfo}
+        carrito={carrito}
+        productosEnCarrito={productosEnCarrito}
+        totalCost={totalCost}
       />
     </Container>
   );
