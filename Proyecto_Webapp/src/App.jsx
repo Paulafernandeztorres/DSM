@@ -7,6 +7,7 @@ import Home from "./components/Home.jsx";
 import Productos from "./components/Productos";
 import Carrito from "./components/Carrito";
 import Login from "./components/Login";
+import Registro from "./components/Registro";
 import Contacto from "./components/Contacto";
 import { getProductos } from "./utils/firebase.utils";
 
@@ -59,6 +60,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route
           path="/productos"

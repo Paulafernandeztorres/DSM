@@ -1,0 +1,165 @@
+import { useState } from "react";
+import { Container, Form, Button, Alert } from "react-bootstrap";
+import { createAuthUserWithEmailAndPassword } from "../utils/firebase.utils";
+import "../styles/Registro.css";
+
+const Register = () => {
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellidos: "",
+    direccion: "",
+    codigoPostal: "",
+    telefono: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertVariant, setAlertVariant] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {
+      nombre,
+      apellidos,
+      direccion,
+      codigoPostal,
+      telefono,
+      email,
+      password,
+      confirmPassword,
+    } = formData;
+
+    if (password !== confirmPassword) {
+      setAlertMessage("Las contraseñas no coinciden.");
+      setAlertVariant("danger");
+      return;
+    }
+
+    try {
+      const response = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      console.log("Registro exitoso:", response.user);
+      setAlertMessage("Registro exitoso.");
+      setAlertVariant("success");
+      // Aquí puedes manejar la respuesta, por ejemplo, guardar el usuario en tu estado o redirigirlo
+    } catch (error) {
+      console.error("Registro fallido:", error);
+      setAlertMessage("Error al registrar. Por favor, intenta nuevamente.");
+      setAlertVariant("danger");
+    }
+  };
+
+  return (
+    <Container className="register-container">
+      <h2 className="text-center">Registro</h2>
+      {alertMessage && (
+        <Alert
+          variant={alertVariant}
+          onClose={() => setAlertMessage("")}
+          dismissible
+        >
+          {alertMessage}
+        </Alert>
+      )}
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="nombre">
+          <Form.Label>Nombre:</Form.Label>
+          <Form.Control
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="apellidos">
+          <Form.Label>Apellidos:</Form.Label>
+          <Form.Control
+            type="text"
+            name="apellidos"
+            value={formData.apellidos}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="direccion">
+          <Form.Label>Dirección:</Form.Label>
+          <Form.Control
+            type="text"
+            name="direccion"
+            value={formData.direccion}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="codigoPostal">
+          <Form.Label>Código Postal:</Form.Label>
+          <Form.Control
+            type="text"
+            name="codigoPostal"
+            value={formData.codigoPostal}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="telefono">
+          <Form.Label>Teléfono:</Form.Label>
+          <Form.Control
+            type="text"
+            name="telefono"
+            value={formData.telefono}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="email">
+          <Form.Label>Correo Electrónico:</Form.Label>
+          <Form.Control
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Contraseña:</Form.Label>
+          <Form.Control
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="confirmPassword">
+          <Form.Label>Confirmar Contraseña:</Form.Label>
+          <Form.Control
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Button
+          variant="primary"
+          type="submit"
+          className="register-button w-100 mt-3"
+        >
+          Registrarse
+        </Button>
+      </Form>
+    </Container>
+  );
+};
+
+export default Register;
