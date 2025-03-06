@@ -18,12 +18,9 @@ function Header({ carrito }) {
         <Nav.Item>
           <Link to="/">Inicio</Link>
         </Nav.Item>
-        <NavDropdown title="Explorar" id="nav-dropdown">
-          <NavDropdown.Item as={Link} to="/explorar/nuevos">Nuevos NFTs</NavDropdown.Item>
-          <NavDropdown.Item as={Link} to="/explorar/subastas">Subastas en Vivo</NavDropdown.Item>
-          <NavDropdown.Item as={Link} to="/explorar/colecciones">Colecciones</NavDropdown.Item>
-          <NavDropdown.Item as={Link} to="/explorar/detalles">Detalles del NFT</NavDropdown.Item>
-        </NavDropdown>
+        <Nav.Item>
+          <Link to="/contacto">Contacto</Link>
+        </Nav.Item>
         <Nav.Item>
           <Link to="/productos">Productos</Link>
         </Nav.Item>

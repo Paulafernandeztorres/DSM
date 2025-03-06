@@ -104,7 +104,9 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
         </Modal.Footer>
       </Modal>
 
-      <Button className="buy-button" onClick={handleShowOrderDetails}>Realizar compra</Button>
+      {productosEnCarrito.length > 0 && (
+        <Button className="buy-button" onClick={handleShowOrderDetails}>Realizar compra</Button>
+      )}
 
       <OrderDetails
         show={showOrderDetails}
