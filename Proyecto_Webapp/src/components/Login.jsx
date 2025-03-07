@@ -5,6 +5,7 @@ import { Container, Form, Button, Alert } from "react-bootstrap";
 import {
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
+  saveUserData,
 } from "../utils/firebase.utils";
 import { FaGoogle } from "react-icons/fa"; // Importa el ícono de Google de react-icons
 
@@ -25,6 +26,13 @@ const Login = () => {
       console.log("Login successful:", response.user);
       setAlertMessage("Inicio de sesión exitoso.");
       setAlertVariant("success");
+
+      localStorage.setItem(
+        "authToken",
+        response.user.stsTokenManager.accessToken
+      );
+
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
       if (error.code === "auth/invalid-credential") {
@@ -46,7 +54,32 @@ const Login = () => {
       console.log("Google login successful:", response.user);
       setAlertMessage("Inicio de sesión con Google exitoso.");
       setAlertVariant("success");
-      // Aquí puedes manejar la respuesta de Google, por ejemplo, guardar el usuario en tu estado o redirigirlo
+
+      localStorage.setItem(
+        "authToken",
+        response.user.stsTokenManager.accessToken
+      );
+
+      // Extraer el nombre de la parte izquierda del correo
+      const email = response.user.email;
+      const nombre = email.split("@")[0];
+
+      const userData = {
+        Nombre: nombre,
+        Apellidos: "",
+        Direccion: "",
+        CodigoPostal: "",
+        Telefono: "",
+        Correo: email,
+        Comprados: [],
+        Creados: [],
+      };
+
+      // Guardar los datos del usuario en la base de datos
+      await saveUserData(response.user.uid, userData);
+
+      // Redirigir al usuario a la página principal o a otra página
+      navigate("/");
     } catch (error) {
       console.error("Google login failed:", error);
       setAlertMessage("Error al iniciar sesión con Google.");
@@ -74,6 +107,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="username"
           />
         </Form.Group>
         <Form.Group controlId="password">
