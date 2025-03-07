@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import {
@@ -7,7 +8,7 @@ import {
 } from "../utils/firebase.utils";
 import "../styles/Registro.css";
 
-const Register = () => {
+const Register = ({ setUsuario }) => {
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -72,6 +73,8 @@ const Register = () => {
         "authToken",
         response.user.stsTokenManager.accessToken
       );
+
+      setUsuario(userData);
       navigate("/");
     } catch (error) {
       console.error("Registro fallido:", error);
@@ -186,6 +189,9 @@ const Register = () => {
       </Form>
     </Container>
   );
+};
+Register.propTypes = {
+  setUsuario: PropTypes.func.isRequired,
 };
 
 export default Register;

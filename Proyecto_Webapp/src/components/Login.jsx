@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import { Container, Form, Button, Alert } from "react-bootstrap";
@@ -10,7 +11,7 @@ import {
 } from "../utils/firebase.utils";
 import { FaGoogle, FaUserPlus } from "react-icons/fa"; // Importa el ícono de Google de react-icons
 
-const Login = () => {
+const Login = ({ setUsuario }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -32,6 +33,9 @@ const Login = () => {
         "authToken",
         response.user.stsTokenManager.accessToken
       );
+
+      const userData = await getUserData(response.user.uid);
+      setUsuario(userData);
 
       navigate("/");
     } catch (error) {
@@ -82,6 +86,9 @@ const Login = () => {
 
         // Guardar los datos del usuario en la base de datos
         await saveUserData(response.user.uid, userData);
+        setUsuario(userData);
+      } else {
+        setUsuario(existingUser);
       }
 
       // Redirigir al usuario a la página principal o a otra página
@@ -154,6 +161,9 @@ const Login = () => {
       </div>
     </Container>
   );
+};
+Login.propTypes = {
+  setUsuario: PropTypes.func.isRequired,
 };
 
 export default Login;

@@ -79,8 +79,11 @@ function App() {
       <Header carrito={carrito} usuario={usuario} />
       <Routes className="content">
         <Route path="/" element={<Home />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/registro" element={<Registro />} />
+        <Route path="/Login" element={<Login setUsuario={setUsuario} />} />
+        <Route
+          path="/registro"
+          element={<Registro setUsuario={setUsuario} />}
+        />
         <Route path="/contacto" element={<Contacto />} />
         <Route
           path="/productos"
