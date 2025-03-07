@@ -6,6 +6,7 @@ import {
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
   saveUserData,
+  getUserData,
 } from "../utils/firebase.utils";
 import { FaGoogle, FaUserPlus } from "react-icons/fa"; // Importa el ícono de Google de react-icons
 
@@ -60,23 +61,28 @@ const Login = () => {
         response.user.stsTokenManager.accessToken
       );
 
-      // Extraer el nombre de la parte izquierda del correo
-      const email = response.user.email;
-      const nombre = email.split("@")[0];
+      // Verificar si el usuario ya existe en la base de datos
+      const existingUser = await getUserData(response.user.uid);
 
-      const userData = {
-        Nombre: nombre,
-        Apellidos: "",
-        Direccion: "",
-        CodigoPostal: "",
-        Telefono: "",
-        Correo: email,
-        Comprados: [],
-        Creados: [],
-      };
+      if (!existingUser) {
+        // Extraer el nombre de la parte izquierda del correo
+        const email = response.user.email;
+        const nombre = email.split("@")[0];
 
-      // Guardar los datos del usuario en la base de datos
-      await saveUserData(response.user.uid, userData);
+        const userData = {
+          Nombre: nombre,
+          Apellidos: "",
+          Direccion: "",
+          CodigoPostal: "",
+          Telefono: "",
+          Correo: email,
+          Comprados: [],
+          Creados: [],
+        };
+
+        // Guardar los datos del usuario en la base de datos
+        await saveUserData(response.user.uid, userData);
+      }
 
       // Redirigir al usuario a la página principal o a otra página
       navigate("/");
