@@ -1,11 +1,14 @@
 import "../styles/Header.css";
-import { Nav, NavDropdown } from "react-bootstrap";
-import { Link } from 'react-router-dom'; 
-import PropTypes from 'prop-types';
+import { Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 import { FaShoppingCart } from "react-icons/fa"; // Ícono de carrito
 
-function Header({ carrito }) {
-  const totalItems = Object.values(carrito).reduce((acc, item) => acc + item, 0);
+function Header({ carrito, usuario }) {
+  const totalItems = Object.values(carrito).reduce(
+    (acc, item) => acc + item,
+    0
+  );
 
   return (
     <header className="header">
@@ -28,7 +31,15 @@ function Header({ carrito }) {
           <Link to="/mis-nfts">Mis NFTs</Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/login">Login</Link>
+          {usuario ? (
+            <Nav.Item>
+              <Link to="/usuario">{usuario.Nombre}</Link>
+            </Nav.Item>
+          ) : (
+            <Nav.Item>
+              <Link to="/login">Login</Link>
+            </Nav.Item>
+          )}
         </Nav.Item>
         <Nav.Item>
           <Link to="/carrito">
@@ -42,6 +53,7 @@ function Header({ carrito }) {
 }
 Header.propTypes = {
   carrito: PropTypes.object.isRequired,
+  usuario: PropTypes.object,
 };
 
 export default Header;
