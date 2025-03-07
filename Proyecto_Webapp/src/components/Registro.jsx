@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import {
   createAuthUserWithEmailAndPassword,
@@ -19,6 +20,7 @@ const Register = () => {
   });
   const [alertMessage, setAlertMessage] = useState("");
   const [alertVariant, setAlertVariant] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +72,7 @@ const Register = () => {
         "authToken",
         response.user.stsTokenManager.accessToken
       );
+      navigate("/");
     } catch (error) {
       console.error("Registro fallido:", error);
       setAlertMessage("Error al registrar. Por favor, intenta nuevamente.");
