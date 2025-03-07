@@ -17,6 +17,11 @@ function ShippingInfo({
   const [telefono, setTelefono] = useState("");
 
   const handleConfirmPedido = async () => {
+    if (!nombre || !direccion || !ciudad || !codigoPostal || !telefono) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
     const pedido = {
       Nombre_completo: nombre,
       Direccion: direccion,
