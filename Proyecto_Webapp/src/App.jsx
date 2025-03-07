@@ -9,11 +9,13 @@ import Carrito from "./components/Carrito";
 import Login from "./components/Login";
 import Registro from "./components/Registro";
 import Contacto from "./components/Contacto";
-import { getProductos } from "./utils/firebase.utils";
+import Usuario from "./components/Usuario";
+import { getProductos, getUserData } from "./utils/firebase.utils";
 
 function App() {
   const [productosFirebase, setproductosFirebase] = useState([]);
   const [carrito, setCarrito] = useState({});
+  const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -23,6 +25,20 @@ function App() {
 
     fetchProductos().catch((error) => {
       console.error("Error fetching data: ", error);
+    });
+
+    // Obtener datos del usuario autenticado
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        const userId = JSON.parse(atob(token.split(".")[1])).user_id;
+        const userData = await getUserData(userId);
+        setUsuario(userData);
+      }
+    };
+
+    fetchUserData().catch((error) => {
+      console.error("Error fetching user data: ", error);
     });
   }, []);
 
@@ -56,8 +72,8 @@ function App() {
 
   return (
     <>
-      <Header carrito={carrito} />
-      <Routes>
+      <Header carrito={carrito} usuario={usuario} />
+      <Routes className="content">
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
@@ -85,6 +101,7 @@ function App() {
             />
           }
         />
+        <Route path="/usuario" element={<Usuario usuario={usuario} />} />
       </Routes>
       <Footer />
     </>
