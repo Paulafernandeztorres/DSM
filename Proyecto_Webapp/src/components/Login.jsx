@@ -7,7 +7,7 @@ import {
   signInAuthUserWithEmailAndPassword,
   saveUserData,
 } from "../utils/firebase.utils";
-import { FaGoogle } from "react-icons/fa"; // Importa el ícono de Google de react-icons
+import { FaGoogle, FaUserPlus } from "react-icons/fa"; // Importa el ícono de Google de react-icons
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -139,11 +139,11 @@ const Login = () => {
       </div>
       <div className="text-center mt-3">
         <Button
-          variant="link"
+          variant="outline-secondary"
           onClick={() => navigate("/registro")}
           className="w-100"
         >
-          ¿No tienes cuenta? Regístrate
+          <FaUserPlus className="me-2" /> ¿No tienes cuenta? Regístrate
         </Button>
       </div>
     </Container>
