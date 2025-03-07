@@ -9,7 +9,7 @@ import {
 } from "../utils/firebase.utils";
 import { FaGoogle } from "react-icons/fa"; // Importa el ícono de Google de react-icons
 
-const Login = ({ setUsuario }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -85,12 +85,6 @@ const Login = ({ setUsuario }) => {
       setAlertMessage("Error al iniciar sesión con Google.");
       setAlertVariant("danger");
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    setUsuario(null);
-    navigate("/login");
   };
 
   return (

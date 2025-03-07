@@ -1,14 +1,18 @@
 import PropTypes from "prop-types";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import "../styles/Usuario.css";
 
 const Usuario = ({ usuario, onLogout }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    console.log("Logging out...");
     sessionStorage.clear(); // Clear session storage
-    onLogout();
+    localStorage.removeItem("authToken"); // Clear auth token from local storage
+    onLogout(); // Call the onLogout function passed as a prop
     navigate("/login");
   };
 
@@ -20,12 +24,20 @@ const Usuario = ({ usuario, onLogout }) => {
     <Container className="mt-4">
       <Row className="justify-content-center">
         <Col md={8}>
-          <Card className="no-hover">
-            <Card.Header as="h2" className="d-flex justify-content-between align-items-center">
-              Perfil de Usuario
-              <Button variant="danger" size="md" onClick={handleLogout} className="w-25">Cerrar Sesión</Button>
-            </Card.Header>
-            <Card.Body>
+          <div className="p-4 border rounded shadow-sm container-usuario">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h2>Perfil de Usuario</h2>
+              <Button
+                variant="danger"
+                size="md"
+                onClick={handleLogout}
+                className="w-25 logout-button"
+              >
+                <span className="logout-text">Cerrar Sesión</span>
+                <FontAwesomeIcon icon={faSignOutAlt} className="logout-icon" />
+              </Button>
+            </div>
+            <div>
               <p>
                 <strong>Nombre:</strong> {usuario.Nombre}
               </p>
@@ -44,8 +56,8 @@ const Usuario = ({ usuario, onLogout }) => {
               <p>
                 <strong>Correo Electrónico:</strong> {usuario.Correo}
               </p>
-            </Card.Body>
-          </Card>
+            </div>
+          </div>
         </Col>
       </Row>
     </Container>
@@ -53,7 +65,14 @@ const Usuario = ({ usuario, onLogout }) => {
 };
 
 Usuario.propTypes = {
-  usuario: PropTypes.object.isRequired,
+  usuario: PropTypes.shape({
+    Nombre: PropTypes.string.isRequired,
+    Apellidos: PropTypes.string.isRequired,
+    Direccion: PropTypes.string.isRequired,
+    CodigoPostal: PropTypes.string.isRequired,
+    Telefono: PropTypes.string.isRequired,
+    Correo: PropTypes.string.isRequired,
+  }).isRequired,
   onLogout: PropTypes.func.isRequired,
 };
 

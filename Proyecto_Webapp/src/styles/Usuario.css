@@ -1,3 +1,41 @@
-.no-hover {
-  pointer-events: none;
+.container-usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
+}
+
+.logout-icon {
+  display: none;
+}
+
+.logout-text {
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 1000px) {
+  .logout-text {
+    display: none;
+  }
+  .logout-icon {
+    display: inline-block;
+  }
 }

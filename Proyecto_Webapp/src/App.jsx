@@ -70,6 +70,10 @@ function App() {
     });
   };
 
+  const handleLogout = () => {
+    setUsuario(null);
+  };
+
   return (
     <>
       <Header carrito={carrito} usuario={usuario} />
@@ -101,7 +105,10 @@ function App() {
             />
           }
         />
-        <Route path="/usuario" element={<Usuario usuario={usuario} />} />
+        <Route
+          path="/usuario"
+          element={<Usuario usuario={usuario} onLogout={handleLogout} />}
+        />
       </Routes>
       <Footer />
     </>
