@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
-import { createAuthUserWithEmailAndPassword } from "../utils/firebase.utils";
+import {
+  createAuthUserWithEmailAndPassword,
+  saveUserData,
+} from "../utils/firebase.utils";
 import "../styles/Registro.css";
 
 const Register = () => {
@@ -46,10 +49,27 @@ const Register = () => {
         email,
         password
       );
+      const userId = response.user.uid;
+      const userData = {
+        Nombre: nombre,
+        Apellidos: apellidos,
+        Direccion: direccion,
+        CodigoPostal: codigoPostal,
+        Telefono: telefono,
+        Correo: email,
+        Comprados: [],
+        Creados: [],
+      };
+      await saveUserData(userId, userData);
       console.log("Registro exitoso:", response.user);
       setAlertMessage("Registro exitoso.");
       setAlertVariant("success");
-      // Aquí puedes manejar la respuesta, por ejemplo, guardar el usuario en tu estado o redirigirlo
+
+      // Guardar el token de autenticación en el localStorage
+      localStorage.setItem(
+        "authToken",
+        response.user.stsTokenManager.accessToken
+      );
     } catch (error) {
       console.error("Registro fallido:", error);
       setAlertMessage("Error al registrar. Por favor, intenta nuevamente.");
@@ -128,6 +148,7 @@ const Register = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            autoComplete="username"
           />
         </Form.Group>
         <Form.Group controlId="password">
@@ -138,6 +159,7 @@ const Register = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            autoComplete="new-password"
           />
         </Form.Group>
         <Form.Group controlId="confirmPassword">
@@ -148,6 +170,7 @@ const Register = () => {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+            autoComplete="new-password"
           />
         </Form.Group>
         <Button
