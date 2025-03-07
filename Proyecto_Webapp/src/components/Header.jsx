@@ -3,8 +3,10 @@ import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FaShoppingCart, FaUser } from "react-icons/fa"; // Ícono de carrito
+import { useState } from "react";
 
 function Header({ carrito, usuario }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const totalItems = Object.values(carrito).reduce(
     (acc, item) => acc + item,
     0
@@ -17,7 +19,11 @@ function Header({ carrito, usuario }) {
         <h2>NFT MarketPlace</h2>
       </div>
 
-      <Nav className="justify-content-end">
+      <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+        ☰
+      </button>
+
+      <Nav className={`nav ${menuOpen ? "open" : ""}`}>
         <Nav.Item>
           <Link to="/">Inicio</Link>
         </Nav.Item>
@@ -33,7 +39,7 @@ function Header({ carrito, usuario }) {
         <Nav.Item>
           {usuario ? (
             <Nav.Item className="user-container">
-              <Link to="/usuario" >{usuario.Nombre}</Link>
+              <Link to="/usuario">{usuario.Nombre}</Link>
               <FaUser size={24} color="#ffffff" />
             </Nav.Item>
           ) : (
