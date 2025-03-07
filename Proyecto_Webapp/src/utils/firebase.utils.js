@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { getDatabase, ref, get, push, update } from "firebase/database";
+import { getDatabase, ref, set, get, push, update } from "firebase/database";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -27,14 +27,14 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const database = getDatabase(app);
 
 // Initialize Firebase Auth provider
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
   prompt: "select_account ",
 });
-export const auth = getAuth();
 export const signInWithGooglePopup = () => {
   return signInWithPopup(auth, provider);
 };
@@ -90,4 +90,26 @@ export const updatePedidoWithId = async (pedidoId) => {
   const db = getDatabase();
   const pedidoRef = ref(db, `Pedidos/${pedidoId}`);
   await update(pedidoRef, { id: pedidoId });
+};
+
+// Function to save user data in the Realtime Database
+export const saveUserData = async (userId, userData) => {
+  const userRef = ref(database, `Usuarios/${userId}`);
+  await set(userRef, userData);
+};
+
+export const isAuthenticated = () => {
+  const token = localStorage.getItem("authToken");
+  return token !== null;
+};
+
+export const getUserData = async (userId) => {
+  const userRef = ref(database, `Usuarios/${userId}`);
+  const snapshot = await get(userRef);
+  if (snapshot.exists()) {
+    return snapshot.val();
+  } else {
+    console.error("No user data available");
+    return null;
+  }
 };
