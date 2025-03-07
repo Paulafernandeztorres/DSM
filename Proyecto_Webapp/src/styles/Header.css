@@ -35,27 +35,38 @@
 }
 
 .nav a {
+  position: relative;
   text-decoration: none;
-  color: #ffffff; /* Gris claro */
+  color: #ffffff; /* Blanco */
   font-weight: normal;
   transition: color 0.2s ease-in-out;
   padding: 5px 10px;
   border-radius: 5px;
 }
 
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px; /* Ajusta la distancia de la línea al texto */
+  width: 100%;
+  height: 2px;
+  background-color: white; /* Color de la línea */
+  transform: scaleX(0); /* Inicialmente oculta */
+  transform-origin: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav a.active::after {
+  transform: scaleX(1); /* La línea aparece en el enlace activo */
+}
+
+.nav a:hover::after {
+  transform: scaleX(1); /* La línea aparece al hacer hover */
+}
+
 .nav a:hover {
-  color: #ffffff; /* Blanco al pasar el ratón */
-}
-
-.nav .dropdown-item {
-  color: #005b96; /* Azul oscuro para los ítems del desplegable */
-  background-color: #ffffff; /* Fondo blanco para los ítems */
-  transition: background-color 0.3s ease-in-out; /* Transición suave en el fondo */
-}
-
-.nav .dropdown-item:hover {
-  background-color: #0077cc; /* Azul suave de fondo cuando el ratón pasa por encima */
-  color: #ffffff; /* El texto cambia a blanco cuando el ratón pasa */
+  color: #ffffff; /* Mantiene el color al pasar el ratón */
 }
 
 .cart-count {
@@ -70,6 +81,26 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 10px;
-  right: 40px;
+  top: -7px;
+  right: -2px;
+}
+
+.user-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.user-container:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.user-name {
+  font-size: 16px;
 }

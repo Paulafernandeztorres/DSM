@@ -1,10 +1,11 @@
 import "../styles/Header.css";
 import { Nav } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-import { FaShoppingCart } from "react-icons/fa"; // Ícono de carrito
+import { FaShoppingCart, FaUser } from "react-icons/fa"; // Ícono de carrito
 
 function Header({ carrito, usuario }) {
+  const location = useLocation();
   const totalItems = Object.values(carrito).reduce(
     (acc, item) => acc + item,
     0
@@ -19,30 +20,31 @@ function Header({ carrito, usuario }) {
 
       <Nav className="justify-content-end">
         <Nav.Item>
-          <Link to="/">Inicio</Link>
+          <Link to="/" className={location.pathname === "/" ? "active" : ""}>Inicio</Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/contacto">Contacto</Link>
+          <Link to="/contacto" className={location.pathname === "/contacto" ? "active" : ""}>Contacto</Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/productos">Productos</Link>
+          <Link to="/productos" className={location.pathname === "/productos" ? "active" : ""}>Productos</Link>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/mis-nfts">Mis NFTs</Link>
+          <Link to="/mis-nfts" className={location.pathname === "/mis-nfts" ? "active" : ""}>Mis NFTs</Link>
         </Nav.Item>
         <Nav.Item>
           {usuario ? (
-            <Nav.Item>
-              <Link to="/usuario">{usuario.Nombre}</Link>
+            <Nav.Item className="user-container">
+              <Link to="/usuario" className={location.pathname === "/usuario" ? "active" : ""}>{usuario.Nombre}</Link>
+              <FaUser size={24} color="#ffffff" />
             </Nav.Item>
           ) : (
             <Nav.Item>
-              <Link to="/login">Login</Link>
+              <Link to="/login" className={location.pathname === "/login" ? "active" : ""}>Login</Link>
             </Nav.Item>
           )}
         </Nav.Item>
         <Nav.Item>
-          <Link to="/carrito">
+          <Link to="/carrito" className={location.pathname === "/carrito" ? "active" : ""}>
             <FaShoppingCart size={24} color="#ffffff" />
             <span className="cart-count">{totalItems}</span>
           </Link>
