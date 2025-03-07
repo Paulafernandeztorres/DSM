@@ -52,13 +52,14 @@
   width: 100%;
   height: 2px;
   background-color: white; /* Color de la línea */
-  transform: scaleX(0); /* Inicialmente oculta */
-  transform-origin: center;
-  transition: transform 0.3s ease-in-out;
+  transform: translateY(5px); /* Inicialmente oculta */
+  opacity: 0; /* Inicialmente invisible */
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .nav a:hover::after {
-  transform: scaleX(1); /* La línea aparece al hacer hover */
+  transform: translateY(0); /* La línea asciende al hacer hover */
+  opacity: 1; /* La línea aparece al hacer hover */
 }
 
 .nav a:hover {
