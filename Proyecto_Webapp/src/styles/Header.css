@@ -57,10 +57,6 @@
   transition: transform 0.3s ease-in-out;
 }
 
-.nav a.active::after {
-  transform: scaleX(1); /* La línea aparece en el enlace activo */
-}
-
 .nav a:hover::after {
   transform: scaleX(1); /* La línea aparece al hacer hover */
 }
