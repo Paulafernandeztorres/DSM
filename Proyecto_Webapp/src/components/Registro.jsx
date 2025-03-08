@@ -13,6 +13,7 @@ const Register = ({ setUsuario }) => {
     nombre: "",
     apellidos: "",
     direccion: "",
+    ciudad: "", // Nueva propiedad para la ciudad
     codigoPostal: "",
     telefono: "",
     email: "",
@@ -34,6 +35,7 @@ const Register = ({ setUsuario }) => {
       nombre,
       apellidos,
       direccion,
+      ciudad, // Nueva propiedad para la ciudad
       codigoPostal,
       telefono,
       email,
@@ -57,6 +59,7 @@ const Register = ({ setUsuario }) => {
         Nombre: nombre,
         Apellidos: apellidos,
         Direccion: direccion,
+        Ciudad: ciudad, 
         CodigoPostal: codigoPostal,
         Telefono: telefono,
         Correo: email,
@@ -122,6 +125,16 @@ const Register = ({ setUsuario }) => {
             type="text"
             name="direccion"
             value={formData.direccion}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="ciudad">
+          <Form.Label>Ciudad:</Form.Label>
+          <Form.Control
+            type="text"
+            name="ciudad"
+            value={formData.ciudad}
             onChange={handleChange}
             required
           />

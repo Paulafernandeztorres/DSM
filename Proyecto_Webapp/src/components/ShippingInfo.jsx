@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { createPedido, updatePedidoWithId } from "../utils/firebase.utils";
@@ -15,6 +15,17 @@ function ShippingInfo({
   const [ciudad, setCiudad] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
   const [telefono, setTelefono] = useState("");
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (userData) {
+      setNombre(userData.Nombre);
+      setDireccion(userData.Direccion);
+      setCiudad(userData.Ciudad);
+      setCodigoPostal(userData.CodigoPostal);
+      setTelefono(userData.Telefono);
+    }
+  }, [show]);
 
   const handleConfirmPedido = async () => {
     if (!nombre || !direccion || !ciudad || !codigoPostal || !telefono) {

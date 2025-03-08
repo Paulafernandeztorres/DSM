@@ -37,6 +37,9 @@ const Login = ({ setUsuario }) => {
       const userData = await getUserData(response.user.uid);
       setUsuario(userData);
 
+      // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
+      localStorage.setItem("userData", JSON.stringify(userData));
+
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -77,6 +80,7 @@ const Login = ({ setUsuario }) => {
           Nombre: nombre,
           Apellidos: "",
           Direccion: "",
+          Ciudad: "",
           CodigoPostal: "",
           Telefono: "",
           Correo: email,
@@ -90,6 +94,9 @@ const Login = ({ setUsuario }) => {
       } else {
         setUsuario(existingUser);
       }
+
+      // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
+      localStorage.setItem("userData", JSON.stringify(existingUser || userData));
 
       // Redirigir al usuario a la página principal o a otra página
       navigate("/");
