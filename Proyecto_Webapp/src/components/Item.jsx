@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Card, Button, Col, Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import { useState } from "react";
+import { Card, Button, Col, Modal } from "react-bootstrap";
+import PropTypes from "prop-types";
+import { FaPlus, FaMinus } from "react-icons/fa"; // Importar los iconos
 import "../styles/Item.css";
 
 function Item({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
@@ -19,9 +20,25 @@ function Item({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
             <Card.Title>{producto.nombre}</Card.Title>
             <Card.Text>{producto.precio}€</Card.Text>
             <div className="d-flex justify-content-between">
-              <Button variant="danger" onClick={(e) => { e.stopPropagation(); eliminarDelCarrito(producto.id); }}>-</Button>
+              <Button
+                variant="danger"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  eliminarDelCarrito(producto.id);
+                }}
+              >
+                <FaMinus /> {/* Icono de menos */}
+              </Button>
               <span>{cantidad}</span>
-              <Button variant="primary" onClick={(e) => { e.stopPropagation(); agregarAlCarrito(producto.id); }}>+</Button>
+              <Button
+                variant="primary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  agregarAlCarrito(producto.id);
+                }}
+              >
+                <FaPlus /> {/* Icono de más */}
+              </Button>
             </div>
           </Card.Body>
         </Card>
@@ -32,12 +49,24 @@ function Item({ producto, agregarAlCarrito, eliminarDelCarrito, carrito }) {
           <Modal.Title>{producto.nombre}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={producto.imagen} alt={producto.nombre} style={{ width: '100%', marginBottom: '20px' }} />
-          <p><strong>Precio:</strong> €{producto.precio}</p>
-          <p><strong>Descripción:</strong> {producto.descripcion}</p>
+          <img
+            src={producto.imagen}
+            alt={producto.nombre}
+            style={{ width: "100%", marginBottom: "20px" }}
+          />
+          <p>
+            <strong>Precio:</strong> €{producto.precio}
+          </p>
+          <p>
+            <strong>Descripción:</strong> {producto.descripcion}
+          </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal} className="modal-close-button">
+          <Button
+            variant="secondary"
+            onClick={handleCloseModal}
+            className="modal-close-button"
+          >
             Cerrar
           </Button>
         </Modal.Footer>
