@@ -24,7 +24,7 @@ function Contacto() {
   };
 
   return (
-    <Container className="contacto-container">
+    <Container className="contacto-container mt-5">
       <h2>Contacto</h2>
       <p>
         Si tienes alguna pregunta o necesitas más información, no dudes en
