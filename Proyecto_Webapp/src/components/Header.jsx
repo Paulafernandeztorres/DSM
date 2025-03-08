@@ -3,7 +3,7 @@ import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FaShoppingCart, FaUser } from "react-icons/fa"; // Ícono de carrito
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Header({ carrito, usuario }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,6 +12,20 @@ function Header({ carrito, usuario }) {
     0
   );
 
+  // Cerrar el menú cuando la pantalla se agranda
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1000) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <header className="header">
       <div className="header-title-container">
@@ -19,11 +33,17 @@ function Header({ carrito, usuario }) {
         <h2>NFT MarketPlace</h2>
       </div>
 
-      <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+      <button
+        className="menu-toggle"
+        onMouseEnter={() => setMenuOpen(true)}
+      >
         ☰
       </button>
 
-      <Nav className={`nav ${menuOpen ? "open" : ""}`}>
+      <Nav
+        className={`nav ${menuOpen ? "open" : ""}`}
+        onMouseLeave={() => setMenuOpen(false)}
+      >
         <Nav.Item>
           <Link to="/">Inicio</Link>
         </Nav.Item>
@@ -58,6 +78,7 @@ function Header({ carrito, usuario }) {
     </header>
   );
 }
+
 Header.propTypes = {
   carrito: PropTypes.object.isRequired,
   usuario: PropTypes.object,

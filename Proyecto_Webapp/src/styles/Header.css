@@ -5,6 +5,8 @@
   display: flex;
   justify-content: space-between; /* Esto sigue separando los elementos, pero vamos a organizarlo mejor */
   align-items: center;
+  position: relative; /* Añadir posición relativa */
+  z-index: 1000; /* Asegurar que el header esté por encima de otros elementos */
 }
 
 .header-title-container {
@@ -36,11 +38,6 @@
 .nav {
   display: flex;
   align-items: center;
-}
-
-.nav.open {
-  display: flex;
-  flex-direction: column;
 }
 
 .nav .nav-item {
@@ -121,18 +118,18 @@
   }
 
   .nav {
-    display: none;
     flex-direction: column;
     width: 100%;
     background-color: #7795aa;
     position: absolute;
     top: 60px;
     left: 0;
-    padding: 10px 0;
+    max-height: 0;
+    overflow: hidden;
   }
 
   .nav.open {
-    display: flex;
+    max-height: 600px; /* Ajusta este valor según sea necesario */
   }
 
   .nav .nav-item {
