@@ -1,6 +1,6 @@
 import "../styles/Header.css";
 import { Nav } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FaShoppingCart, FaUser } from "react-icons/fa"; // Ícono de carrito
 import { useState, useEffect } from "react";
@@ -45,34 +45,46 @@ function Header({ carrito, usuario }) {
         onMouseLeave={() => setMenuOpen(false)}
       >
         <Nav.Item>
-          <Link to="/">Inicio</Link>
+          <NavLink to="/" exact className="nav-item" activeClassName="active">
+            Inicio
+          </NavLink>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/contacto">Contacto</Link>
+          <NavLink to="/contacto" className="nav-item" activeClassName="active">
+            Contacto
+          </NavLink>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/productos">Productos</Link>
+          <NavLink to="/productos" className="nav-item" activeClassName="active">
+            Productos
+          </NavLink>
         </Nav.Item>
         <Nav.Item>
-          <Link to="/mis-nfts">Mis NFTs</Link>
+          <NavLink to="/mis-nfts" className="nav-item" activeClassName="active">
+            Mis NFTs
+          </NavLink>
         </Nav.Item>
         <Nav.Item>
           {usuario ? (
             <Nav.Item className="user-container">
-              <Link to="/usuario">{usuario.Nombre}</Link>
+              <NavLink to="/usuario" className="nav-item" activeClassName="active">
+                {usuario.Nombre}
+              </NavLink>
               <FaUser size={24} color="#ffffff" />
             </Nav.Item>
           ) : (
             <Nav.Item>
-              <Link to="/login">Login</Link>
+              <NavLink to="/login" className="nav-item" activeClassName="active">
+                Login
+              </NavLink>
             </Nav.Item>
           )}
         </Nav.Item>
         <Nav.Item>
-          <Link to="/carrito">
+          <NavLink to="/carrito" className="nav-item" activeClassName="active">
             <FaShoppingCart size={24} color="#ffffff" />
             <span className="cart-count">{totalItems}</span>
-          </Link>
+          </NavLink>
         </Nav.Item>
       </Nav>
     </header>
