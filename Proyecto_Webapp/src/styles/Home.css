@@ -6,9 +6,9 @@
 .home-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start; 
+  align-items: flex-start;
   height: 100vh;
-  background-color: #e0e7ef; 
+  background-color: #e0e7ef;
   padding: 20px;
 }
 
@@ -63,4 +63,20 @@
   max-width: 100%;
   height: auto;
   border-radius: 0 10px 10px 0;
+}
+
+@media (max-width: 1000px) {
+  .home-content {
+    flex-direction: column;
+  }
+
+  .home-image {
+    order: 2;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .home-text {
+    order: 1;
+    border-radius: 10px 10px 0 0;
+  }
 }
