@@ -39,3 +39,9 @@
     display: inline-block;
   }
 }
+
+.modal-footer .btn {
+  width: 140px;
+  height: 45px;
+  font-size: 16px;
+}

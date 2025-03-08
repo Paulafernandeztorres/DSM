@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 import "../styles/Usuario.css";
 
 const Usuario = ({ usuario, onLogout }) => {
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
     console.log("Logging out...");
@@ -15,6 +17,9 @@ const Usuario = ({ usuario, onLogout }) => {
     onLogout(); // Call the onLogout function passed as a prop
     navigate("/login");
   };
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   if (!usuario) {
     return <p>Cargando...</p>;
@@ -30,7 +35,7 @@ const Usuario = ({ usuario, onLogout }) => {
               <Button
                 variant="danger"
                 size="md"
-                onClick={handleLogout}
+                onClick={handleShowModal}
                 className="w-25 logout-button"
               >
                 <span className="logout-text">Cerrar Sesión</span>
@@ -60,6 +65,21 @@ const Usuario = ({ usuario, onLogout }) => {
           </div>
         </Col>
       </Row>
+
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar Cierre de Sesión</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>¿Estás seguro de que quieres cerrar la sesión?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleLogout}>
+            Cerrar Sesión
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
