@@ -27,12 +27,8 @@ function ShippingInfo({
     }
   }, [show]);
 
-  const handleConfirmPedido = async () => {
-    if (!nombre || !direccion || !ciudad || !codigoPostal || !telefono) {
-      alert("Por favor, completa todos los campos.");
-      return;
-    }
-
+  const handleConfirmPedido = async (event) => {
+    event.preventDefault();
     const pedido = {
       Nombre_completo: nombre,
       Direccion: direccion,
@@ -49,7 +45,10 @@ function ShippingInfo({
     };
 
     try {
-      const pedidoId = await createPedido(pedido);
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      const userId = userData ? userData.id : null;
+
+      const pedidoId = await createPedido(pedido, userId);
       await updatePedidoWithId(pedidoId);
       handleClose();
       alert("Pedido realizado con éxito");
@@ -65,7 +64,7 @@ function ShippingInfo({
         <Modal.Title>Información de Envío</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
+        <Form onSubmit={handleConfirmPedido}>
           <Form.Group controlId="formNombre">
             <Form.Label>Nombre</Form.Label>
             <Form.Control
@@ -73,6 +72,7 @@ function ShippingInfo({
               placeholder="Introduce tu nombre"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
+              required
             />
           </Form.Group>
           <Form.Group controlId="formDireccion" className="mt-3">
@@ -82,6 +82,7 @@ function ShippingInfo({
               placeholder="Introduce tu dirección"
               value={direccion}
               onChange={(e) => setDireccion(e.target.value)}
+              required
             />
           </Form.Group>
           <Form.Group controlId="formCiudad" className="mt-3">
@@ -91,6 +92,7 @@ function ShippingInfo({
               placeholder="Introduce tu ciudad"
               value={ciudad}
               onChange={(e) => setCiudad(e.target.value)}
+              required
             />
           </Form.Group>
           <Form.Group controlId="formCodigoPostal" className="mt-3">
@@ -100,6 +102,7 @@ function ShippingInfo({
               placeholder="Introduce tu código postal"
               value={codigoPostal}
               onChange={(e) => setCodigoPostal(e.target.value)}
+              required
             />
           </Form.Group>
           <Form.Group controlId="formTelefono" className="mt-3">
@@ -109,26 +112,28 @@ function ShippingInfo({
               placeholder="Introduce tu teléfono"
               value={telefono}
               onChange={(e) => setTelefono(e.target.value)}
+              required
             />
           </Form.Group>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={handleClose}
+              className="modal-button"
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="primary"
+              type="submit"
+              className="modal-button modal-confirm-button"
+              style={{ width: "40%" }} 
+            >
+              Confirmar Pedido
+            </Button>
+          </Modal.Footer>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={handleClose}
-          className="modal-button"
-        >
-          Cancelar
-        </Button>
-        <Button
-          variant="primary"
-          onClick={handleConfirmPedido}
-          className="modal-button modal-confirm-button"
-        >
-          Confirmar Pedido
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 }
