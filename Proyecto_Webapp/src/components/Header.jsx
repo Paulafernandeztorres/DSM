@@ -33,10 +33,7 @@ function Header({ carrito, usuario }) {
         <h2>NFT MarketPlace</h2>
       </div>
 
-      <button
-        className="menu-toggle"
-        onMouseEnter={() => setMenuOpen(true)}
-      >
+      <button className="menu-toggle" onMouseEnter={() => setMenuOpen(true)}>
         ☰
       </button>
 
@@ -55,7 +52,11 @@ function Header({ carrito, usuario }) {
           </NavLink>
         </Nav.Item>
         <Nav.Item>
-          <NavLink to="/productos" className="nav-item" activeClassName="active">
+          <NavLink
+            to="/productos"
+            className="nav-item"
+            activeClassName="active"
+          >
             Productos
           </NavLink>
         </Nav.Item>
@@ -67,14 +68,22 @@ function Header({ carrito, usuario }) {
         <Nav.Item>
           {usuario ? (
             <Nav.Item className="user-container">
-              <NavLink to="/usuario" className="nav-item" activeClassName="active">
+              <NavLink
+                to="/usuario"
+                className="nav-item user-link"
+                activeClassName="active"
+              >
                 {usuario.Nombre}
               </NavLink>
               <FaUser size={24} color="#ffffff" />
             </Nav.Item>
           ) : (
             <Nav.Item>
-              <NavLink to="/login" className="nav-item" activeClassName="active">
+              <NavLink
+                to="/login"
+                className="nav-item"
+                activeClassName="active"
+              >
                 Login
               </NavLink>
             </Nav.Item>
