@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Container, Button, ListGroup, Image, Modal } from "react-bootstrap";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom"; // Importa useNavigate
 import "../styles/Carrito.css";
 import OrderDetails from "./OrderDetails";
 import ShippingInfo from "./ShippingInfo";
@@ -16,7 +17,9 @@ function Carrito({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [showShippingInfo, setShowShippingInfo] = useState(false);
+  const [showLoginErrorModal, setShowLoginErrorModal] = useState(false); // Nuevo estado para el modal de error de inicio de sesión
   const [productoAEliminar, setProductoAEliminar] = useState(null);
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   const handleShowDeleteModal = (productoId) => {
     setProductoAEliminar(productoId);
@@ -50,6 +53,14 @@ function Carrito({
     setShowShippingInfo(false);
   };
 
+  const handleShowLoginErrorModal = () => {
+    setShowLoginErrorModal(true);
+  };
+
+  const handleCloseLoginErrorModal = () => {
+    setShowLoginErrorModal(false);
+  };
+
   const productosEnCarrito = productosFirebase.filter(
     (producto) => carrito[producto.id]
   );
@@ -59,9 +70,16 @@ function Carrito({
   }, 0);
 
   const handleLimpiarCarrito = () => {
-    // Implementa la lógica para limpiar el carrito
-    // Por ejemplo, puedes llamar a una función pasada como prop
     limpiarCarrito();
+  };
+
+  const handleRealizarCompra = () => {
+    const authToken = localStorage.getItem("authToken");
+    if (authToken) {
+      handleShowOrderDetails();
+    } else {
+      handleShowLoginErrorModal();
+    }
   };
 
   return (
@@ -159,7 +177,7 @@ function Carrito({
       </Modal>
 
       {productosEnCarrito.length > 0 && (
-        <Button className="buy-button" onClick={handleShowOrderDetails}>
+        <Button className="buy-button" onClick={handleRealizarCompra}>
           Realizar compra
         </Button>
       )}
@@ -179,8 +197,31 @@ function Carrito({
         carrito={carrito}
         productosEnCarrito={productosEnCarrito}
         totalCost={totalCost}
-        limpiarCarrito={handleLimpiarCarrito} // Pasa la función limpiarCarrito aquí
+        limpiarCarrito={handleLimpiarCarrito}
       />
+
+      <Modal show={showLoginErrorModal} onHide={handleCloseLoginErrorModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error de inicio de sesión</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Debes iniciar sesión para realizar una compra.</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={handleCloseLoginErrorModal}
+            className="modal-button"
+          >
+            Cancelar
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => navigate("/Login")}
+            className="modal-button"
+          >
+            Iniciar sesión
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }
@@ -191,7 +232,7 @@ Carrito.propTypes = {
   agregarAlCarrito: PropTypes.func.isRequired,
   eliminarDelCarrito: PropTypes.func.isRequired,
   eliminarProductoDelCarrito: PropTypes.func.isRequired,
-  limpiarCarrito: PropTypes.func.isRequired, // Añade la propType para limpiarCarrito
+  limpiarCarrito: PropTypes.func.isRequired,
 };
 
 export default Carrito;
