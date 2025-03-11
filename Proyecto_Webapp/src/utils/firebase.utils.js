@@ -113,3 +113,10 @@ export const getUserData = async (userId) => {
     return null;
   }
 };
+
+// Function to add a pedido to the user's "Comprados" section
+export const addPedidoToUserComprados = async (userId, pedido) => {
+  const userCompradosRef = ref(database, `Usuarios/${userId}/Comprados`);
+  const newCompradoRef = await push(userCompradosRef, pedido);
+  return newCompradoRef.key;
+};

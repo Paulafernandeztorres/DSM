@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types";
-import { createPedido, updatePedidoWithId } from "../utils/firebase.utils";
+import { addPedidoToUserComprados } from "../utils/firebase.utils";
 
 function ShippingInfo({
   show,
@@ -36,6 +36,7 @@ function ShippingInfo({
       Codigo_postal: codigoPostal,
       Telefono: telefono,
       Productos: productosEnCarrito.map((producto) => ({
+        id: producto.id,
         nombre: producto.nombre,
         cantidad: carrito[producto.id],
         precio_unitario: producto.precio,
@@ -48,8 +49,9 @@ function ShippingInfo({
       const userData = JSON.parse(localStorage.getItem("userData"));
       const userId = userData ? userData.id : null;
 
-      const pedidoId = await createPedido(pedido, userId);
-      await updatePedidoWithId(pedidoId);
+      if (userId) {
+        await addPedidoToUserComprados(userId, pedido);
+      }
       handleClose();
       alert("Pedido realizado con éxito");
     } catch (error) {
