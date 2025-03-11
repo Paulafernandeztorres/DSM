@@ -124,3 +124,22 @@ export const addPedidoToUserComprados = async (userId, pedido) => {
   const newCompradoRef = await push(userCompradosRef, newPedido);
   return newCompradoRef.key;
 };
+
+export const contarProductosComprados = (comprados) => {
+  const productosContados = {};
+
+  for (const pedidoId in comprados) {
+    const pedido = comprados[pedidoId];
+    const productos = pedido.Productos;
+
+    productos.forEach((producto) => {
+      const productoId = producto.id;
+      if (!productosContados[productoId]) {
+        productosContados[productoId] = 0;
+      }
+      productosContados[productoId] += producto.cantidad;
+    });
+  }
+
+  return productosContados;
+};
