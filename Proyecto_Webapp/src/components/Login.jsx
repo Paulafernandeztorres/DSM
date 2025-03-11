@@ -38,7 +38,10 @@ const Login = ({ setUsuario }) => {
       setUsuario(userData);
 
       // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
-      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("userData", JSON.stringify({ ...userData, id: response.user.uid }));
+
+      // Update header with user's name
+      document.getElementById("header-username").innerText = userData.Nombre;
 
       navigate("/");
     } catch (error) {
@@ -96,7 +99,10 @@ const Login = ({ setUsuario }) => {
       }
 
       // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
-      localStorage.setItem("userData", JSON.stringify(existingUser || userData));
+      localStorage.setItem("userData", JSON.stringify({ ...existingUser, id: response.user.uid }));
+
+      // Update header with user's name
+      document.getElementById("header-username").innerText = existingUser ? existingUser.Nombre : userData.Nombre;
 
       // Redirigir al usuario a la página principal o a otra página
       navigate("/");

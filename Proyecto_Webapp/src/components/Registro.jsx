@@ -77,6 +77,9 @@ const Register = ({ setUsuario }) => {
         response.user.stsTokenManager.accessToken
       );
 
+      // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
+      localStorage.setItem("userData", JSON.stringify({ ...userData, id: userId }));
+
       setUsuario(userData);
       navigate("/");
     } catch (error) {
