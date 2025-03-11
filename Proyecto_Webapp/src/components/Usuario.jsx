@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button, Modal, Card } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
