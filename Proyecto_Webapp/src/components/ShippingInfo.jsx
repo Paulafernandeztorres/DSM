@@ -136,7 +136,7 @@ function ShippingInfo({
                 type="submit"
                 className="modal-button modal-confirm-button"
               >
-                Confirmar Pedido
+                Confirmar
               </Button>
             </Modal.Footer>
           </Form>

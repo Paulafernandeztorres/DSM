@@ -28,10 +28,10 @@ function ThankYouModal({ show, handleClose }) {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="primary" onClick={handleNewOrder}>
-          Realizar nuevo pedido
+          Nuevo pedido
         </Button>
         <Button variant="secondary" onClick={handleViewOrders}>
-          Ver mis compras
+          Mis compras
         </Button>
       </Modal.Footer>
     </Modal>
