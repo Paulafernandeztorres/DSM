@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button, Modal } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import "../styles/Usuario.css";
+import PedidosRealizados from "./PedidosRealizados";
 
 const Usuario = ({ usuario, onLogout }) => {
   const navigate = useNavigate();
@@ -21,12 +22,16 @@ const Usuario = ({ usuario, onLogout }) => {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
+  console.log("Comprados:", usuario.Comprados);
+
+  const pedidosArray = usuario.Comprados ? Object.values(usuario.Comprados) : [];
+
   if (!usuario) {
     return <p>Cargando...</p>;
   }
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-2">
       <Row className="justify-content-center">
         <Col md={8}>
           <div className="p-4 border rounded shadow-sm container-usuario">
@@ -66,6 +71,12 @@ const Usuario = ({ usuario, onLogout }) => {
         </Col>
       </Row>
 
+      <Row className="justify-content-center mt-4">
+        <Col md={8}>
+          <PedidosRealizados pedidos={pedidosArray} />
+        </Col>
+      </Row>
+
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Cierre de Sesión</Modal.Title>
@@ -92,6 +103,25 @@ Usuario.propTypes = {
     CodigoPostal: PropTypes.string.isRequired,
     Telefono: PropTypes.string.isRequired,
     Correo: PropTypes.string.isRequired,
+    Comprados: PropTypes.arrayOf(
+      PropTypes.shape({
+        Nombre_completo: PropTypes.string.isRequired,
+        Direccion: PropTypes.string.isRequired,
+        Ciudad: PropTypes.string.isRequired,
+        Codigo_postal: PropTypes.string.isRequired,
+        Telefono: PropTypes.string.isRequired,
+        Total: PropTypes.number.isRequired,
+        Productos: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            nombre: PropTypes.string.isRequired,
+            cantidad: PropTypes.number.isRequired,
+            precio_unitario: PropTypes.number.isRequired,
+            total: PropTypes.number.isRequired,
+          })
+        ).isRequired,
+      })
+    ).isRequired,
   }).isRequired,
   onLogout: PropTypes.func.isRequired,
 };
