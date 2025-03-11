@@ -41,7 +41,7 @@ const Login = ({ setUsuario }) => {
       localStorage.setItem("userData", JSON.stringify({ ...userData, id: response.user.uid }));
 
       // Update header with user's name
-      document.getElementById("header-username").innerText = userData.Nombre;
+      setUsuario((prevUser) => ({ ...prevUser, Nombre: userData.Nombre }));
 
       navigate("/");
     } catch (error) {
@@ -98,11 +98,23 @@ const Login = ({ setUsuario }) => {
         setUsuario(existingUser);
       }
 
+      const userData = existingUser || {
+        Nombre: response.user.displayName,
+        Apellidos: "",
+        Direccion: "",
+        Ciudad: "",
+        CodigoPostal: "",
+        Telefono: "",
+        Correo: response.user.email,
+        Comprados: [],
+        Creados: [],
+      };
+
       // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
-      localStorage.setItem("userData", JSON.stringify({ ...existingUser, id: response.user.uid }));
+      localStorage.setItem("userData", JSON.stringify({ ...userData, id: response.user.uid }));
 
       // Update header with user's name
-      document.getElementById("header-username").innerText = existingUser ? existingUser.Nombre : userData.Nombre;
+      setUsuario((prevUser) => ({ ...prevUser, Nombre: userData.Nombre }));
 
       // Redirigir al usuario a la página principal o a otra página
       navigate("/");
