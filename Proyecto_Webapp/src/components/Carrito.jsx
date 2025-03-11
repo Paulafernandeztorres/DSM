@@ -1,11 +1,18 @@
-import { useState } from 'react';
-import { Container, Button, ListGroup, Image, Modal } from 'react-bootstrap';
-import PropTypes from 'prop-types';
-import '../styles/Carrito.css';
-import OrderDetails from './OrderDetails';
-import ShippingInfo from './ShippingInfo';
+import { useState } from "react";
+import { Container, Button, ListGroup, Image, Modal } from "react-bootstrap";
+import PropTypes from "prop-types";
+import "../styles/Carrito.css";
+import OrderDetails from "./OrderDetails";
+import ShippingInfo from "./ShippingInfo";
 
-function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarrito, eliminarProductoDelCarrito }) {
+function Carrito({
+  carrito,
+  productosFirebase,
+  agregarAlCarrito,
+  eliminarDelCarrito,
+  eliminarProductoDelCarrito,
+  limpiarCarrito,
+}) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [showShippingInfo, setShowShippingInfo] = useState(false);
@@ -43,11 +50,19 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
     setShowShippingInfo(false);
   };
 
-  const productosEnCarrito = productosFirebase.filter(producto => carrito[producto.id]);
+  const productosEnCarrito = productosFirebase.filter(
+    (producto) => carrito[producto.id]
+  );
 
   const totalCost = productosEnCarrito.reduce((total, producto) => {
     return total + producto.precio * carrito[producto.id];
   }, 0);
+
+  const handleLimpiarCarrito = () => {
+    // Implementa la lógica para limpiar el carrito
+    // Por ejemplo, puedes llamar a una función pasada como prop
+    limpiarCarrito();
+  };
 
   return (
     <Container className="carrito-container">
@@ -60,21 +75,52 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
       ) : (
         <>
           <ListGroup>
-            {productosEnCarrito.map(producto => (
-              <ListGroup.Item key={producto.id} className="d-flex align-items-center">
-                <Image src={producto.imagen} rounded style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
-                <span style={{ flex: 2, marginLeft: '15px' }}>{producto.nombre}</span>
-                <div className="d-flex align-items-center justify-content-center" style={{ flex: 1 }}>
-                  <Button variant="danger" onClick={() => eliminarDelCarrito(producto.id)}>-</Button>
-                  <span className="product-quantity" style={{ margin: '0 10px', textAlign: 'center' }}>{carrito[producto.id]}</span>
-                  <Button variant="primary" onClick={() => agregarAlCarrito(producto.id)}>+</Button>
+            {productosEnCarrito.map((producto) => (
+              <ListGroup.Item
+                key={producto.id}
+                className="d-flex align-items-center"
+              >
+                <Image
+                  src={producto.imagen}
+                  rounded
+                  style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                />
+                <span style={{ flex: 2, marginLeft: "15px" }}>
+                  {producto.nombre}
+                </span>
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ flex: 1 }}
+                >
+                  <Button
+                    variant="danger"
+                    onClick={() => eliminarDelCarrito(producto.id)}
+                  >
+                    -
+                  </Button>
+                  <span
+                    className="product-quantity"
+                    style={{ margin: "0 10px", textAlign: "center" }}
+                  >
+                    {carrito[producto.id]}
+                  </span>
+                  <Button
+                    variant="primary"
+                    onClick={() => agregarAlCarrito(producto.id)}
+                  >
+                    +
+                  </Button>
                 </div>
-                <span style={{ flex: 1, textAlign: 'right', marginRight: '20px' }}>€{(producto.precio * carrito[producto.id]).toFixed(2)}</span>
-                <Button 
-                  variant="danger" 
-                  onClick={() => handleShowDeleteModal(producto.id)} 
+                <span
+                  style={{ flex: 1, textAlign: "right", marginRight: "20px" }}
+                >
+                  €{(producto.precio * carrito[producto.id]).toFixed(2)}
+                </span>
+                <Button
+                  variant="danger"
+                  onClick={() => handleShowDeleteModal(producto.id)}
                   className="delete-button"
-                  style={{ marginLeft: 'auto' }}
+                  style={{ marginLeft: "auto" }}
                 >
                   Eliminar
                 </Button>
@@ -95,17 +141,27 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
           ¿Estás seguro de que deseas eliminar este producto del carrito?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteModal} className="modal-button">
+          <Button
+            variant="secondary"
+            onClick={handleCloseDeleteModal}
+            className="modal-button"
+          >
             Cancelar
           </Button>
-          <Button variant="danger" onClick={handleConfirmDelete} className="modal-button">
+          <Button
+            variant="danger"
+            onClick={handleConfirmDelete}
+            className="modal-button"
+          >
             Eliminar
           </Button>
         </Modal.Footer>
       </Modal>
 
       {productosEnCarrito.length > 0 && (
-        <Button className="buy-button" onClick={handleShowOrderDetails}>Realizar compra</Button>
+        <Button className="buy-button" onClick={handleShowOrderDetails}>
+          Realizar compra
+        </Button>
       )}
 
       <OrderDetails
@@ -123,6 +179,7 @@ function Carrito({ carrito, productosFirebase, agregarAlCarrito, eliminarDelCarr
         carrito={carrito}
         productosEnCarrito={productosEnCarrito}
         totalCost={totalCost}
+        limpiarCarrito={handleLimpiarCarrito} // Pasa la función limpiarCarrito aquí
       />
     </Container>
   );
@@ -134,6 +191,7 @@ Carrito.propTypes = {
   agregarAlCarrito: PropTypes.func.isRequired,
   eliminarDelCarrito: PropTypes.func.isRequired,
   eliminarProductoDelCarrito: PropTypes.func.isRequired,
+  limpiarCarrito: PropTypes.func.isRequired, // Añade la propType para limpiarCarrito
 };
 
 export default Carrito;

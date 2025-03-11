@@ -105,6 +105,7 @@ function App() {
               agregarAlCarrito={agregarAlCarrito}
               eliminarDelCarrito={eliminarDelCarrito}
               eliminarProductoDelCarrito={eliminarProductoDelCarrito}
+              limpiarCarrito={() => setCarrito({})}
             />
           }
         />

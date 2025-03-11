@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { addPedidoToUserComprados } from "../utils/firebase.utils";
+import ThankYouModal from "./ThankYouModal";
 
 function ShippingInfo({
   show,
@@ -9,12 +10,14 @@ function ShippingInfo({
   carrito,
   productosEnCarrito,
   totalCost,
+  limpiarCarrito, // Añadir esta prop
 }) {
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
   const [ciudad, setCiudad] = useState("");
   const [codigoPostal, setCodigoPostal] = useState("");
   const [telefono, setTelefono] = useState("");
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -53,8 +56,9 @@ function ShippingInfo({
         await addPedidoToUserComprados(userId, pedido);
       }
       localStorage.removeItem("cart"); // Clear the cart from local storage
+      limpiarCarrito(); // Llama a la función limpiarCarrito para resetear el estado del carrito
       handleClose();
-      alert("Pedido realizado con éxito");
+      setShowThankYouModal(true);
     } catch (error) {
       console.error("Error al crear el pedido:", error);
       alert("Error al realizar el pedido. Por favor, intenta nuevamente.");
@@ -62,82 +66,88 @@ function ShippingInfo({
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Información de Envío</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleConfirmPedido}>
-          <Form.Group controlId="formNombre">
-            <Form.Label>Nombre</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Introduce tu nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formDireccion" className="mt-3">
-            <Form.Label>Dirección</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Introduce tu dirección"
-              value={direccion}
-              onChange={(e) => setDireccion(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formCiudad" className="mt-3">
-            <Form.Label>Ciudad</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Introduce tu ciudad"
-              value={ciudad}
-              onChange={(e) => setCiudad(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formCodigoPostal" className="mt-3">
-            <Form.Label>Código Postal</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Introduce tu código postal"
-              value={codigoPostal}
-              onChange={(e) => setCodigoPostal(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formTelefono" className="mt-3">
-            <Form.Label>Teléfono</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Introduce tu teléfono"
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Modal.Footer>
-            <Button
-              variant="secondary"
-              onClick={handleClose}
-              className="modal-button"
-            >
-              Cancelar
-            </Button>
-            <Button
-              variant="primary"
-              type="submit"
-              className="modal-button modal-confirm-button"
-              style={{ width: "40%" }} 
-            >
-              Confirmar Pedido
-            </Button>
-          </Modal.Footer>
-        </Form>
-      </Modal.Body>
-    </Modal>
+    <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información de Envío</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleConfirmPedido}>
+            <Form.Group controlId="formNombre">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Introduce tu nombre"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formDireccion" className="mt-3">
+              <Form.Label>Dirección</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Introduce tu dirección"
+                value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formCiudad" className="mt-3">
+              <Form.Label>Ciudad</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Introduce tu ciudad"
+                value={ciudad}
+                onChange={(e) => setCiudad(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formCodigoPostal" className="mt-3">
+              <Form.Label>Código Postal</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Introduce tu código postal"
+                value={codigoPostal}
+                onChange={(e) => setCodigoPostal(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formTelefono" className="mt-3">
+              <Form.Label>Teléfono</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Introduce tu teléfono"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={handleClose}
+                className="modal-button"
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="primary"
+                type="submit"
+                className="modal-button modal-confirm-button"
+              >
+                Confirmar Pedido
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      <ThankYouModal
+        show={showThankYouModal}
+        handleClose={() => setShowThankYouModal(false)}
+      />
+    </>
   );
 }
 
@@ -147,6 +157,7 @@ ShippingInfo.propTypes = {
   carrito: PropTypes.object.isRequired,
   productosEnCarrito: PropTypes.array.isRequired,
   totalCost: PropTypes.number.isRequired,
+  limpiarCarrito: PropTypes.func.isRequired, // Añade la propType para limpiarCarrito
 };
 
 export default ShippingInfo;
