@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import Registro from "./components/Registro";
 import Contacto from "./components/Contacto";
 import Usuario from "./components/Usuario";
+import MisNFT from "./components/misNFT.jsx";
 import { getProductos, getUserData } from "./utils/firebase.utils";
 
 function App() {
@@ -80,6 +81,12 @@ function App() {
       <Routes className="content">
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login setUsuario={setUsuario} />} />
+        <Route
+          path="/mis-nfts"
+          element={
+            <MisNFT usuario={usuario} productosFirebase={productosFirebase} />
+          }
+        />
         <Route
           path="/registro"
           element={<Registro setUsuario={setUsuario} />}
