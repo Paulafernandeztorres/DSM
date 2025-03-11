@@ -52,6 +52,7 @@ function ShippingInfo({
       if (userId) {
         await addPedidoToUserComprados(userId, pedido);
       }
+      localStorage.removeItem("cart"); // Clear the cart from local storage
       handleClose();
       alert("Pedido realizado con éxito");
     } catch (error) {
