@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { Container, Form, Button, Alert } from "react-bootstrap";
+import { Container, Form, Button, Alert, CloseButton } from "react-bootstrap";
 import {
   createAuthUserWithEmailAndPassword,
   saveUserData,
@@ -13,7 +13,7 @@ const Register = ({ setUsuario }) => {
     nombre: "",
     apellidos: "",
     direccion: "",
-    ciudad: "", // Nueva propiedad para la ciudad
+    ciudad: "",
     codigoPostal: "",
     telefono: "",
     email: "",
@@ -35,7 +35,7 @@ const Register = ({ setUsuario }) => {
       nombre,
       apellidos,
       direccion,
-      ciudad, // Nueva propiedad para la ciudad
+      ciudad,
       codigoPostal,
       telefono,
       email,
@@ -59,7 +59,7 @@ const Register = ({ setUsuario }) => {
         Nombre: nombre,
         Apellidos: apellidos,
         Direccion: direccion,
-        Ciudad: ciudad, 
+        Ciudad: ciudad,
         CodigoPostal: codigoPostal,
         Telefono: telefono,
         Correo: email,
@@ -78,7 +78,10 @@ const Register = ({ setUsuario }) => {
       );
 
       // Guardar los datos del usuario en el localStorage para auto-llenar el ShippingInfo
-      localStorage.setItem("userData", JSON.stringify({ ...userData, id: userId }));
+      localStorage.setItem(
+        "userData",
+        JSON.stringify({ ...userData, id: userId })
+      );
 
       setUsuario(userData);
       navigate("/");
@@ -89,9 +92,16 @@ const Register = ({ setUsuario }) => {
     }
   };
 
+  const handleClose = () => {
+    navigate("/login");
+  };
+
   return (
     <Container className="register-container">
-      <h2 className="text-center">Registro</h2>
+      <div className="register-header">
+        <h2 className="text-registro">Registro</h2>
+        <CloseButton onClick={handleClose} className="close-button" />
+      </div>
       {alertMessage && (
         <Alert
           variant={alertVariant}
@@ -198,7 +208,7 @@ const Register = ({ setUsuario }) => {
         <Button
           variant="primary"
           type="submit"
-          className="register-button w-100 mt-3"
+          className="register-button w-100 mt-3 m-0"
         >
           Registrarse
         </Button>
@@ -206,6 +216,7 @@ const Register = ({ setUsuario }) => {
     </Container>
   );
 };
+
 Register.propTypes = {
   setUsuario: PropTypes.func.isRequired,
 };

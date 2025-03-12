@@ -1,6 +1,7 @@
 import { Modal, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import "../styles/MisNFT.css"; // Importar el archivo CSS
 
 function ThankYouModal({ show, handleClose }) {
   const navigate = useNavigate();
@@ -27,7 +28,11 @@ function ThankYouModal({ show, handleClose }) {
         </p>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={handleNewOrder}>
+        <Button
+          variant="primary"
+          onClick={handleNewOrder}
+          className="inicio-button"
+        >
           Nuevo pedido
         </Button>
         <Button variant="secondary" onClick={handleViewOrders}>
