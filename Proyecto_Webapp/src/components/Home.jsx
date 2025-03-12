@@ -17,7 +17,7 @@ function Home() {
             En nuestra tienda encontrarás una amplia variedad de NFTs para
             coleccionar. ¡No te quedes sin el tuyo!
           </p>
-          <button className="btn btn-primary" onClick={handleVerMasClick}>Ver más</button>
+          <button className="btn btn-primary m-0" onClick={handleVerMasClick}>Ver más</button>
         </div>
         <div className="home-image">
           <img src="header-right.png" alt="NFTs" />

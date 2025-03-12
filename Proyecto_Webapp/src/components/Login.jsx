@@ -161,7 +161,7 @@ const Login = ({ setUsuario }) => {
         <Button
           variant="primary"
           type="submit"
-          className="login-button w-100 mt-3"
+          className="login-button w-100 mt-3 m-0"
         >
           Iniciar Sesión
         </Button>
@@ -170,7 +170,7 @@ const Login = ({ setUsuario }) => {
         <Button
           variant="outline-danger"
           onClick={handleGoogleLogin}
-          className="w-100"
+          className="w-100 m-0"
         >
           <FaGoogle className="me-2" /> Iniciar Sesión con Google
         </Button>
@@ -179,7 +179,7 @@ const Login = ({ setUsuario }) => {
         <Button
           variant="outline-secondary"
           onClick={() => navigate("/registro")}
-          className="w-100"
+          className="w-100 m-0"
         >
           <FaUserPlus className="me-2" /> ¿No tienes cuenta? Regístrate
         </Button>
