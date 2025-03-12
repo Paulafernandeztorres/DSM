@@ -3,3 +3,12 @@
   padding: 0;
   margin: 0;
 }
+
+.inicio-button {
+  background-color: #7795aa;
+  border: none;
+}
+
+.inicio-button:hover {
+  background-color: #5678a0;
+}
