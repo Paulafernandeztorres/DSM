@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button, Modal} from "react-bootstrap";
+import { Container, Row, Col, Button, Modal, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +12,6 @@ const Usuario = ({ usuario, onLogout }) => {
   const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
-    console.log("Logging out...");
     sessionStorage.clear(); // Clear session storage
     localStorage.removeItem("authToken"); // Clear auth token from local storage
     onLogout(); // Call the onLogout function passed as a prop
@@ -22,13 +21,22 @@ const Usuario = ({ usuario, onLogout }) => {
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  console.log("Comprados:", usuario.Comprados);
-
-  const pedidosArray = usuario.Comprados ? Object.values(usuario.Comprados) : [];
-
   if (!usuario) {
-    return <p>Cargando...</p>;
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </Spinner>
+      </div>
+    );
   }
+
+  const pedidosArray = usuario.Comprados
+    ? Object.values(usuario.Comprados)
+    : [];
 
   return (
     <Container className="mt-2">
@@ -103,7 +111,7 @@ Usuario.propTypes = {
     CodigoPostal: PropTypes.string.isRequired,
     Telefono: PropTypes.string.isRequired,
     Correo: PropTypes.string.isRequired,
-    Comprados: PropTypes.arrayOf(
+    Comprados: PropTypes.objectOf(
       PropTypes.shape({
         Nombre_completo: PropTypes.string.isRequired,
         Direccion: PropTypes.string.isRequired,
@@ -121,7 +129,7 @@ Usuario.propTypes = {
           })
         ).isRequired,
       })
-    ).isRequired,
+    ),
   }).isRequired,
   onLogout: PropTypes.func.isRequired,
 };

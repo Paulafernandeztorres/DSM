@@ -13,6 +13,7 @@ function Carrito({
   eliminarDelCarrito,
   eliminarProductoDelCarrito,
   limpiarCarrito,
+  actualizarUsuario, // Añade la prop actualizarUsuario
 }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
@@ -198,6 +199,7 @@ function Carrito({
         productosEnCarrito={productosEnCarrito}
         totalCost={totalCost}
         limpiarCarrito={handleLimpiarCarrito}
+        actualizarUsuario={actualizarUsuario} // Pasa la función actualizarUsuario
       />
 
       <Modal show={showLoginErrorModal} onHide={handleCloseLoginErrorModal}>
@@ -233,6 +235,7 @@ Carrito.propTypes = {
   eliminarDelCarrito: PropTypes.func.isRequired,
   eliminarProductoDelCarrito: PropTypes.func.isRequired,
   limpiarCarrito: PropTypes.func.isRequired,
+  actualizarUsuario: PropTypes.func.isRequired, // Añade la propType para actualizarUsuario
 };
 
 export default Carrito;

@@ -11,6 +11,7 @@ function ShippingInfo({
   productosEnCarrito,
   totalCost,
   limpiarCarrito, // Añadir esta prop
+  actualizarUsuario,
 }) {
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
@@ -57,6 +58,7 @@ function ShippingInfo({
       }
       localStorage.removeItem("cart"); // Clear the cart from local storage
       limpiarCarrito(); // Llama a la función limpiarCarrito para resetear el estado del carrito
+      actualizarUsuario();
       handleClose();
       setShowThankYouModal(true);
     } catch (error) {
@@ -158,6 +160,7 @@ ShippingInfo.propTypes = {
   productosEnCarrito: PropTypes.array.isRequired,
   totalCost: PropTypes.number.isRequired,
   limpiarCarrito: PropTypes.func.isRequired, // Añade la propType para limpiarCarrito
+  actualizarUsuario: PropTypes.func.isRequired,
 };
 
 export default ShippingInfo;

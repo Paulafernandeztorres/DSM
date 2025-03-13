@@ -67,7 +67,7 @@ const Register = ({ setUsuario }) => {
         Creados: [],
       };
       await saveUserData(userId, userData);
-      console.log("Registro exitoso:", response.user);
+      //console.log("Registro exitoso:", response.user);
       setAlertMessage("Registro exitoso.");
       setAlertVariant("success");
 

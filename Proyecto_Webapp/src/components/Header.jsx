@@ -1,6 +1,6 @@
 import "../styles/Header.css";
 import { Nav } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FaShoppingCart, FaUser } from "react-icons/fa"; // Ícono de carrito
 import { useState, useEffect } from "react";
@@ -26,6 +26,8 @@ function Header({ carrito, usuario }) {
     };
   }, []);
 
+  const location = useLocation();
+
   return (
     <header className="header">
       <div className="header-title-container">
@@ -42,26 +44,40 @@ function Header({ carrito, usuario }) {
         onMouseLeave={() => setMenuOpen(false)}
       >
         <Nav.Item>
-          <NavLink to="/" exact className="nav-item" activeClassName="active">
+          <NavLink
+            to="/"
+            className={`nav-item ${location.pathname === "/" ? "active" : ""}`}
+          >
             Inicio
           </NavLink>
         </Nav.Item>
         <Nav.Item>
-          <NavLink to="/contacto" className="nav-item" activeClassName="active">
+          <NavLink
+            to="/contacto"
+            className={`nav-item ${
+              location.pathname === "/contacto" ? "active" : ""
+            }`}
+          >
             Contacto
           </NavLink>
         </Nav.Item>
         <Nav.Item>
           <NavLink
             to="/productos"
-            className="nav-item"
-            activeClassName="active"
+            className={`nav-item ${
+              location.pathname === "/productos" ? "active" : ""
+            }`}
           >
             Productos
           </NavLink>
         </Nav.Item>
         <Nav.Item>
-          <NavLink to="/mis-nfts" className="nav-item" activeClassName="active">
+          <NavLink
+            to="/mis-nfts"
+            className={`nav-item ${
+              location.pathname === "/mis-nfts" ? "active" : ""
+            }`}
+          >
             Mis NFTs
           </NavLink>
         </Nav.Item>
@@ -70,8 +86,9 @@ function Header({ carrito, usuario }) {
             <Nav.Item className="user-container">
               <NavLink
                 to="/usuario"
-                className="nav-item user-link"
-                activeClassName="active"
+                className={`nav-item user-link ${
+                  location.pathname === "/usuario" ? "active" : ""
+                }`}
               >
                 {usuario.Nombre}
               </NavLink>
@@ -81,8 +98,9 @@ function Header({ carrito, usuario }) {
             <Nav.Item>
               <NavLink
                 to="/login"
-                className="nav-item"
-                activeClassName="active"
+                className={`nav-item ${
+                  location.pathname === "/login" ? "active" : ""
+                }`}
               >
                 Login
               </NavLink>
@@ -90,7 +108,12 @@ function Header({ carrito, usuario }) {
           )}
         </Nav.Item>
         <Nav.Item>
-          <NavLink to="/carrito" className="nav-item" activeClassName="active">
+          <NavLink
+            to="/carrito"
+            className={`nav-item ${
+              location.pathname === "/carrito" ? "active" : ""
+            }`}
+          >
             <FaShoppingCart size={24} color="#ffffff" />
             <span className="cart-count">{totalItems}</span>
           </NavLink>

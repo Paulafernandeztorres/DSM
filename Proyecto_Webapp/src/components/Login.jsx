@@ -25,7 +25,7 @@ const Login = ({ setUsuario }) => {
         email,
         password
       );
-      console.log("Login successful:", response.user);
+      //console.log("Login successful:", response.user);
       setAlertMessage("Inicio de sesión exitoso.");
       setAlertVariant("success");
 
@@ -62,7 +62,7 @@ const Login = ({ setUsuario }) => {
   const handleGoogleLogin = async () => {
     try {
       const response = await signInWithGooglePopup();
-      console.log("Google login successful:", response.user);
+      //console.log("Google login successful:", response.user);
       setAlertMessage("Inicio de sesión con Google exitoso.");
       setAlertVariant("success");
 

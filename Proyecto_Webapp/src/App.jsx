@@ -43,6 +43,15 @@ function App() {
     });
   }, []);
 
+  const actualizarUsuario = async () => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const userId = JSON.parse(atob(token.split(".")[1])).user_id;
+      const userData = await getUserData(userId);
+      setUsuario(userData);
+    }
+  };
+
   const agregarAlCarrito = (productoId) => {
     setCarrito((prevCarrito) => {
       const nuevoCarrito = { ...prevCarrito };
@@ -113,6 +122,7 @@ function App() {
               eliminarDelCarrito={eliminarDelCarrito}
               eliminarProductoDelCarrito={eliminarProductoDelCarrito}
               limpiarCarrito={() => setCarrito({})}
+              actualizarUsuario={actualizarUsuario} // Pasa la función actualizarUsuario
             />
           }
         />
