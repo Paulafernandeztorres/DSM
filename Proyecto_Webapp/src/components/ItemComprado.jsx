@@ -5,7 +5,6 @@ import "../styles/Item.css";
 
 function ItemComprado({ producto, cantidadComprada }) {
   const [showModal, setShowModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   if (!producto) {
     return <p>Producto no encontrado</p>;
@@ -13,15 +12,6 @@ function ItemComprado({ producto, cantidadComprada }) {
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-  const handleShowConfirmModal = (e) => {
-    e.stopPropagation(); // Stop event propagation
-    setShowConfirmModal(true);
-  };
-  const handleCloseConfirmModal = () => setShowConfirmModal(false);
-  const handleDeleteConfirmed = () => {
-    handleDelete(producto.id);
-    setShowConfirmModal(false);
-  };
 
   return (
     <>
@@ -34,14 +24,6 @@ function ItemComprado({ producto, cantidadComprada }) {
         <Card.Body>
           <Card.Title>{producto.nombre}</Card.Title>
           <Card.Text>Cantidad Comprada: {cantidadComprada}</Card.Text>
-          <Button
-            onClick={handleShowConfirmModal}
-            variant="danger"
-            className="m-0"
-            style={{ width: "100%" }} // Added style to make the button wider
-          >
-            Eliminar
-          </Button>
         </Card.Body>
       </Card>
 
@@ -67,13 +49,6 @@ function ItemComprado({ producto, cantidadComprada }) {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
-            onClick={handleCloseModal}
-            className="modal-close-button"
-          >
-            Cerrar
-          </Button>
-          <Button
             variant="primary"
             href={producto.imagen}
             download={`imagen_${producto.nombre}.jpg`}
@@ -84,23 +59,6 @@ function ItemComprado({ producto, cantidadComprada }) {
             }}
           >
             Descargar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal show={showConfirmModal} onHide={handleCloseConfirmModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmar Eliminación</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          ¿Estás seguro de que deseas eliminar {producto.nombre}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseConfirmModal}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleDeleteConfirmed}>
-            Eliminar
           </Button>
         </Modal.Footer>
       </Modal>
