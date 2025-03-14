@@ -46,14 +46,14 @@ function Productos({
 
   if (loading) {
     return (
-      <Container className="productos-container d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <Container className="productos d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
         <FontAwesomeIcon icon={faSpinner} spin size="3x" />
       </Container>
     );
   }
 
   return (
-    <Container className="productos-container">
+    <Container className="productos mt-4">
       <Form.Group controlId="search" className="mb-4 d-flex">
         <Form.Control
           type="text"
