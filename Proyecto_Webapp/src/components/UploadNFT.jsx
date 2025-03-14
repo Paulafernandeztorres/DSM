@@ -67,7 +67,7 @@ const UploadNFT = ({ userId }) => {
       <Button
         variant="primary"
         onClick={handleShow}
-        className="btn w-auto m-0 mt-4 mb-4"
+        className="upload-btn w-auto mt-3"
       >
         Subir Imagen
       </Button>

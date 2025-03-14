@@ -12,3 +12,48 @@
 .inicio-button:hover {
   background-color: #5678a0;
 }
+
+.no-products {
+  text-align: center;
+  padding: 30px;
+  border: 2px dashed #bbb; /* Borde punteado */
+  background-color: #f9f9f9; /* Fondo gris claro */
+  border-radius: 8px; /* Bordes redondeados */
+  margin-top: 20px;
+}
+
+.no-products p {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.no-products p:first-child {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.no-products p:last-child {
+  color: #0077cc;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button-group .btn {
+  background-color: #7795aa;
+  border: none;
+}
+
+.button-group .btn:hover {
+  background-color: #5678a0;
+}
+
+.upload-btn {
+  margin-bottom: 20px; /* Añadir margen inferior */
+}

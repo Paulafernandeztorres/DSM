@@ -57,27 +57,48 @@ const MisNFT = ({ usuario, productosFirebase }) => {
     );
   }
 
+  const noNFTs = Object.keys(productosContados).length === 0;
+
   return (
     <Container className="productos-container">
       <h2>Mis NFT</h2>
-      <UploadNFT userId={usuario.uid} /> {/* Mostrar el componente UploadNFT */}
-      <Row>
-        {Object.keys(productosContados).map((productoId) => {
-          const producto = productosFirebase.find((p) => p.id === productoId);
-          return (
-            <Col key={productoId} xs={12} sm={6} md={4} lg={3} className="mb-4">
-              {producto ? (
-                <ItemComprado
-                  producto={producto}
-                  cantidadComprada={productosContados[productoId]}
-                />
-              ) : (
-                <p>Producto no encontrado</p>
-              )}
-            </Col>
-          );
-        })}
-      </Row>
+      {noNFTs ? (
+        <div className="no-products">
+          <p>Aún no tienes ninguna NFT</p>
+          <p>¡Puedes comprar o subir alguna usando los botones a continuación!</p>
+          <div className="button-group">
+            <Button
+              onClick={handleViewProducts}
+              className="btn w-auto mt-3"
+              variant="primary"
+            >
+              Ver Productos
+            </Button>
+            <UploadNFT userId={usuario.uid} />
+          </div>
+        </div>
+      ) : (
+        <>
+          <UploadNFT userId={usuario.uid} className="mb-4" /> {/* Añadir clase mb-4 para margen inferior */}
+          <Row>
+            {Object.keys(productosContados).map((productoId) => {
+              const producto = productosFirebase.find((p) => p.id === productoId);
+              return (
+                <Col key={productoId} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                  {producto ? (
+                    <ItemComprado
+                      producto={producto}
+                      cantidadComprada={productosContados[productoId]}
+                    />
+                  ) : (
+                    <p>Producto no encontrado</p>
+                  )}
+                </Col>
+              );
+            })}
+          </Row>
+        </>
+      )}
     </Container>
   );
 };
