@@ -81,7 +81,9 @@ const Usuario = ({ usuario, onLogout }) => {
 
       <Row className="justify-content-center mt-4">
         <Col md={8}>
-          <PedidosRealizados pedidos={pedidosArray} />
+          <div className="pedidos-container">
+            <PedidosRealizados pedidos={pedidosArray} />
+          </div>
         </Col>
       </Row>
 
