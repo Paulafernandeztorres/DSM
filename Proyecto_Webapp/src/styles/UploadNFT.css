@@ -1,8 +1,8 @@
 .upload-btn {
-    background-color: #7795aa;
-    border: none;
-  }
-  
-  .button-group .btn:hover {
-    background-color: #5678a0;
-  }
+  background-color: #7795aa;
+  border: none;
+}
+
+.upload-btn:hover {
+  background-color: #5678a0;
+}
