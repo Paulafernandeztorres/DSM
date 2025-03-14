@@ -77,6 +77,11 @@ function ItemComprado({ producto, cantidadComprada }) {
             variant="primary"
             href={producto.imagen}
             download={`imagen_${producto.nombre}.jpg`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             Descargar
           </Button>
