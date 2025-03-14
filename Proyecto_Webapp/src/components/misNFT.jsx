@@ -1,24 +1,37 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
 import { contarProductosComprados } from "../utils/firebase.utils";
 import ItemComprado from "./ItemComprado";
 import UploadNFT from "./UploadNFT";
 import "../styles/MisNFT.css"; // Importar el archivo CSS
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { faExclamationTriangle, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const MisNFT = ({ usuario, productosFirebase }) => {
   const [productosContados, setProductosContados] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (usuario && usuario.Comprados) {
-      const productos = contarProductosComprados(usuario.Comprados);
-      setProductosContados(productos);
+    if (usuario) {
+      setUserLoading(false);
+      if (usuario.Comprados) {
+        const productos = contarProductosComprados(usuario.Comprados);
+        setProductosContados(productos);
+      }
+    } else {
+      setUserLoading(false);
     }
   }, [usuario]);
+
+  useEffect(() => {
+    if (productosFirebase.length > 0) {
+      setLoading(false);
+    }
+  }, [productosFirebase]);
 
   const handleLogin = () => {
     navigate("/login");
@@ -27,6 +40,14 @@ const MisNFT = ({ usuario, productosFirebase }) => {
   const handleViewProducts = () => {
     navigate("/productos");
   };
+
+  if (userLoading || loading) {
+    return (
+      <Container className="d-flex justify-content-center align-items-center vh-100">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+      </Container>
+    );
+  }
 
   if (!usuario) {
     return (

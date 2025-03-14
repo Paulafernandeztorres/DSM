@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Container, Row, Form } from "react-bootstrap";
 import Item from "./Item";
 import "../styles/Productos.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 function Productos({
   productosFirebase,
@@ -12,6 +14,13 @@ function Productos({
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (productosFirebase.length > 0) {
+      setLoading(false);
+    }
+  }, [productosFirebase]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -34,6 +43,14 @@ function Productos({
         return 0;
       }
     });
+
+  if (loading) {
+    return (
+      <Container className="productos-container d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+      </Container>
+    );
+  }
 
   return (
     <Container className="productos-container">
