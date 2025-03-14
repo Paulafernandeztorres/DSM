@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import { Table, Modal, Button } from "react-bootstrap";
 import { useState } from "react";
+import "../styles/PedidosRealizados.css";
 
-const PedidosRealizados = ({ pedidos }) => {
+const PedidosRealizados = ({ pedidos, onDelete }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedPedido, setSelectedPedido] = useState(null);
 
@@ -31,6 +32,7 @@ const PedidosRealizados = ({ pedidos }) => {
               <th>ID del Pedido</th>
               <th>Fecha</th>
               <th>Total</th>
+              <th>Eliminar pedido</th>
             </tr>
           </thead>
           <tbody>
@@ -39,6 +41,19 @@ const PedidosRealizados = ({ pedidos }) => {
                 <td>{index + 1}</td>
                 <td>{formatDate(pedido.fecha)}</td>
                 <td>{pedido.Total} €</td>
+                <td>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    className="delete-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(pedido.id);
+                    }}
+                  >
+                    Eliminar
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -84,6 +99,7 @@ const PedidosRealizados = ({ pedidos }) => {
 PedidosRealizados.propTypes = {
   pedidos: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.string.isRequired,
       Nombre_completo: PropTypes.string.isRequired,
       Direccion: PropTypes.string.isRequired,
       Ciudad: PropTypes.string.isRequired,
@@ -102,6 +118,7 @@ PedidosRealizados.propTypes = {
       fecha: PropTypes.string.isRequired,
     })
   ).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default PedidosRealizados;
