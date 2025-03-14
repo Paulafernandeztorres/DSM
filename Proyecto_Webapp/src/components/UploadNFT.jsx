@@ -46,12 +46,21 @@ const UploadNFT = ({ userId }) => {
     const imageUrl = await getDownloadURL(imageRef);
 
     const newProductRef = push(databaseRef(database, "Productos"));
-    await set(newProductRef, {
+    const newProductId = newProductRef.key;
+
+    const newProduct = {
+      id: newProductId,
       nombre: name,
       descripcion: description,
       precio: parseFloat(price),
       imagen: image.name,
-    });
+    };
+
+    await set(newProductRef, newProduct);
+
+    // Actualizar el array "Creados" del usuario
+    const userCreadosRef = databaseRef(database, `Usuarios/${userId}/Creados`);
+    await push(userCreadosRef, newProductId);
 
     alert("Imagen subida y detalles guardados exitosamente");
     setImage(null);
@@ -66,7 +75,8 @@ const UploadNFT = ({ userId }) => {
     <>
       <Button
         onClick={handleShow}
-        className="upload-btn w-auto mt-3 mb-3 m-0"
+        className="upload-btn m-0"
+        style={{ width: "fit-content" }}
       >
         Subir Imagen
       </Button>

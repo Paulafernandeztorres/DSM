@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Container, Row, Col, Button, Spinner } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { contarProductosComprados } from "../utils/firebase.utils";
 import ItemComprado from "./ItemComprado";
+import ItemSubido from "./ItemSubido";
 import UploadNFT from "./UploadNFT";
 import "../styles/MisNFT.css"; // Importar el archivo CSS
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faExclamationTriangle,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 
 const MisNFT = ({ usuario, productosFirebase }) => {
   const [productosContados, setProductosContados] = useState({});
@@ -32,6 +36,22 @@ const MisNFT = ({ usuario, productosFirebase }) => {
       setLoading(false);
     }
   }, [productosFirebase]);
+
+  useEffect(() => {
+    if (usuario && usuario.Creados) {
+      const creadosIds = usuario.Creados;
+      const creadosProductos = creadosIds.map((id) =>
+        productosFirebase.find((producto) => producto.id === id)
+      );
+      setProductosContados((prev) => ({
+        ...prev,
+        ...creadosProductos.reduce((acc, producto) => {
+          if (producto) acc[producto.id] = 1; // Asume cantidad 1 para creados
+          return acc;
+        }, {}),
+      }));
+    }
+  }, [usuario, productosFirebase]);
 
   const handleLogin = () => {
     navigate("/login");
@@ -81,46 +101,94 @@ const MisNFT = ({ usuario, productosFirebase }) => {
   const noNFTs = Object.keys(productosContados).length === 0;
 
   return (
-    <Container className="productos-container">
-      <h2>Mis NFT</h2>
-      {noNFTs ? (
-        <div className="no-products">
-          <p>Aún no tienes ninguna NFT</p>
-          <p>¡Puedes comprar o subir alguna usando los botones a continuación!</p>
-          <div className="button-group">
-            <Button
-              onClick={handleViewProducts}
-              className="btn w-auto mt-3"
-              variant="primary"
-            >
-              Ver Productos
-            </Button>
-            <UploadNFT userId={usuario.uid} />
+    <>
+      <Container className="productos-container mt-4">
+        <h2>Mis NFT</h2>
+        {noNFTs ? (
+          <div className="no-products">
+            <p>Aún no has cargado ninguna NFT</p>
+            <p>¡Puedes subir alguna usando el botón a continuación!</p>
+            <div className="button-group">
+              <UploadNFT userId={usuario.uid} />
+            </div>
           </div>
-        </div>
-      ) : (
-        <>
-          <UploadNFT userId={usuario.uid} className="mb-4" /> {/* Añadir clase mb-4 para margen inferior */}
-          <Row>
-            {Object.keys(productosContados).map((productoId) => {
-              const producto = productosFirebase.find((p) => p.id === productoId);
-              return (
-                <Col key={productoId} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                  {producto ? (
-                    <ItemComprado
-                      producto={producto}
-                      cantidadComprada={productosContados[productoId]}
-                    />
-                  ) : (
-                    <p>Producto no encontrado</p>
-                  )}
-                </Col>
-              );
-            })}
-          </Row>
-        </>
-      )}
-    </Container>
+        ) : (
+          <>
+            <UploadNFT userId={usuario.uid} className="mb-4" /> {}
+            <Row>
+              {Object.keys(productosContados).map((productoId) => {
+                const producto = productosFirebase.find(
+                  (p) => p.id === productoId
+                );
+                return (
+                  <Col
+                    key={productoId}
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    className="mb-4"
+                  >
+                    {producto ? (
+                      <ItemSubido producto={producto} />
+                    ) : (
+                      <p>Producto no encontrado</p>
+                    )}
+                  </Col>
+                );
+              })}
+            </Row>
+          </>
+        )}
+      </Container>
+      <Container className="productos-container mt-4">
+        <h2>NFT Comprados</h2>
+        {noNFTs ? (
+          <div className="no-products">
+            <p>Aún no has adquirido ninguna NFT</p>
+            <p>¡Puedes comprar alguna en la sección de productos!</p>
+            <div className="button-group">
+              <Button
+                onClick={handleViewProducts}
+                className="btn w-auto mt-3"
+                variant="primary"
+              >
+                Ver Productos
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <Row>
+              {Object.keys(productosContados).map((productoId) => {
+                const producto = productosFirebase.find(
+                  (p) => p.id === productoId
+                );
+                return (
+                  <Col
+                    key={productoId}
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    className="mb-4"
+                  >
+                    {producto ? (
+                      <ItemComprado
+                        producto={producto}
+                        cantidadComprada={productosContados[productoId]}
+                      />
+                    ) : (
+                      <p>Producto no encontrado</p>
+                    )}
+                  </Col>
+                );
+              })}
+            </Row>
+          </>
+        )}
+      </Container>
+    </>
   );
 };
 
