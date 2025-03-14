@@ -10,7 +10,6 @@ import PedidosRealizados from "./PedidosRealizados";
 const Usuario = ({ usuario, onLogout }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
   const handleLogout = () => {
     sessionStorage.clear(); // Clear session storage
@@ -21,12 +20,6 @@ const Usuario = ({ usuario, onLogout }) => {
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-
-  const handleDelete = (pedidoId) => {
-    // Logic to delete the order
-    console.log(`Deleting order with id: ${pedidoId}`);
-    setShowDeleteConfirm(null);
-  };
 
   if (!usuario) {
     return (
@@ -89,7 +82,7 @@ const Usuario = ({ usuario, onLogout }) => {
       <Row className="justify-content-center mt-4">
         <Col md={8}>
           <div className="pedidos-container">
-            <PedidosRealizados pedidos={pedidosArray} onDelete={handleDelete} />
+            <PedidosRealizados pedidos={pedidosArray} />
           </div>
         </Col>
       </Row>
