@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { contarProductosComprados } from "../utils/firebase.utils";
 import ItemComprado from "./ItemComprado";
+import UploadNFT from "./UploadNFT";
 import "../styles/MisNFT.css"; // Importar el archivo CSS
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -59,6 +60,7 @@ const MisNFT = ({ usuario, productosFirebase }) => {
   return (
     <Container className="productos-container">
       <h2>Mis NFT</h2>
+      <UploadNFT userId={usuario.uid} /> {/* Mostrar el componente UploadNFT */}
       <Row>
         {Object.keys(productosContados).map((productoId) => {
           const producto = productosFirebase.find((p) => p.id === productoId);
