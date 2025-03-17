@@ -2,7 +2,7 @@ import "../styles/footer.css";
 
 function Footer() {
   return (
-    <footer className="container mt-5 mt-auto">
+    <footer className="mt-5">
       <p>
         &copy; 2024–2025 Marketplace, Inc. &middot;
         <a href="#">Privacidad</a> &middot;
