@@ -1,13 +1,10 @@
 import { useState } from "react";
-import {
-  ref as storageRef,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref as storageRef, uploadBytes } from "firebase/storage";
 import { ref as databaseRef, set, push } from "firebase/database";
 import { storage, database } from "../utils/firebase.utils";
 import { Button, Form, Modal } from "react-bootstrap";
 import "../styles/UploadNFT.css";
+import PropTypes from "prop-types";
 
 const UploadNFT = ({ userId }) => {
   const [image, setImage] = useState(null);
@@ -43,7 +40,6 @@ const UploadNFT = ({ userId }) => {
 
     const imageRef = storageRef(storage, `NFTImages/${image.name}`);
     await uploadBytes(imageRef, image);
-    const imageUrl = await getDownloadURL(imageRef);
 
     const newProductRef = push(databaseRef(database, "Productos"));
     const newProductId = newProductRef.key;
@@ -153,6 +149,9 @@ const UploadNFT = ({ userId }) => {
       </Modal>
     </>
   );
+};
+UploadNFT.propTypes = {
+  userId: PropTypes.string.isRequired,
 };
 
 export default UploadNFT;

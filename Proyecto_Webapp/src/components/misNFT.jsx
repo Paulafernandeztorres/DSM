@@ -19,6 +19,22 @@ const MisNFT = ({ usuario, productosFirebase }) => {
   const [userLoading, setUserLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Obtener el UID del token
+  const getUserUid = () => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      try {
+        return JSON.parse(atob(token.split(".")[1])).user_id;
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const userUid = getUserUid();
+
   useEffect(() => {
     if (usuario) {
       setUserLoading(false);
@@ -38,7 +54,7 @@ const MisNFT = ({ usuario, productosFirebase }) => {
   }, [productosFirebase]);
 
   useEffect(() => {
-    if (usuario && usuario.Creados) {
+    if (usuario && Array.isArray(usuario.Creados)) {
       const creadosIds = usuario.Creados;
       const creadosProductos = creadosIds.map((id) =>
         productosFirebase.find((producto) => producto.id === id)
@@ -109,12 +125,12 @@ const MisNFT = ({ usuario, productosFirebase }) => {
             <p>Aún no has cargado ninguna NFT</p>
             <p>¡Puedes subir alguna usando el botón a continuación!</p>
             <div className="button-group">
-              <UploadNFT userId={usuario.uid} />
+              <UploadNFT userId={userUid} className="mb-4" />
             </div>
           </div>
         ) : (
           <>
-            <UploadNFT userId={usuario.uid} className="mb-4" /> {}
+            <UploadNFT userId={userUid} className="mb-4" /> {}
             <Row>
               {Object.keys(productosContados).map((productoId) => {
                 const producto = productosFirebase.find(
