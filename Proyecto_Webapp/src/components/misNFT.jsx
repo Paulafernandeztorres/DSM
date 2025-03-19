@@ -162,7 +162,12 @@ const MisNFT = ({
                   lg={3}
                   className="mb-4"
                 >
-                  <ItemSubido producto={producto} />
+                  <ItemSubido
+                    producto={producto}
+                    userId={userUid}
+                    actualizarUsuario={actualizarUsuario}
+                    actualizarProductos={actualizarProductos}
+                  />
                 </Col>
               ))}
             </Row>

@@ -2,8 +2,14 @@ import { useState } from "react";
 import { Card, Modal, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "../styles/Item.css";
+import { deleteProduct } from "../utils/firebase.utils";
 
-function ItemSubido({ producto }) {
+function ItemSubido({
+  producto,
+  userId,
+  actualizarUsuario,
+  actualizarProductos,
+}) {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -21,6 +27,27 @@ function ItemSubido({ producto }) {
   const handleDeleteConfirmed = () => {
     handleDelete(producto.id);
     setShowConfirmModal(false);
+  };
+
+  const handleDelete = async (productoId) => {
+    try {
+      // Llamar a la función de utilidades para eliminar el producto
+      await deleteProduct(productoId, userId);
+
+      // Actualizar el usuario y los productos
+      if (actualizarUsuario) {
+        await actualizarUsuario();
+      }
+      if (actualizarProductos) {
+        await actualizarProductos();
+      }
+
+      alert("Producto eliminado exitosamente.");
+    } catch (error) {
+      alert(
+        "Error al eliminar el producto: " + error.message || "Error desconocido"
+      );
+    }
   };
 
   return (
@@ -105,6 +132,9 @@ ItemSubido.propTypes = {
     imagen: PropTypes.string.isRequired,
     descripcion: PropTypes.string,
   }).isRequired,
+  userId: PropTypes.string.isRequired,
+  actualizarUsuario: PropTypes.func.isRequired,
+  actualizarProductos: PropTypes.func.isRequired,
 };
 
 export default ItemSubido;

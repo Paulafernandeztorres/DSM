@@ -15,6 +15,7 @@ import {
   get,
   push,
   update,
+  remove,
 } from "firebase/database";
 import {
   getStorage,
@@ -188,4 +189,51 @@ export const uploadNFTImage = async (image, name, description, price) => {
   });
 
   return imageUrl;
+};
+
+// Function to delete a product from Firebase
+export const deleteProduct = async (productoId, userId) => {
+  try {
+    // Obtener el índice correcto del producto en "Creados"
+    const userCreadosRef = databaseRef(database, `Usuarios/${userId}/Creados`);
+    const snapshot = await get(userCreadosRef);
+
+    if (snapshot.exists()) {
+      const creados = snapshot.val();
+      const creadosKey = Object.keys(creados).find(
+        (key) => creados[key] === productoId
+      );
+
+      if (!creadosKey) {
+        throw new Error("El producto no se encontró en el array 'Creados'.");
+      }
+
+      // Eliminar el producto del array "Creados"
+      const creadosProductoRef = databaseRef(
+        database,
+        `Usuarios/${userId}/Creados/${creadosKey}`
+      );
+      await remove(creadosProductoRef);
+    } else {
+      throw new Error("El usuario no tiene productos en 'Creados'.");
+    }
+
+    // Eliminar el producto de la base de datos
+    const productRef = databaseRef(database, `Productos/${productoId}`);
+    await remove(productRef);
+
+    // No funciona la eliminación del storage por el link de la imagen
+    // // Corregir el nombre de la imagen si es una URL completa
+    // const imageName = imagen.includes("NFTImages/")
+    //   ? imagen.split("NFTImages/")[1].split("?")[0]
+    //   : imagen;
+
+    // // Eliminar la imagen del almacenamiento
+    // const imageRef = storageRef(storage, `NFTImages/${imageName}`);
+    // await deleteObject(imageRef);
+
+  } catch (error) {
+    console.error("Error al eliminar el producto:", error);
+    throw new Error("Hubo un error al eliminar el producto.");
+  }
 };

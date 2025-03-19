@@ -53,8 +53,12 @@ function App() {
   };
 
   const actualizarProductos = async () => {
-    const productosArray = await getProductos();
-    setproductosFirebase(productosArray);
+    try {
+      const productosArray = await getProductos();
+      setproductosFirebase(productosArray);
+    } catch (error) {
+      console.error("Error al actualizar los productos:", error);
+    }
   };
 
   const agregarAlCarrito = (productoId) => {
