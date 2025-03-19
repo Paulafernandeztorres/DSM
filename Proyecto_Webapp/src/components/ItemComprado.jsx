@@ -3,7 +3,7 @@ import { Card, Modal, Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 import "../styles/Item.css";
 
-function ItemComprado({ producto, cantidadComprada }) {
+function ItemComprado({ producto }) {
   const [showModal, setShowModal] = useState(false);
 
   if (!producto) {
@@ -23,7 +23,7 @@ function ItemComprado({ producto, cantidadComprada }) {
         />
         <Card.Body>
           <Card.Title>{producto.nombre}</Card.Title>
-          <Card.Text>Cantidad Comprada: {cantidadComprada}</Card.Text>
+          <Card.Text>Cantidad Comprada: {producto.cantidad}</Card.Text>
         </Card.Body>
       </Card>
 
@@ -44,7 +44,7 @@ function ItemComprado({ producto, cantidadComprada }) {
             <strong>Descripción:</strong> {producto.descripcion}
           </p>
           <p>
-            <strong>Cantidad Comprada:</strong> {cantidadComprada}
+            <strong>Cantidad Comprada:</strong> {producto.cantidad}
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -73,6 +73,7 @@ ItemComprado.propTypes = {
     precio: PropTypes.number.isRequired,
     imagen: PropTypes.string.isRequired,
     descripcion: PropTypes.string,
+    cantidad: PropTypes.number.isRequired,
   }).isRequired,
   cantidadComprada: PropTypes.number.isRequired,
 };

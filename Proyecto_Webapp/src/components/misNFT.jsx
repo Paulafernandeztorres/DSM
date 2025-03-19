@@ -13,13 +13,13 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
-const MisNFT = ({ usuario, productosFirebase }) => {
-  const [productosContados, setProductosContados] = useState({});
+const MisNFT = ({ usuario, productosFirebase, actualizarUsuario }) => {
+  const [productosCreados, setProductosCreados] = useState([]);
+  const [productosComprados, setProductosComprados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLoading, setUserLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Obtener el UID del token
   const getUserUid = () => {
     const token = localStorage.getItem("authToken");
     if (token) {
@@ -35,39 +35,43 @@ const MisNFT = ({ usuario, productosFirebase }) => {
 
   const userUid = getUserUid();
 
+  // Cargar productos creados
   useEffect(() => {
-    if (usuario) {
-      setUserLoading(false);
-      if (usuario.Comprados) {
-        const productos = contarProductosComprados(usuario.Comprados);
-        setProductosContados(productos);
-      }
+    if (usuario && usuario.Creados) {
+      const creadosIds = Object.values(usuario.Creados); // Obtener los IDs de los productos creados
+      const creadosProductos = creadosIds
+        .map((id) => productosFirebase.find((producto) => producto.id === id))
+        .filter((producto) => producto); // Filtrar productos válidos
+
+      setProductosCreados(creadosProductos);
+    }
+  }, [usuario, productosFirebase]);
+
+  // Cargar productos comprados
+  useEffect(() => {
+    if (usuario && usuario.Comprados) {
+      const productos = contarProductosComprados(usuario.Comprados);
+      const compradosProductos = Object.keys(productos)
+        .map((id) => {
+          const producto = productosFirebase.find((p) => p.id === id);
+          if (producto) {
+            return { ...producto, cantidad: productos[id] }; // Agregar la cantidad al producto
+          }
+          return null;
+        })
+        .filter((producto) => producto); // Filtrar productos válidos
+
+      setProductosComprados(compradosProductos);
     } else {
       setUserLoading(false);
     }
-  }, [usuario]);
+  }, [usuario, productosFirebase]);
 
   useEffect(() => {
     if (productosFirebase.length > 0) {
       setLoading(false);
     }
   }, [productosFirebase]);
-
-  useEffect(() => {
-    if (usuario && Array.isArray(usuario.Creados)) {
-      const creadosIds = usuario.Creados;
-      const creadosProductos = creadosIds.map((id) =>
-        productosFirebase.find((producto) => producto.id === id)
-      );
-      setProductosContados((prev) => ({
-        ...prev,
-        ...creadosProductos.reduce((acc, producto) => {
-          if (producto) acc[producto.id] = 1; // Asume cantidad 1 para creados
-          return acc;
-        }, {}),
-      }));
-    }
-  }, [usuario, productosFirebase]);
 
   const handleLogin = () => {
     navigate("/login");
@@ -114,52 +118,52 @@ const MisNFT = ({ usuario, productosFirebase }) => {
     );
   }
 
-  const noNFTs = Object.keys(productosContados).length === 0;
+  const noCreados = productosCreados.length === 0;
+  const noComprados = productosComprados.length === 0;
 
   return (
     <>
       <Container className="productos-container mt-4">
         <h2>Mis NFT</h2>
-        {noNFTs ? (
+        {noCreados ? (
           <div className="no-products">
             <p>Aún no has cargado ninguna NFT</p>
             <p>¡Puedes subir alguna usando el botón a continuación!</p>
             <div className="button-group">
-              <UploadNFT userId={userUid} className="mb-4" />
+              <UploadNFT
+                userId={userUid}
+                actualizarUsuario={actualizarUsuario}
+                className="mb-4"
+              />
             </div>
           </div>
         ) : (
           <>
-            <UploadNFT userId={userUid} className="mb-4" /> {}
+            <UploadNFT
+              userId={userUid}
+              actualizarUsuario={actualizarUsuario}
+              className="mb-4"
+            />
             <Row>
-              {Object.keys(productosContados).map((productoId) => {
-                const producto = productosFirebase.find(
-                  (p) => p.id === productoId
-                );
-                return (
-                  <Col
-                    key={productoId}
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    className="mb-4"
-                  >
-                    {producto ? (
-                      <ItemSubido producto={producto} />
-                    ) : (
-                      <p>Producto no encontrado</p>
-                    )}
-                  </Col>
-                );
-              })}
+              {productosCreados.map((producto) => (
+                <Col
+                  key={producto.id}
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  className="mb-4"
+                >
+                  <ItemSubido producto={producto} />
+                </Col>
+              ))}
             </Row>
           </>
         )}
       </Container>
       <Container className="productos-container mt-4">
         <h2>NFT Comprados</h2>
-        {noNFTs ? (
+        {noComprados ? (
           <div className="no-products">
             <p>Aún no has adquirido ninguna NFT</p>
             <p>¡Puedes comprar alguna en la sección de productos!</p>
@@ -174,34 +178,20 @@ const MisNFT = ({ usuario, productosFirebase }) => {
             </div>
           </div>
         ) : (
-          <>
-            <Row>
-              {Object.keys(productosContados).map((productoId) => {
-                const producto = productosFirebase.find(
-                  (p) => p.id === productoId
-                );
-                return (
-                  <Col
-                    key={productoId}
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={3}
-                    className="mb-4"
-                  >
-                    {producto ? (
-                      <ItemComprado
-                        producto={producto}
-                        cantidadComprada={productosContados[productoId]}
-                      />
-                    ) : (
-                      <p>Producto no encontrado</p>
-                    )}
-                  </Col>
-                );
-              })}
-            </Row>
-          </>
+          <Row>
+            {productosComprados.map((producto) => (
+              <Col
+                key={producto.id}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                className="mb-4"
+              >
+                <ItemComprado producto={producto} />
+              </Col>
+            ))}
+          </Row>
         )}
       </Container>
     </>
@@ -219,6 +209,7 @@ MisNFT.propTypes = {
       descripcion: PropTypes.string,
     })
   ).isRequired,
+  actualizarUsuario: PropTypes.func.isRequired,
 };
 
 export default MisNFT;

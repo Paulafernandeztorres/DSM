@@ -160,20 +160,17 @@ export const addPedidoToUserComprados = async (userId, pedido) => {
 export const contarProductosComprados = (comprados) => {
   const productosContados = {};
 
-  for (const pedidoId in comprados) {
-    const pedido = comprados[pedidoId];
-    const productos = pedido.Productos;
-
-    productos.forEach((producto) => {
-      const productoId = producto.id;
-      if (!productosContados[productoId]) {
-        productosContados[productoId] = 0;
+  Object.values(comprados).forEach((compra) => {
+    compra.Productos.forEach((producto) => {
+      if (productosContados[producto.id]) {
+        productosContados[producto.id] += producto.cantidad;
+      } else {
+        productosContados[producto.id] = producto.cantidad;
       }
-      productosContados[productoId] += producto.cantidad;
     });
-  }
+  });
 
-  return productosContados;
+  return productosContados; // Devuelve un objeto con { id: cantidad }
 };
 
 // Función para subir una imagen a Firebase Storage y guardar los detalles en la Realtime Database
