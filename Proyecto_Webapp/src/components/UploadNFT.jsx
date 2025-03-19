@@ -6,7 +6,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import "../styles/UploadNFT.css";
 import PropTypes from "prop-types";
 
-const UploadNFT = ({ userId }) => {
+const UploadNFT = ({ userId, actualizarUsuario, actualizarProductos }) => {
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -38,33 +38,56 @@ const UploadNFT = ({ userId }) => {
       return;
     }
 
-    const imageRef = storageRef(storage, `NFTImages/${image.name}`);
-    await uploadBytes(imageRef, image);
+    try {
+      // Subir la imagen al almacenamiento de Firebase
+      const imageRef = storageRef(storage, `NFTImages/${image.name}`);
+      await uploadBytes(imageRef, image);
 
-    const newProductRef = push(databaseRef(database, "Productos"));
-    const newProductId = newProductRef.key;
+      // Crear un nuevo producto en la base de datos
+      const newProductRef = push(databaseRef(database, "Productos"));
+      const newProductId = newProductRef.key;
 
-    const newProduct = {
-      id: newProductId,
-      nombre: name,
-      descripcion: description,
-      precio: parseFloat(price),
-      imagen: image.name,
-    };
+      const newProduct = {
+        id: newProductId,
+        nombre: name,
+        descripcion: description,
+        precio: parseFloat(price),
+        imagen: image.name,
+      };
 
-    await set(newProductRef, newProduct);
+      await set(newProductRef, newProduct);
 
-    // Actualizar el array "Creados" del usuario
-    const userCreadosRef = databaseRef(database, `Usuarios/${userId}/Creados`);
-    await push(userCreadosRef, newProductId);
+      // Actualizar el array "Creados" del usuario
+      const userCreadosRef = databaseRef(
+        database,
+        `Usuarios/${userId}/Creados`
+      );
+      await push(userCreadosRef, newProductId);
 
-    alert("Imagen subida y detalles guardados exitosamente");
-    setImage(null);
-    setName("");
-    setDescription("");
-    setPrice("");
-    setErrors({});
-    handleClose();
+      alert("Imagen subida y detalles guardados exitosamente");
+
+      // Llamar a la función para actualizar el usuario
+      if (actualizarUsuario) {
+        await actualizarUsuario(); // Asegúrate de que esta función se ejecute correctamente
+      }
+
+      if (actualizarProductos) {
+        await actualizarProductos(); // Actualiza la lista de productos
+      }
+
+      // Limpiar el formulario
+      setImage(null);
+      setName("");
+      setDescription("");
+      setPrice("");
+      setErrors({});
+      handleClose();
+    } catch (error) {
+      console.error("Error al subir el producto:", error);
+      alert(
+        "Hubo un error al subir el producto. Por favor, inténtalo de nuevo."
+      );
+    }
   };
 
   return (
@@ -152,6 +175,8 @@ const UploadNFT = ({ userId }) => {
 };
 UploadNFT.propTypes = {
   userId: PropTypes.string.isRequired,
+  actualizarUsuario: PropTypes.func.isRequired,
+  actualizarProductos: PropTypes.func.isRequired,
 };
 
 export default UploadNFT;

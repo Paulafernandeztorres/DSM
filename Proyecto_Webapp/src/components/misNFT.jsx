@@ -13,7 +13,12 @@ import {
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 
-const MisNFT = ({ usuario, productosFirebase, actualizarUsuario }) => {
+const MisNFT = ({
+  usuario,
+  productosFirebase,
+  actualizarUsuario,
+  actualizarProductos,
+}) => {
   const [productosCreados, setProductosCreados] = useState([]);
   const [productosComprados, setProductosComprados] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,11 +50,12 @@ const MisNFT = ({ usuario, productosFirebase, actualizarUsuario }) => {
 
       setProductosCreados(creadosProductos);
     }
-  }, [usuario, productosFirebase]);
+  }, [usuario, productosFirebase]); // Asegúrate de que este efecto dependa de `usuario`
 
   // Cargar productos comprados
   useEffect(() => {
     if (usuario && usuario.Comprados) {
+      setUserLoading(false);
       const productos = contarProductosComprados(usuario.Comprados);
       const compradosProductos = Object.keys(productos)
         .map((id) => {
@@ -133,6 +139,7 @@ const MisNFT = ({ usuario, productosFirebase, actualizarUsuario }) => {
               <UploadNFT
                 userId={userUid}
                 actualizarUsuario={actualizarUsuario}
+                actualizarProductos={actualizarProductos}
                 className="mb-4"
               />
             </div>
@@ -142,6 +149,7 @@ const MisNFT = ({ usuario, productosFirebase, actualizarUsuario }) => {
             <UploadNFT
               userId={userUid}
               actualizarUsuario={actualizarUsuario}
+              actualizarProductos={actualizarProductos}
               className="mb-4"
             />
             <Row>
@@ -210,6 +218,7 @@ MisNFT.propTypes = {
     })
   ).isRequired,
   actualizarUsuario: PropTypes.func.isRequired,
+  actualizarProductos: PropTypes.func.isRequired,
 };
 
 export default MisNFT;

@@ -52,6 +52,11 @@ function App() {
     }
   };
 
+  const actualizarProductos = async () => {
+    const productosArray = await getProductos();
+    setproductosFirebase(productosArray);
+  };
+
   const agregarAlCarrito = (productoId) => {
     setCarrito((prevCarrito) => {
       const nuevoCarrito = { ...prevCarrito };
@@ -93,7 +98,12 @@ function App() {
         <Route
           path="/mis-nfts"
           element={
-            <MisNFT usuario={usuario} productosFirebase={productosFirebase} />
+            <MisNFT
+              usuario={usuario}
+              productosFirebase={productosFirebase}
+              actualizarUsuario={actualizarUsuario}
+              actualizarProductos={actualizarProductos}
+            />
           }
         />
         <Route
@@ -122,7 +132,7 @@ function App() {
               eliminarDelCarrito={eliminarDelCarrito}
               eliminarProductoDelCarrito={eliminarProductoDelCarrito}
               limpiarCarrito={() => setCarrito({})}
-              actualizarUsuario={actualizarUsuario} // Pasa la función actualizarUsuario
+              actualizarUsuario={actualizarUsuario}
             />
           }
         />
