@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import "../styles/Home.css";
+import "animate.css";
 
 function Home() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Home() {
     <div className="home-container">
       <div className="home-content">
         <div className="home-text">
-          <h1>¡Bienvenido a la tienda de NFTs!</h1>
+        <h1 className="animate__animated animate__fadeInLeft">¡Bienvenido a la tienda de NFTs!</h1>
           <p>
             En nuestra tienda encontrarás una amplia variedad de NFTs para
             coleccionar. ¡No te quedes sin el tuyo!
