@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Form } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { addPedidoToUserComprados } from "../utils/firebase.utils";
 import ThankYouModal from "./ThankYouModal";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import paypalConfig from "../utils/paypal.utils";
 
 function ShippingInfo({
   show,
@@ -10,7 +12,7 @@ function ShippingInfo({
   carrito,
   productosEnCarrito,
   totalCost,
-  limpiarCarrito, // Añadir esta prop
+  limpiarCarrito,
   actualizarUsuario,
 }) {
   const [nombre, setNombre] = useState("");
@@ -33,6 +35,10 @@ function ShippingInfo({
 
   const handleConfirmPedido = async (event) => {
     event.preventDefault();
+    // The payment process will be handled by PayPal, so no need to handle it here
+  };
+
+  const handlePaymentSuccess = async () => {
     const pedido = {
       Nombre_completo: nombre,
       Direccion: direccion,
@@ -56,8 +62,8 @@ function ShippingInfo({
       if (userId) {
         await addPedidoToUserComprados(userId, pedido);
       }
-      localStorage.removeItem("cart"); // Clear the cart from local storage
-      limpiarCarrito(); // Llama a la función limpiarCarrito para resetear el estado del carrito
+      localStorage.removeItem("cart");
+      limpiarCarrito();
       actualizarUsuario();
       handleClose();
       setShowThankYouModal(true);
@@ -125,21 +131,36 @@ function ShippingInfo({
                 required
               />
             </Form.Group>
-            <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={handleClose}
-                className="modal-button"
+            <Modal.Footer className="mt-3 justify-content-center border-0 d-block">
+              <PayPalScriptProvider
+                options={{ "client-id": paypalConfig.ClientID }}
               >
-                Cancelar
-              </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                className="modal-button modal-confirm-button"
-              >
-                Confirmar
-              </Button>
+                <PayPalButtons
+                  style={{ layout: "vertical" }}
+                  createOrder={(data, actions) => {
+                    return actions.order.create({
+                      purchase_units: [
+                        {
+                          amount: {
+                            value: totalCost.toString(),
+                          },
+                        },
+                      ],
+                    });
+                  }}
+                  onApprove={(data, actions) => {
+                    return actions.order.capture().then((details) => {
+                      handlePaymentSuccess(details);
+                    });
+                  }}
+                  onError={(err) => {
+                    console.error("PayPal Checkout onError", err);
+                    alert(
+                      "Error en el proceso de pago. Por favor, intenta nuevamente."
+                    );
+                  }}
+                />
+              </PayPalScriptProvider>
             </Modal.Footer>
           </Form>
         </Modal.Body>
@@ -159,7 +180,7 @@ ShippingInfo.propTypes = {
   carrito: PropTypes.object.isRequired,
   productosEnCarrito: PropTypes.array.isRequired,
   totalCost: PropTypes.number.isRequired,
-  limpiarCarrito: PropTypes.func.isRequired, // Añade la propType para limpiarCarrito
+  limpiarCarrito: PropTypes.func.isRequired,
   actualizarUsuario: PropTypes.func.isRequired,
 };
 
