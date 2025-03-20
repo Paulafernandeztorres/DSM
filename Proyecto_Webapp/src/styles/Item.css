@@ -42,7 +42,6 @@ button {
   display: inline-block;
   text-align: center;
   line-height: 46px; /* Ajustar el line-height */
-  margin: 0 10px; /* Aumentar el margen */
   padding: 5px; /* Añadir padding */
 }
 
