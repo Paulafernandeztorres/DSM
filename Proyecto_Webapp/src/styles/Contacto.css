@@ -18,6 +18,16 @@
   margin-bottom: 30px;
 }
 
+.contacto-container p a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contacto-container p a:hover {
+  color: #0056b3;
+}
+
 .contacto-container .form-control {
   border-radius: 5px;
   padding: 10px;

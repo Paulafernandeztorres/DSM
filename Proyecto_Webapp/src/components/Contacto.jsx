@@ -30,6 +30,13 @@ function Contacto() {
         Si tienes alguna pregunta o necesitas más información, no dudes en
         contactarnos.
       </p>
+      <p>
+        También puedes encontrarnos en Instagram:{" "}
+        <a target="_blank" rel="noopener noreferrer">
+          @NFTmarketplace
+        </a>
+        , o llamarnos al teléfono: <strong>+34 624 786 430</strong>.
+      </p>
       {showSuccess && (
         <Alert
           variant="success"
