@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import "../styles/Home.css";
-import "animate.css";
 
 function Home() {
   const navigate = useNavigate();
@@ -13,9 +15,13 @@ function Home() {
     navigate("/login");
   };
 
+  useEffect(() => {
+    AOS.init({ duration: 1500 });
+  }, []);
+
   return (
     <>
-      <div className="home-container">
+      <div className="home-container" data-aos="fade-up">
         <div className="home-content">
           <div className="home-text animate__animated animate__fadeInDown">
             <h1>¡Bienvenido a la tienda de NFTs!</h1>
@@ -36,7 +42,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="home-container">
+      <div className="home-container" data-aos="fade-up">
         <div className="home-content">
           <div className="home-image">
             <img src="header-left.jpg" alt="NFTs" />
@@ -56,7 +62,7 @@ function Home() {
           </div>
         </div>
       </div>
-      <div className="home-container">
+      <div className="home-container" data-aos="fade-up">
         <div className="home-content">
           <div className="home-text animate__animated animate__fadeInDown">
             <h1>¡Consigue un ingreso extra!</h1>

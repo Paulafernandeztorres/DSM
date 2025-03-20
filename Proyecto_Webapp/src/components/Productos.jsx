@@ -5,6 +5,8 @@ import Item from "./Item";
 import "../styles/Productos.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function Productos({
   productosFirebase,
@@ -21,6 +23,11 @@ function Productos({
       setLoading(false);
     }
   }, [productosFirebase]);
+
+  // Inicializar AOS
+  useEffect(() => {
+    AOS.init({ duration: 1500 });
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -46,7 +53,10 @@ function Productos({
 
   if (loading) {
     return (
-      <Container className="productos d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <Container
+        className="productos d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
         <FontAwesomeIcon icon={faSpinner} spin size="3x" />
       </Container>
     );
@@ -62,7 +72,13 @@ function Productos({
           onChange={handleSearchChange}
           className="search-input me-2"
         />
-        <Form.Control as="select" value={sortOrder} onChange={handleSortChange} className="sort-select" style={{ width: "200px" }}>
+        <Form.Control
+          as="select"
+          value={sortOrder}
+          onChange={handleSortChange}
+          className="sort-select"
+          style={{ width: "200px" }}
+        >
           <option value="">Ordenar por precio</option>
           <option value="asc">Menor a Mayor</option>
           <option value="desc">Mayor a Menor</option>
@@ -71,18 +87,25 @@ function Productos({
       <h2>Productos disponibles:</h2>
       <Row>
         {filteredProductos.map((producto) => (
-          <Item
+          <div
             key={producto.id}
-            producto={producto}
-            agregarAlCarrito={agregarAlCarrito}
-            eliminarDelCarrito={eliminarDelCarrito}
-            carrito={carrito}
-          />
+            data-aos="fade-up" // AOS animation
+            className="col-md-4 mb-4 "
+          >
+            <Item
+              className="item-container"
+              producto={producto}
+              agregarAlCarrito={agregarAlCarrito}
+              eliminarDelCarrito={eliminarDelCarrito}
+              carrito={carrito}
+            />
+          </div>
         ))}
       </Row>
     </Container>
   );
 }
+
 Productos.propTypes = {
   productosFirebase: PropTypes.arrayOf(
     PropTypes.shape({
