@@ -8,7 +8,7 @@
   justify-content: center;
   align-items: flex-start;
   height: 100vh;
-  background:#e0e7ef;
+  background: #e0e7ef;
   padding: 20px;
 }
 
@@ -56,13 +56,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #7795aa;
 }
 
 .home-image img {
   max-width: 100%;
   height: auto;
-  border-radius: 0 10px 10px 0;
 }
 
 @media (max-width: 1000px) {
@@ -79,4 +77,12 @@
     order: 1;
     border-radius: 10px 10px 0 0;
   }
+}
+
+.highlighted-text {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ff5722; /* Color llamativo */
+  text-align: left;
+  margin-top: 1rem;
 }
