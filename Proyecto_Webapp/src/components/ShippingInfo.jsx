@@ -133,7 +133,10 @@ function ShippingInfo({
             </Form.Group>
             <Modal.Footer className="mt-3 justify-content-center border-0 d-block">
               <PayPalScriptProvider
-                options={{ "client-id": paypalConfig.ClientID }}
+                options={{
+                  "client-id": paypalConfig.ClientID,
+                  currency: "EUR", 
+                }}
               >
                 <PayPalButtons
                   style={{ layout: "vertical" }}
@@ -143,6 +146,7 @@ function ShippingInfo({
                         {
                           amount: {
                             value: totalCost.toString(),
+                            currency_code: "EUR", 
                           },
                         },
                       ],
