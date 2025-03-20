@@ -135,7 +135,7 @@ function ShippingInfo({
               <PayPalScriptProvider
                 options={{
                   "client-id": paypalConfig.ClientID,
-                  currency: "EUR", 
+                  currency: "EUR",
                 }}
               >
                 <PayPalButtons
@@ -146,10 +146,13 @@ function ShippingInfo({
                         {
                           amount: {
                             value: totalCost.toString(),
-                            currency_code: "EUR", 
+                            currency_code: "EUR",
                           },
                         },
                       ],
+                      application_context: {
+                        brand_name: "NFT Marketplace",               
+                      },
                     });
                   }}
                   onApprove={(data, actions) => {
