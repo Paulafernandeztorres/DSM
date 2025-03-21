@@ -3,10 +3,11 @@ import PropTypes from "prop-types";
 import { Container, Row, Form } from "react-bootstrap";
 import Item from "./Item";
 import "../styles/Productos.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; // Importar correctamente FontAwesomeIcon
+import { faShoppingCart, faSpinner } from "@fortawesome/free-solid-svg-icons"; // Importar faShoppingCart desde free-solid-icons
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate para redirección
 
 function Productos({
   productosFirebase,
@@ -17,6 +18,7 @@ function Productos({
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Hook para redirección
 
   useEffect(() => {
     if (productosFirebase.length > 0) {
@@ -50,6 +52,11 @@ function Productos({
         return 0;
       }
     });
+
+  const totalItems = Object.values(carrito).reduce(
+    (acc, cantidad) => acc + cantidad,
+    0
+  ); // Calcular total de ítems correctamente
 
   if (loading) {
     return (
@@ -102,6 +109,15 @@ function Productos({
           </div>
         ))}
       </Row>
+
+      {/* Botón flotante */}
+      <button
+        className="floating-cart-button"
+        onClick={() => navigate("/carrito")} // Redirigir a la página de carrito
+      >
+        <FontAwesomeIcon icon={faShoppingCart} size="lg" color="#ffffff" />
+        <span className="cart-count">{totalItems}</span>
+      </button>
     </Container>
   );
 }
