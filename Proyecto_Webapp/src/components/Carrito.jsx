@@ -97,30 +97,22 @@ function Carrito({
             {productosEnCarrito.map((producto) => (
               <ListGroup.Item
                 key={producto.id}
-                className="d-flex align-items-center"
+                className="d-flex align-items-center list-group-item-custom"
               >
                 <Image
                   src={producto.imagen}
                   rounded
-                  style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                  className="product-image"
                 />
-                <span style={{ flex: 2, marginLeft: "15px" }}>
-                  {producto.nombre}
-                </span>
-                <div
-                  className="d-flex align-items-center justify-content-center"
-                  style={{ flex: 1 }}
-                >
+                <span className="product-name m-2">{producto.nombre}</span>
+                <div className="product-controls m-2">
                   <Button
                     variant="danger"
                     onClick={() => eliminarDelCarrito(producto.id)}
                   >
                     -
                   </Button>
-                  <span
-                    className="product-quantity"
-                    style={{ margin: "0 10px", textAlign: "center" }}
-                  >
+                  <span className="product-quantity">
                     {carrito[producto.id]}
                   </span>
                   <Button
@@ -130,16 +122,13 @@ function Carrito({
                     +
                   </Button>
                 </div>
-                <span
-                  style={{ flex: 1, textAlign: "right", marginRight: "20px" }}
-                >
+                <span className="product-price m-2">
                   €{(producto.precio * carrito[producto.id]).toFixed(2)}
                 </span>
                 <Button
                   variant="danger"
                   onClick={() => handleShowDeleteModal(producto.id)}
                   className="delete-button"
-                  style={{ marginLeft: "auto" }}
                 >
                   Eliminar
                 </Button>
