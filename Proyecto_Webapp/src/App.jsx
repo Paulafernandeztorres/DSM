@@ -114,7 +114,7 @@ function App() {
           path="/registro"
           element={<Registro setUsuario={setUsuario} />}
         />
-        <Route path="/contacto" element={<Contacto />} />
+        <Route path="/contacto" element={<Contacto usuario={usuario}/>} />
         <Route
           path="/productos"
           element={
