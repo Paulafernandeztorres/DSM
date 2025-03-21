@@ -107,7 +107,7 @@ const MisNFT = ({
           <h2>Debes iniciar sesión para ver tus NFT</h2>
           <Button
             onClick={handleLogin}
-            className="w-auto mt-3 inicio-button"
+            className="w-auto mt-3 inicio-button me-3"
             variant="primary"
           >
             Iniciar Sesión
@@ -183,7 +183,7 @@ const MisNFT = ({
             <div className="button-group">
               <Button
                 onClick={handleViewProducts}
-                className="btn w-auto mt-3"
+                className="btn w-auto mt-4"
                 variant="primary"
               >
                 Ver Productos
