@@ -3,10 +3,10 @@
   color: #ffffff;
   padding: 15px 30px;
   display: flex;
-  justify-content: space-between; /* Esto sigue separando los elementos, pero vamos a organizarlo mejor */
+  justify-content: space-between;
   align-items: center;
-  position: relative; /* Añadir posición relativa */
-  z-index: 1000; /* Asegurar que el header esté por encima de otros elementos */
+  position: relative;
+  z-index: 1000;
 }
 
 .header-title-container {
@@ -17,7 +17,7 @@
 .header-logo {
   width: 40px;
   height: auto;
-  margin-right: 10px; /* Espacio entre la imagen y el título */
+  margin-right: 10px;
 }
 
 .header h2 {
@@ -36,8 +36,35 @@
 }
 
 .nav {
-  display: flex;
+  display: inline;
   align-items: center;
+  transition: max-height 0.6s ease-in-out; /* Transición suave */
+}
+
+.nav.open {
+  animation: slideDown 0.6s ease forwards;
+}
+
+.nav.closed {
+  animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    max-height: 0;
+  }
+  to {
+    max-height: 600px; /* Ajusta este valor según sea necesario */
+  }
+}
+
+@keyframes slideUp {
+  from {
+    max-height: 600px;
+  }
+  to {
+    max-height: 0;
+  }
 }
 
 .nav .nav-item {
@@ -47,7 +74,7 @@
 .nav a {
   position: relative;
   text-decoration: none;
-  color: #ffffff; /* Blanco */
+  color: #ffffff;
   font-weight: normal;
   transition: color 0.2s ease-in-out;
   padding: 5px 10px;
@@ -58,24 +85,24 @@
   content: "";
   position: absolute;
   left: 0;
-  bottom: -2px; /* Ajusta la distancia de la línea al texto */
+  bottom: -2px;
   width: 100%;
   height: 2px;
-  background-color: white; /* Color de la línea */
-  transform: translateY(5px); /* Inicialmente oculta */
-  opacity: 0; /* Inicialmente invisible */
+  background-color: white;
+  transform: translateY(5px);
+  opacity: 0;
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
 .nav a:hover::after,
 .nav a.active::after {
-  transform: translateY(0); /* La línea asciende al hacer hover */
-  opacity: 1; /* La línea aparece al hacer hover */
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .nav a:hover,
 .nav a.active {
-  color: #ffffff; /* Mantiene el color al pasar el ratón */
+  color: #ffffff;
 }
 
 .nav a.user-link::after {
@@ -135,11 +162,15 @@
   }
 
   .nav.open {
-    max-height: 600px; /* Ajusta este valor según sea necesario */
+    max-height: 600px;
   }
 
   .nav .nav-item {
     margin: 10px 0;
     text-align: center;
+  }
+
+  .user-container{
+    display: inline-flex;
   }
 }

@@ -2,7 +2,7 @@ import "../styles/Header.css";
 import { Nav } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-import { FaShoppingCart, FaUser } from "react-icons/fa"; // Ícono de carrito
+import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
 function Header({ carrito, usuario }) {
@@ -20,11 +20,28 @@ function Header({ carrito, usuario }) {
       }
     };
 
+    const handleClickOutside = (event) => {
+      const menu = document.querySelector(".nav");
+      const toggle = document.querySelector(".menu-toggle");
+      // Si el clic es fuera del menú y fuera del botón de menú
+      if (
+        menuOpen &&
+        menu &&
+        !menu.contains(event.target) &&
+        !toggle.contains(event.target)
+      ) {
+        setMenuOpen(false);
+      }
+    };
+
     window.addEventListener("resize", handleResize);
+    document.addEventListener("mousedown", handleClickOutside);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [menuOpen]);
 
   const location = useLocation();
 
@@ -35,12 +52,16 @@ function Header({ carrito, usuario }) {
         <h2>NFT MarketPlace</h2>
       </div>
 
-      <button className="menu-toggle" onMouseEnter={() => setMenuOpen(true)}>
+      <button
+        className="menu-toggle"
+        onMouseEnter={() => setMenuOpen(true)}
+        onClick={() => setMenuOpen((prev) => !prev)}
+      >
         ☰
       </button>
 
       <Nav
-        className={`nav ${menuOpen ? "open" : ""}`}
+        className={`nav ${menuOpen ? "open" : "closed"}`}
         onMouseLeave={() => setMenuOpen(false)}
       >
         <Nav.Item>
