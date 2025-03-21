@@ -4,6 +4,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header({ carrito, usuario }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -11,7 +12,7 @@ function Header({ carrito, usuario }) {
     (acc, item) => acc + item,
     0
   );
-
+  const navigate = useNavigate();
   // Cerrar el menú cuando la pantalla se agranda
   useEffect(() => {
     const handleResize = () => {
@@ -47,7 +48,7 @@ function Header({ carrito, usuario }) {
 
   return (
     <header className="header">
-      <div className="header-title-container">
+      <div className="header-title-container" onClick={() => navigate("/") } style={{ cursor: "pointer" }}>
         <img src="icon.png" alt="Logo" className="header-logo" />
         <h2>NFT MarketPlace</h2>
       </div>
@@ -61,7 +62,9 @@ function Header({ carrito, usuario }) {
       </button>
 
       <Nav
-        className={`nav ${menuOpen ? "open" : "closed"}`}
+        className={`nav ${menuOpen ? "open" : "closed"} ${
+          usuario ? "user-present" : "no-user"
+        }`}
         onMouseLeave={() => setMenuOpen(false)}
       >
         <Nav.Item>
@@ -107,7 +110,7 @@ function Header({ carrito, usuario }) {
             <Nav.Item className="user-container">
               <NavLink
                 to="/usuario"
-                className={`nav-item user-link ${
+                className={`margin-top nav-item user-link ${
                   location.pathname === "/usuario" ? "active" : ""
                 }`}
               >
