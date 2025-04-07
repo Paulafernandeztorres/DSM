@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { Card } from "@rneui/themed";
 import { EXCURSIONES } from "../comun/excursiones";
 
@@ -9,10 +9,12 @@ function RenderExcursion(props) {
   if (excursion != null) {
     return (
       <Card>
-        <Card.Title>{excursion.nombre}</Card.Title>
-        <Card.Divider />
-        <Card.Image source={require("./imagenes/40Años.png")}></Card.Image>
-        <Text style={{ margin: 20 }}>{excursion.descripcion}</Text>
+        <View style={styles.cardContainer}>
+          <Text style={styles.title}>{excursion.nombre}</Text>
+          <View style={styles.dividerContainer}></View>
+          <Card.Image source={require("./imagenes/40Años.png")} />
+        </View>
+        <Text style={styles.description}>{excursion.descripcion}</Text>
       </Card>
     );
   } else {
@@ -33,5 +35,19 @@ class DetalleExcursion extends Component {
     return <RenderExcursion excursion={this.state.excursiones[+excursionId]} />;
   }
 }
+
+const styles = StyleSheet.create({
+  title: {
+    textAlign: "center",
+    top: 40,
+    fontSize: 30,
+    color: "chocolate",
+    fontWeight: "bold",
+    zIndex: 1,
+  },
+  description: {
+    margin: 20,
+  },
+});
 
 export default DetalleExcursion;
