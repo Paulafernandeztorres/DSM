@@ -12,9 +12,9 @@ function RenderItem(props) {
   if (item != null) {
     return (
       <Card>
+        <Card.Divider />
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{item.nombre}</Text>
-          <Card.Divider />
           <Card.Image source={require("./imagenes/40Años.png")} />
         </View>
         <Text style={styles.description}>{item.descripcion}</Text>
