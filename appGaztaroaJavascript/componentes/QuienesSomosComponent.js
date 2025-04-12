@@ -3,6 +3,7 @@ import { ScrollView, View, Image, FlatList } from "react-native";
 import { Card, Text } from "@rneui/themed";
 import Historia from "./HistoriaComponent";
 import { ACTIVIDADES } from "../comun/actividades";
+import { baseUrl } from "../comun/comun";
 
 class QuienesSomos extends Component {
   renderActividad = ({ item }) => (
@@ -15,7 +16,7 @@ class QuienesSomos extends Component {
         }}
       >
         <Image
-          source={require("./imagenes/40Años.png")}
+          source={{ uri: baseUrl + item.imagen }}
           style={{ width: 40, height: 40, marginRight: 15 }}
         />
         <View style={{ flex: 1 }}>

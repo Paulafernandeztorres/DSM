@@ -5,6 +5,7 @@ import { EXCURSIONES } from "../comun/excursiones";
 import { CABECERAS } from "../comun/cabeceras";
 import { ACTIVIDADES } from "../comun/actividades";
 import { Divider } from "@rneui/base";
+import { baseUrl } from "../comun/comun";
 
 function RenderItem(props) {
   const item = props.item;
@@ -15,7 +16,7 @@ function RenderItem(props) {
         <Card.Divider />
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{item.nombre}</Text>
-          <Card.Image source={require("./imagenes/40Años.png")} />
+          <Card.Image source={{ uri: baseUrl + item.imagen }} />
         </View>
         <Text style={styles.description}>{item.descripcion}</Text>
       </Card>

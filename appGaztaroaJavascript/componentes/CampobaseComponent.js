@@ -10,6 +10,7 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Icon } from "@rneui/themed";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { colorGaztaroaClaro, colorGaztaroaOscuro } from "../comun/comun";
 
 // Componentes individuales
 import Calendario from "./CalendarioComponent";
@@ -27,7 +28,7 @@ function HomeNavegador({ navigation }) {
       initialRouteName="HomeScreen"
       screenOptions={{
         headerTintColor: "#fff",
-        headerStyle: { backgroundColor: "#015afc" },
+        headerStyle: { backgroundColor: colorGaztaroaOscuro },
         headerTitleStyle: { color: "#fff" },
         headerLeft: () => (
           <Icon
@@ -54,7 +55,7 @@ function CalendarioNavegador({ navigation }) {
       initialRouteName="Calendar"
       screenOptions={{
         headerTintColor: "#fff",
-        headerStyle: { backgroundColor: "#015afc" },
+        headerStyle: { backgroundColor: colorGaztaroaOscuro },
         headerTitleStyle: { color: "#fff" },
       }}
     >
@@ -88,7 +89,7 @@ function ContactoNavegador({ navigation }) {
       initialRouteName="ContactoInfo"
       screenOptions={{
         headerTintColor: "#fff",
-        headerStyle: { backgroundColor: "#015afc" },
+        headerStyle: { backgroundColor: colorGaztaroaOscuro },
         headerTitleStyle: { color: "#fff" },
         headerLeft: () => (
           <Icon
@@ -115,7 +116,7 @@ function QuienesSomosNavegador({ navigation }) {
       initialRouteName="QuienesSomosInfo"
       screenOptions={{
         headerTintColor: "#fff",
-        headerStyle: { backgroundColor: "#015afc" },
+        headerStyle: { backgroundColor: colorGaztaroaOscuro },
         headerTitleStyle: { color: "#fff" },
         headerLeft: () => (
           <Icon
@@ -144,7 +145,7 @@ function DrawerNavegador() {
       screenOptions={{
         headerShown: false,
         drawerStyle: {
-          backgroundColor: "#c2d3da",
+          backgroundColor: colorGaztaroaClaro,
         },
       }}
     >
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   drawerHeader: {
-    backgroundColor: "#015afc",
+    backgroundColor: colorGaztaroaOscuro,
     height: 100,
     alignItems: "center",
     justifyContent: "center",
