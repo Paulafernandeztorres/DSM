@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { EXCURSIONES } from "../comun/excursiones";
-import { ScrollView, FlatList } from "react-native";
-import { COMENTARIOS } from "../comun/comentarios";
+import { Text, View, StyleSheet, ScrollView, FlatList } from "react-native";
 import { Card, Icon } from "@rneui/themed";
 import { baseUrl } from "../comun/comun";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    excursiones: state.excursiones,
+    comentarios: state.comentarios,
+  };
+};
 
 function RenderExcursion(props) {
   const excursion = props.excursion;
 
   if (excursion != null) {
     const imageUrl = baseUrl + excursion.imagen;
-    console.log("Image URL:", imageUrl);
     return (
       <Card>
         <View style={styles.cardContainer}>
@@ -70,8 +74,6 @@ class DetalleExcursion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      excursiones: EXCURSIONES,
-      comentarios: COMENTARIOS,
       favoritos: [],
     };
   }
@@ -84,19 +86,19 @@ class DetalleExcursion extends Component {
 
   render() {
     const { excursionId } = this.props.route.params;
+    const excursion = this.props.excursiones.excursiones[+excursionId];
+    const comentarios = this.props.comentarios.comentarios.filter(
+      (comentario) => comentario.excursionId === excursionId
+    );
 
     return (
       <ScrollView>
         <RenderExcursion
-          excursion={this.state.excursiones[+excursionId]}
+          excursion={excursion}
           favorita={this.state.favoritos.some((el) => el === excursionId)}
           onPress={() => this.marcarFavorito(excursionId)}
         />
-        <RenderComentario
-          comentarios={this.state.comentarios.filter(
-            (comentario) => comentario.excursionId === excursionId
-          )}
-        />
+        <RenderComentario comentarios={comentarios} />
       </ScrollView>
     );
   }
@@ -116,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DetalleExcursion;
+export default connect(mapStateToProps)(DetalleExcursion);
