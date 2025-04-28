@@ -4,6 +4,7 @@ import { Card } from "@rneui/themed";
 import { Divider } from "@rneui/base";
 import { baseUrl } from "../comun/comun";
 import { connect } from "react-redux";
+import IndicadorActividad from "./IndicadorActividadComponent";
 
 const mapStateToProps = (state) => {
   return {
@@ -15,20 +16,30 @@ const mapStateToProps = (state) => {
 
 function RenderItem(props) {
   const item = props.item;
-
-  if (item != null) {
+  if (props.isLoading) {
+    return <IndicadorActividad />;
+  } else if (props.errMess) {
     return (
-      <Card>
-        <Card.Divider />
-        <View style={styles.cardContainer}>
-          <Text style={styles.title}>{item.nombre}</Text>
-          <Card.Image source={{ uri: baseUrl + item.imagen }} />
-        </View>
-        <Text style={styles.description}>{item.descripcion}</Text>
-      </Card>
+      <View>
+        <Text>{props.errMess}</Text>
+      </View>
     );
   } else {
-    return <View></View>;
+    const item = props.item;
+    if (item != null) {
+      return (
+        <Card>
+          <Card.Divider />
+          <View style={styles.cardContainer}>
+            <Text style={styles.title}>{item.nombre}</Text>
+            <Card.Image source={{ uri: baseUrl + item.imagen }} />
+          </View>
+          <Text style={styles.description}>{item.descripcion}</Text>
+        </Card>
+      );
+    } else {
+      return <View></View>;
+    }
   }
 }
 
@@ -49,6 +60,8 @@ class Home extends Component {
               (excursion) => excursion.destacado
             )[0]
           }
+          isLoading={this.props.excursiones.isLoading}
+          errMess={this.props.excursiones.errMess}
         />
         <RenderItem
           item={

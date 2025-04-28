@@ -4,6 +4,7 @@ import { Card, Text } from "@rneui/themed";
 import Historia from "./HistoriaComponent";
 import { baseUrl } from "../comun/comun";
 import { connect } from "react-redux";
+import IndicadorActividad from "./IndicadorActividadComponent";
 
 const mapStateToProps = (state) => {
   return {
@@ -41,11 +42,23 @@ class QuienesSomos extends Component {
   );
 
   render() {
+    if (this.props.actividades.isLoading) {
+      return (
+        <ScrollView>
+          <Historia />
+          <Card>
+            <Card.Title>Actividades y recursos</Card.Title>
+            <Card.Divider />
+            <IndicadorActividad />
+          </Card>
+        </ScrollView>
+      );
+    }
+
     return (
       <ScrollView>
         <View>
           <Historia />
-
           <Card>
             <Card.Title>Actividades y recursos</Card.Title>
             <Card.Divider />
