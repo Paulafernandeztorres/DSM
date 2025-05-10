@@ -2,15 +2,13 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRef, useState } from "react";
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import Feather from "@expo/vector-icons/Feather";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function App() {
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef(null);
   const [uri, setUri] = useState(null);
-  const [facing, setFacing] = useState("back");
+  const [facing, setFacing] = useState("back"); // Cambiado a string simple
   const [cameraOpen, setCameraOpen] = useState(false);
 
   if (!permission) {
@@ -34,8 +32,7 @@ export default function App() {
   };
 
   const toggleFacing = () => {
-    setFacing((prev) => (prev === "back" ? "front" : "back"));
-    console.log(facing);
+    setFacing((prev) => (prev === "back" ? "front" : "back")); // Cambiado a strings
   };
 
   const renderPicture = () => {
@@ -53,9 +50,10 @@ export default function App() {
 
   const renderCamera = () => (
     <CameraView
+      key={facing}
       style={styles.camera}
       ref={ref}
-      type={facing}
+      facing={facing} // Usamos la prop 'facing' con strings
       mode="picture"
       onCameraReady={() => console.log("Camera is ready")}
     >
