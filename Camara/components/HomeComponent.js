@@ -1,47 +1,61 @@
-import { useState } from "react";
-import { View, Button, StyleSheet } from "react-native";
+import React, { Component } from "react";
+import { ScrollView, View, StyleSheet, Text, Button } from "react-native";
+import { Image } from "react-native";
 import CameraComponent from "./CameraComponent";
 
-function HomeLogic() {
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [capturedImage, setCapturedImage] = useState(null);
+function RenderItem(props) {
+  const { capturedImage, onDelete } = props;
 
-  return {
-    isCameraOpen,
-    setIsCameraOpen,
-    capturedImage,
-    setCapturedImage,
-  };
+  if (capturedImage) {
+    return (
+      <View style={styles.preview}>
+        <Image source={{ uri: capturedImage }} style={styles.image} />
+        <Button title="Borrar foto" onPress={onDelete} />
+      </View>
+    );
+  } else {
+    return <View></View>;
+  }
 }
 
-export default function Home() {
-  const { isCameraOpen, setIsCameraOpen, capturedImage, setCapturedImage } =
-    HomeLogic();
+class HomeComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isCameraOpen: false,
+      capturedImage: null,
+    };
+  }
 
-  return (
-    <View style={styles.container}>
-      {isCameraOpen ? (
-        <CameraComponent
-          onClose={() => setIsCameraOpen(false)}
-          onPictureTaken={(uri) => setCapturedImage(uri)}
-        />
-      ) : (
-        <Button title="Abrir Cámara" onPress={() => setIsCameraOpen(true)} />
-      )}
+  render() {
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        {this.state.isCameraOpen ? (
+          <CameraComponent
+            onClose={() => this.setState({ isCameraOpen: false })}
+            onPictureTaken={(uri) => this.setState({ capturedImage: uri })}
+          />
+        ) : (
+          <Button
+            title="Abrir Cámara"
+            onPress={() => this.setState({ isCameraOpen: true })}
+          />
+        )}
 
-      {capturedImage && !isCameraOpen && (
-        <View style={styles.preview}>
-          <Image source={{ uri: capturedImage }} style={styles.image} />
-          <Button title="Borrar foto" onPress={() => setCapturedImage(null)} />
-        </View>
-      )}
-    </View>
-  );
+        {!this.state.isCameraOpen && (
+          <RenderItem
+            capturedImage={this.state.capturedImage}
+            onDelete={() => this.setState({ capturedImage: null })}
+          />
+        )}
+      </ScrollView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -56,3 +70,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
+export default HomeComponent;

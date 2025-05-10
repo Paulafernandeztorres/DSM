@@ -4,35 +4,49 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-const CameraComponent = ({ onClose, onPictureTaken }) => {
+function CameraLogic() {
   const [permission] = useCameraPermissions();
   const cameraRef = useRef(null);
   const [uri, setUri] = useState(null);
   const [facing, setFacing] = useState("back");
 
-  if (!permission?.granted) {
-<<<<<<< HEAD
-    return null;
-=======
-    return null; // O podrías manejar esto de otra forma
->>>>>>> c155c2c8c62841091b670f55a175ff002e427042
-  }
-
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setUri(photo.uri);
-<<<<<<< HEAD
-      if (onPictureTaken) onPictureTaken(photo.uri);
-=======
-      if (onPictureTaken) onPictureTaken(photo.uri); // Opcional: enviar la URI al padre
->>>>>>> c155c2c8c62841091b670f55a175ff002e427042
+      return photo.uri;
     }
   };
 
   const toggleFacing = () => {
     setFacing((prev) => (prev === "back" ? "front" : "back"));
   };
+
+  return {
+    permission,
+    cameraRef,
+    uri,
+    setUri,
+    facing,
+    takePicture,
+    toggleFacing,
+  };
+}
+
+const CameraComponent = ({ onClose, onPictureTaken }) => {
+  const {
+    permission,
+    cameraRef,
+    uri,
+    setUri,
+    facing,
+    takePicture,
+    toggleFacing,
+  } = CameraLogic();
+
+  if (!permission?.granted) {
+    return null;
+  }
 
   if (uri) {
     return (
@@ -58,7 +72,12 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
         <Pressable onPress={onClose} style={styles.backButton}>
           <FontAwesome6 name="arrow-left" size={32} color="white" />
         </Pressable>
-        <Pressable onPress={takePicture}>
+        <Pressable
+          onPress={async () => {
+            const uri = await takePicture();
+            if (onPictureTaken) onPictureTaken(uri);
+          }}
+        >
           <View style={styles.shutterBtn}>
             <View style={styles.shutterBtnInner} />
           </View>
