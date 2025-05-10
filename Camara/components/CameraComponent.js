@@ -11,14 +11,22 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
   const [facing, setFacing] = useState("back");
 
   if (!permission?.granted) {
+<<<<<<< HEAD
     return null;
+=======
+    return null; // O podrías manejar esto de otra forma
+>>>>>>> c155c2c8c62841091b670f55a175ff002e427042
   }
 
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setUri(photo.uri);
+<<<<<<< HEAD
       if (onPictureTaken) onPictureTaken(photo.uri);
+=======
+      if (onPictureTaken) onPictureTaken(photo.uri); // Opcional: enviar la URI al padre
+>>>>>>> c155c2c8c62841091b670f55a175ff002e427042
     }
   };
 
