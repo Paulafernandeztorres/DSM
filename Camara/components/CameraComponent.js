@@ -64,7 +64,7 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
           contentFit="contain" // Ensure the image fits within its container.
           style={{ width: 300, aspectRatio: 1 }} // Set the image dimensions.
         />
-        <Button title="Tomar otra foto" onPress={() => setUri(null)} />{" "}
+        <Button title="Tomar otra foto" onPress={() => setUri(null)} />
         {/* Button to retake the photo. */}
       </View>
     );
@@ -92,7 +92,7 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
         >
           <View style={styles.shutterBtn}>
             {/* Outer circle of the shutter button. */}
-            <View style={styles.shutterBtnInner} />{" "}
+            <View style={styles.shutterBtnInner} />
             {/* Inner circle of the shutter button. */}
           </View>
         </Pressable>
