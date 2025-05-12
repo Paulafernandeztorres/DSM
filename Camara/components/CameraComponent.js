@@ -6,7 +6,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 function CameraLogic() {
   // Encapsulate the camera logic in a reusable function.
-  const [permission] = useCameraPermissions(); // Request and store camera permissions.
+  const [permission, requestPermission] = useCameraPermissions(); // Request and store camera permissions.
   const cameraRef = useRef(null); // Create a reference to the camera instance.
   const [uri, setUri] = useState(null); // State to store the URI of the captured image.
   const [facing, setFacing] = useState("back"); // State to track the camera's facing direction (front or back).
@@ -25,6 +25,11 @@ function CameraLogic() {
     // Function to toggle the camera's facing direction.
     setFacing((prev) => (prev === "back" ? "front" : "back")); // Switch between "back" and "front".
   };
+
+  if (permission?.granted === false) {
+    // If permission is denied, request it.
+    requestPermission();
+  }
 
   return {
     // Return the logic and state variables for use in the component.
