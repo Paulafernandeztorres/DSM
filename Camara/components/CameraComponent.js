@@ -1,117 +1,166 @@
-import { useRef, useState } from "react";
-import { Pressable, View, Button } from "react-native";
+import { useRef, useState, useEffect } from "react";
+import { Pressable, View, Button, Text, StyleSheet } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 function CameraLogic() {
-  // Encapsulate the camera logic in a reusable function.
-  const [permission, requestPermission] = useCameraPermissions(); // Request and store camera permissions.
-  const cameraRef = useRef(null); // Create a reference to the camera instance.
-  const [uri, setUri] = useState(null); // State to store the URI of the captured image.
-  const [facing, setFacing] = useState("back"); // State to track the camera's facing direction (front or back).
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef(null);
+  const [uri, setUri] = useState(null);
+  const [facing, setFacing] = useState("back");
+  const [scanEnabled, setScanEnabled] = useState(true);
+  const [lastScannedData, setLastScannedData] = useState(null); // Almacena el último código escaneado
+  const [lastScannedTime, setLastScannedTime] = useState(0); // Almacena el momento del último escaneo
 
   const takePicture = async () => {
-    // Function to capture a picture.
     if (cameraRef.current) {
-      // Check if the camera reference is available.
-      const photo = await cameraRef.current.takePictureAsync(); // Capture the picture.
-      setUri(photo.uri); // Update the state with the captured image URI.
-      return photo.uri; // Return the URI for further use.
+      const photo = await cameraRef.current.takePictureAsync();
+      setUri(photo.uri);
+      return photo.uri;
     }
   };
 
   const toggleFacing = () => {
-    // Function to toggle the camera's facing direction.
-    setFacing((prev) => (prev === "back" ? "front" : "back")); // Switch between "back" and "front".
+    setFacing((prev) => (prev === "back" ? "front" : "back"));
+  };
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    if (!scanEnabled) return;
+
+    const now = Date.now();
+    // Evita escaneos duplicados:
+    // - Mismo código que el anterior
+    // - Y menos de 2 segundos desde el último escaneo
+    if (data === lastScannedData && now - lastScannedTime < 2000) {
+      return;
+    }
+
+    setLastScannedData(data);
+    setLastScannedTime(now);
+    alert(`Código escaneado!\nTipo: ${type}\nDatos: ${data}`);
   };
 
   if (permission?.granted === false) {
-    // If permission is denied, request it.
     requestPermission();
   }
 
   return {
-    // Return the logic and state variables for use in the component.
     permission,
     cameraRef,
     uri,
     setUri,
     facing,
+    scanEnabled,
+    setScanEnabled,
     takePicture,
     toggleFacing,
+    handleBarCodeScanned,
   };
 }
 
 const CameraComponent = ({ onClose, onPictureTaken }) => {
-  // Define the CameraComponent, receiving props for closing the camera and handling captured images.
   const {
     permission,
     cameraRef,
     uri,
     setUri,
     facing,
+    scanEnabled,
+    setScanEnabled,
     takePicture,
     toggleFacing,
-  } = CameraLogic(); // Use the CameraLogic function to manage state and logic.
+    handleBarCodeScanned,
+  } = CameraLogic();
 
   if (!permission?.granted) {
-    // If camera permissions are not granted, render nothing.
     return null;
   }
 
   if (uri) {
-    // If an image has been captured, render the preview.
     return (
       <View>
         <Image
-          source={{ uri }} // Display the captured image using its URI.
-          contentFit="contain" // Ensure the image fits within its container.
-          style={{ width: 300, aspectRatio: 1 }} // Set the image dimensions.
+          source={{ uri }}
+          contentFit="contain"
+          style={{ width: 300, aspectRatio: 1 }}
         />
         <Button title="Tomar otra foto" onPress={() => setUri(null)} />
-        {/* Button to retake the photo. */}
       </View>
     );
   }
 
   return (
     <CameraView
-      ref={cameraRef} // Attach the camera reference.
-      style={{ flex: 1, width: "100%" }} // Set the camera view to fill the screen.
-      facing={facing} // Set the camera's facing direction.
-      mode="picture" // Set the camera mode to capture pictures.
+      ref={cameraRef}
+      style={{ flex: 1, width: "100%" }}
+      facing={facing}
+      mode="picture"
+      barcodeScannerSettings={{
+        barcodeTypes: [
+          "qr",
+          "pdf417",
+          "upc_e",
+          "upc_a",
+          "ean8",
+          "ean13",
+          "code39",
+          "code93",
+          "code128",
+          "itf14",
+          "codabar",
+        ],
+      }}
+      onBarcodeScanned={scanEnabled ? handleBarCodeScanned : undefined}
     >
       <View style={styles.shutterContainer}>
-        {/* Render the camera controls. */}
         <Pressable onPress={onClose} style={styles.backButton}>
-          {/* Button to close the camera. */}
           <FontAwesome6 name="arrow-left" size={32} color="white" />
         </Pressable>
-        <Pressable
-          onPress={async () => {
-            // Button to capture a picture.
-            const uri = await takePicture(); // Capture the picture.
-            if (onPictureTaken) onPictureTaken(uri); // Pass the URI to the parent component if a callback is provided.
-          }}
-        >
-          <View style={styles.shutterBtn}>
-            {/* Outer circle of the shutter button. */}
-            <View style={styles.shutterBtnInner} />
-            {/* Inner circle of the shutter button. */}
-          </View>
-        </Pressable>
+
+        <View style={styles.middleButtons}>
+          <Pressable
+            onPress={() => setScanEnabled(!scanEnabled)}
+            style={styles.scanButton}
+          >
+            <FontAwesome6
+              name={scanEnabled ? "qrcode" : "camera"}
+              size={32}
+              color="white"
+            />
+          </Pressable>
+
+          {!scanEnabled && (
+            <Pressable
+              onPress={async () => {
+                const uri = await takePicture();
+                if (onPictureTaken) onPictureTaken(uri);
+              }}
+            >
+              <View style={styles.shutterBtn}>
+                <View style={styles.shutterBtnInner} />
+              </View>
+            </Pressable>
+          )}
+        </View>
+
         <Pressable onPress={toggleFacing} style={styles.flipButton}>
-          {/* Button to toggle the camera's facing direction. */}
           <FontAwesome6 name="arrow-rotate-left" size={32} color="white" />
         </Pressable>
       </View>
+
+      {scanEnabled && (
+        <View style={styles.scanOverlay}>
+          <Text style={styles.scanText}>
+            Modo Escáner - Apunta a un código QR
+          </Text>
+        </View>
+      )}
     </CameraView>
   );
 };
 
-const styles = {
-  // Define styles for the camera component.
+const styles = StyleSheet.create({
   shutterContainer: {
     position: "absolute",
     bottom: 44,
@@ -122,9 +171,17 @@ const styles = {
     justifyContent: "space-between",
     paddingHorizontal: 30,
   },
+  middleButtons: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
   backButton: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  scanButton: {
+    marginBottom: 20,
   },
   shutterBtn: {
     backgroundColor: "transparent",
@@ -146,6 +203,20 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
   },
-};
+  scanOverlay: {
+    position: "absolute",
+    top: 50,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    padding: 20,
+  },
+  scanText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
 
-export default CameraComponent; // Export the CameraComponent as the default export.
+export default CameraComponent;
