@@ -51,8 +51,6 @@ function CameraLogic() {
     uri,
     setUri,
     facing,
-    scanEnabled,
-    setScanEnabled,
     takePicture,
     toggleFacing,
     handleBarCodeScanned,
@@ -66,8 +64,6 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
     uri,
     setUri,
     facing,
-    scanEnabled,
-    setScanEnabled,
     takePicture,
     toggleFacing,
     handleBarCodeScanned,
@@ -111,7 +107,7 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
           "codabar",
         ],
       }}
-      onBarcodeScanned={scanEnabled ? handleBarCodeScanned : undefined}
+      onBarcodeScanned={handleBarCodeScanned}
     >
       <View style={styles.shutterContainer}>
         <Pressable onPress={onClose} style={styles.backButton}>
@@ -120,28 +116,15 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
 
         <View style={styles.middleButtons}>
           <Pressable
-            onPress={() => setScanEnabled(!scanEnabled)}
-            style={styles.scanButton}
+            onPress={async () => {
+              const uri = await takePicture();
+              if (onPictureTaken) onPictureTaken(uri);
+            }}
           >
-            <FontAwesome6
-              name={scanEnabled ? "qrcode" : "camera"}
-              size={32}
-              color="white"
-            />
+            <View style={styles.shutterBtn}>
+              <View style={styles.shutterBtnInner} />
+            </View>
           </Pressable>
-
-          {!scanEnabled && (
-            <Pressable
-              onPress={async () => {
-                const uri = await takePicture();
-                if (onPictureTaken) onPictureTaken(uri);
-              }}
-            >
-              <View style={styles.shutterBtn}>
-                <View style={styles.shutterBtnInner} />
-              </View>
-            </Pressable>
-          )}
         </View>
 
         <Pressable onPress={toggleFacing} style={styles.flipButton}>
@@ -149,13 +132,11 @@ const CameraComponent = ({ onClose, onPictureTaken }) => {
         </Pressable>
       </View>
 
-      {scanEnabled && (
-        <View style={styles.scanOverlay}>
-          <Text style={styles.scanText}>
-            Modo Escáner - Apunta a un código QR
-          </Text>
-        </View>
-      )}
+      <View style={styles.scanOverlay}>
+        <Text style={styles.scanText}>
+          Apunta a un código de barras o toma una foto
+        </Text>
+      </View>
     </CameraView>
   );
 };
