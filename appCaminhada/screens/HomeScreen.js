@@ -2,12 +2,16 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../redux/authSlice';
 
 export default function HomeScreen({ navigation }) {
+  const dispatch = useDispatch();
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigation.replace('Login'); // Vuelve a login al cerrar sesión
+      dispatch(clearUser());
     } catch (error) {
       alert(error.message);
     }

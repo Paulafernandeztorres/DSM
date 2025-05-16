@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
@@ -8,21 +9,26 @@ import HomeScreen from './screens/HomeScreen';
 
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import store from './redux/store';
+import { setUser, clearUser } from './redux/authSlice';
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+function AppContent() {
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
+      if (user) {
+        dispatch(setUser(user));
+      } else {
+        dispatch(clearUser());
+      }
     });
 
-    return unsubscribe; // limpia el listener al desmontar
-  }, []);
+    return unsubscribe;
+  }, [dispatch]);
 
   if (loading) {
     return null; // O algún splash screen, loader, etc.
@@ -32,10 +38,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          // Usuario logueado: muestra Home
           <Stack.Screen name="Home" component={HomeScreen} />
         ) : (
-          // Usuario no logueado: muestra login y registro
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
@@ -43,5 +47,13 @@ export default function App() {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
   );
 }

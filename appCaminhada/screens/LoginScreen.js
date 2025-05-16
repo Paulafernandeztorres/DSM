@@ -12,11 +12,14 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'; // ajusta según ruta
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/authSlice';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secureEntry, setSecureEntry] = useState(true);
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -24,8 +27,8 @@ export default function LoginScreen({ navigation }) {
       return;
     }
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // Ya no hace falta alert, la navegación la controla el listener de onAuthStateChanged
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      dispatch(setUser(userCredential.user));
     } catch (error) {
       Alert.alert('Error', error.message);
     }
