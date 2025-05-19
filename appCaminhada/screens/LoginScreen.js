@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // ajusta según ruta
+import { auth } from '../firebase/config'; // ajusta según ruta
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/authSlice';
 
