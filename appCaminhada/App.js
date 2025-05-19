@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider, useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Provider, useDispatch, useSelector } from "react-redux";
 
-import LoginScreen from './screens/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen';
-import HomeScreen from './screens/HomeScreen';
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import HomeScreen from "./screens/HomeScreen";
 
-import { auth } from './firebase';
-import { onAuthStateChanged } from 'firebase/auth';
-import store from './redux/store';
-import { setUser, clearUser } from './redux/authSlice';
+import { auth } from "./firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
+import store from "./redux/store";
+import { setUser, clearUser } from "./redux/authSlice";
 
 const Stack = createNativeStackNavigator();
 

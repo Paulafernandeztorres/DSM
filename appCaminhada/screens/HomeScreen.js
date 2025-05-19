@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { signOut } from 'firebase/auth';
-import { auth } from '../firebase';
-import { useDispatch } from 'react-redux';
-import { clearUser } from '../redux/authSlice';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/config"; // ajusta según ruta
+import { useDispatch } from "react-redux";
+import { clearUser } from "../redux/authSlice";
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -28,8 +28,8 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex:1, justifyContent:'center', alignItems:'center' },
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
   welcomeText: { fontSize: 24, marginBottom: 20 },
-  logoutButton: { backgroundColor: '#4f46e5', padding: 14, borderRadius: 14 },
-  logoutText: { color: '#fff', fontWeight: '600' },
+  logoutButton: { backgroundColor: "#4f46e5", padding: 14, borderRadius: 14 },
+  logoutText: { color: "#fff", fontWeight: "600" },
 });
