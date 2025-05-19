@@ -1,8 +1,8 @@
 // firebase.js
-import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
+import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 // Tu configuración de Firebase
 const firebaseConfig = {
@@ -12,7 +12,7 @@ const firebaseConfig = {
   storageBucket: "proyectocaminhada.firebasestorage.app",
   messagingSenderId: "788888867409",
   appId: "1:788888867409:web:a766b2544232cec8d85e70",
-  measurementId: "G-1NEQ011742"
+  measurementId: "G-1NEQ011742",
 };
 
 // Inicializa Firebase
@@ -20,7 +20,10 @@ const app = initializeApp(firebaseConfig);
 
 // Inicializa autenticación
 const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
-export { auth };
+// Inicializa Firestore
+const db = getFirestore(app, "database-caminhada");
+
+export { auth, db };

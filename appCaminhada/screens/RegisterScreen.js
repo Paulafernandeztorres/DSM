@@ -8,114 +8,172 @@ import {
   Platform,
   Alert,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase/config"; // ajusta según ruta
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../firebase/config"; // ajusta según ruta
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/authSlice";
 
 export default function RegisterScreen({ navigation }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [secureEntry, setSecureEntry] = useState(true);
   const [secureEntryConfirm, setSecureEntryConfirm] = useState(true);
+  const dispatch = useDispatch();
 
   const handleRegister = async () => {
-    if (!email || !password || !confirmPassword) {
-      Alert.alert("Error", "Por favor, completa todos los campos.");
+    if (!name || !email || !password || !confirmPassword) {
+      Toast.show({
+        type: "error",
+        text1: "Error de registro",
+        text2: "Por favor, completa todos los campos.",
+      });
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden.");
+      Toast.show({
+        type: "error",
+        text1: "Error de registro",
+        text2: "Las contraseñas no coinciden.",
+      });
       return;
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Registro exitoso", `Cuenta creada para ${email}`);
-      navigation.goBack(); // vuelve al login
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        name: name,
+        email: email,
+        role: "user",
+      });
+      dispatch(
+        setUser({
+          user: userCredential.user,
+          name,
+          email,
+          role: "user",
+        })
+      );
+      Toast.show({
+        type: "success",
+        text1: "Registro exitoso",
+        text2: `Cuenta creada para ${email}`,
+      });
+      navigation.goBack();
     } catch (error) {
-      Alert.alert("Error", error.message);
+      Toast.show({
+        type: "error",
+        text1: "Error de registro",
+        text2: error.message,
+      });
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
-      <View style={styles.header}>
-        <Text style={styles.title}>Regístrate</Text>
-        <Text style={styles.subtitle}>Crea una nueva cuenta</Text>
-      </View>
-
-      <View style={styles.form}>
-        <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={20} color="#888" />
-          <TextInput
-            style={styles.input}
-            placeholder="Correo electrónico"
-            placeholderTextColor="#999"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-          />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>Regístrate</Text>
+          <Text style={styles.subtitle}>Crea una nueva cuenta</Text>
         </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#888" />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            placeholderTextColor="#999"
-            secureTextEntry={secureEntry}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <TouchableOpacity onPress={() => setSecureEntry(!secureEntry)}>
-            <Ionicons
-              name={secureEntry ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              color="#888"
+        <View style={styles.form}>
+          <View style={styles.inputContainer}>
+            <Ionicons name="person-outline" size={20} color="#888" />
+            <TextInput
+              style={styles.input}
+              placeholder="Nombre de usuario"
+              placeholderTextColor="#999"
+              autoCapitalize="none"
+              value={name}
+              onChangeText={setName}
             />
-          </TouchableOpacity>
-        </View>
+          </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={20} color="#888" />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirmar contraseña"
-            placeholderTextColor="#999"
-            secureTextEntry={secureEntryConfirm}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail-outline" size={20} color="#888" />
+            <TextInput
+              style={styles.input}
+              placeholder="Correo electrónico"
+              placeholderTextColor="#999"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color="#888" />
+            <TextInput
+              style={styles.input}
+              placeholder="Contraseña"
+              placeholderTextColor="#999"
+              secureTextEntry={secureEntry}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity onPress={() => setSecureEntry(!secureEntry)}>
+              <Ionicons
+                name={secureEntry ? "eye-off-outline" : "eye-outline"}
+                size={20}
+                color="#888"
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color="#888" />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirmar contraseña"
+              placeholderTextColor="#999"
+              secureTextEntry={secureEntryConfirm}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <TouchableOpacity
+              onPress={() => setSecureEntryConfirm(!secureEntryConfirm)}
+            >
+              <Ionicons
+                name={secureEntryConfirm ? "eye-off-outline" : "eye-outline"}
+                size={20}
+                color="#888"
+              />
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity
-            onPress={() => setSecureEntryConfirm(!secureEntryConfirm)}
+            style={styles.registerButton}
+            onPress={handleRegister}
           >
-            <Ionicons
-              name={secureEntryConfirm ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              color="#888"
-            />
+            <Text style={styles.registerButtonText}>Registrarse</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={[styles.forgotText, { marginTop: 20 }]}>
+              ¿Ya tienes cuenta? Inicia sesión
+            </Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.registerButton}
-          onPress={handleRegister}
-        >
-          <Text style={styles.registerButtonText}>Registrarse</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Text style={[styles.forgotText, { marginTop: 20 }]}>
-            ¿Ya tienes cuenta? Inicia sesión
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }

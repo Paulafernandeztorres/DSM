@@ -11,6 +11,7 @@ import { auth } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
 import store from "./redux/store";
 import { setUser, clearUser } from "./redux/authSlice";
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <AppContent />
+      <Toast />
     </Provider>
   );
 }

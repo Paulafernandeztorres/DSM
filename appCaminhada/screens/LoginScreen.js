@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,36 +8,73 @@ import {
   Platform,
   Alert,
   StyleSheet,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase/config'; // ajusta según ruta
-import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/authSlice';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/config"; // ajusta según ruta
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/authSlice";
+import Toast from "react-native-toast-message";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [secureEntry, setSecureEntry] = useState(true);
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Por favor, completa todos los campos.');
+      Toast.show({
+        type: "error",
+        text1: "Error de inicio de sesión",
+        text2: "Por favor, completa todos los campos.",
+      });
       return;
     }
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      dispatch(setUser(userCredential.user));
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      // Obtener datos del usuario desde Firestore
+      const userDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        dispatch(
+          setUser({
+            user: userCredential.user,
+            name: userData.name,
+            email: userData.email,
+            role: userData.role,
+          })
+        );
+      } else {
+        // Si no existe, solo guarda el usuario
+        dispatch(
+          setUser({
+            user: userCredential.user,
+            name: null,
+            email: userCredential.user.email,
+            role: null,
+          })
+        );
+      }
     } catch (error) {
-      Alert.alert('Error', error.message);
+      Toast.show({
+        type: "error",
+        text1: "Error de inicio de sesión",
+        text2: error.message,
+      });
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.header}>
         <Text style={styles.title}>Bienvenido</Text>
@@ -70,7 +107,7 @@ export default function LoginScreen({ navigation }) {
           />
           <TouchableOpacity onPress={() => setSecureEntry(!secureEntry)}>
             <Ionicons
-              name={secureEntry ? 'eye-off-outline' : 'eye-outline'}
+              name={secureEntry ? "eye-off-outline" : "eye-outline"}
               size={20}
               color="#888"
             />
@@ -81,7 +118,7 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.loginButtonText}>Iniciar sesión</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text style={styles.forgotText}>¿No tienes cuenta? Regístrate</Text>
         </TouchableOpacity>
       </View>
@@ -92,60 +129,60 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     paddingHorizontal: 24,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   header: {
     marginBottom: 40,
   },
   title: {
     fontSize: 32,
-    fontWeight: '700',
-    color: '#000',
-    textAlign: 'center',
+    fontWeight: "700",
+    color: "#000",
+    textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   form: {
     gap: 20,
   },
   inputContainer: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
     flex: 1,
     marginLeft: 10,
-    color: '#000',
+    color: "#000",
   },
   loginButton: {
-    backgroundColor: '#4f46e5',
+    backgroundColor: "#4f46e5",
     paddingVertical: 14,
     borderRadius: 14,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
     marginTop: 10,
   },
   loginButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-    textAlign: 'center',
+    color: "#fff",
+    fontWeight: "600",
+    textAlign: "center",
     fontSize: 16,
   },
   forgotText: {
-    color: '#4f46e5',
-    textAlign: 'center',
+    color: "#4f46e5",
+    textAlign: "center",
     marginTop: 16,
   },
 });
