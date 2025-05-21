@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { auth } from "../../firebase/config";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "../redux/authSlice";
+import { clearUser } from "../../redux/authSlice";
 
 export default function UserScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export default function UserScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>¡Bienvenido a Home del User</Text>
+      <Text style={styles.welcomeText}>¡Bienvenido a Home del Admin!</Text>
       <Text style={styles.infoText}>Nombre: {name}</Text>
       <Text style={styles.infoText}>Correo: {email}</Text>
       <Text style={styles.infoText}>Rol: {role}</Text>

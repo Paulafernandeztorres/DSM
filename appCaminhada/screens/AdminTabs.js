@@ -1,8 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import UserScreen from "./User/UserScreen";
-import BookingsScreen from "./User/BookingsScreen";
-import SearchScreen from "./User/SearchScreen";
+import StatisticsScreen from "./Admin/StatisticsScreen";
+import ScannerScreen from "./Admin/ScannerScreen";
+import AdminScreen from "./Admin/AdminScreen";
 import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
@@ -23,27 +23,27 @@ export default function UserTabs() {
         },
         tabBarIcon: ({ color, size }) => {
           let iconName;
-          if (route.name === "Search") iconName = "search";
-          else if (route.name === "Bookings") iconName = "receipt";
-          else if (route.name === "User") iconName = "person";
+          if (route.name === "Statistics") iconName = "bar-chart";
+          else if (route.name === "Scanner") iconName = "camera";
+          else if (route.name === "Admin") iconName = "settings";
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
       <Tab.Screen
-        name="Bookings"
-        component={BookingsScreen}
-        options={{ title: "Reservas" }}
+        name="Statistics"
+        component={StatisticsScreen}
+        options={{ title: "Estadísticas" }}
       />
       <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{ title: "Buscar" }}
+        name="Scanner"
+        component={ScannerScreen}
+        options={{ title: "Escanear" }}
       />
       <Tab.Screen
-        name="User"
-        component={UserScreen}
-        options={{ title: "Usuario" }}
+        name="Admin"
+        component={AdminScreen}
+        options={{ title: "Administrar" }}
       />
     </Tab.Navigator>
   );

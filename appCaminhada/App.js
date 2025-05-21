@@ -5,8 +5,8 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import AdminTabs from "./screens/AdminTabs";
 import UserTabs from "./screens/UserTabs";
-import AdminScreen from "./screens/AdminScreen";
 
 import { auth } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -41,7 +41,7 @@ function AppContent() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           role === "admin" ? (
-            <Stack.Screen name="Admin" component={AdminScreen} />
+            <Stack.Screen name="Admin" component={AdminTabs} />
           ) : role === "user" ? (
             <Stack.Screen name="UserTabs" component={UserTabs} />
           ) : null
