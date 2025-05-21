@@ -41,7 +41,7 @@ function AppContent() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
           role === "admin" ? (
-            <Stack.Screen name="Admin" component={AdminTabs} />
+            <Stack.Screen name="AdminTabs" component={AdminTabs} />
           ) : role === "user" ? (
             <Stack.Screen name="UserTabs" component={UserTabs} />
           ) : null
