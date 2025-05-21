@@ -5,7 +5,8 @@ import { Provider, useDispatch, useSelector } from "react-redux";
 
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import HomeScreen from "./screens/HomeScreen";
+import UserTabs from "./screens/UserTabs";
+import AdminScreen from "./screens/AdminScreen";
 
 import { auth } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -17,7 +18,7 @@ const Stack = createNativeStackNavigator();
 
 function AppContent() {
   const dispatch = useDispatch();
-  const { user, loading } = useSelector((state) => state.auth);
+  const { user, loading, role } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -39,7 +40,11 @@ function AppContent() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          role === "admin" ? (
+            <Stack.Screen name="Admin" component={AdminScreen} />
+          ) : role === "user" ? (
+            <Stack.Screen name="UserTabs" component={UserTabs} />
+          ) : null
         ) : (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />

@@ -5,7 +5,7 @@ import { auth } from "../firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../redux/authSlice";
 
-export default function HomeScreen({ navigation }) {
+export default function UserScreen({ navigation }) {
   const dispatch = useDispatch();
   // Accede a los datos del usuario desde Redux
   const { name, email, role } = useSelector((state) => state.auth);
@@ -21,7 +21,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcomeText}>¡Bienvenido a Home!</Text>
+      <Text style={styles.welcomeText}>¡Bienvenido a Home del Admin!</Text>
       <Text style={styles.infoText}>Nombre: {name}</Text>
       <Text style={styles.infoText}>Correo: {email}</Text>
       <Text style={styles.infoText}>Rol: {role}</Text>
