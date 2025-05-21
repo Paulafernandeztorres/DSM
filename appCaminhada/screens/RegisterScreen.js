@@ -58,7 +58,7 @@ export default function RegisterScreen({ navigation }) {
       });
       dispatch(
         setUser({
-          user: userCredential.user,
+          user: userCredential.user.uid,
           name,
           email,
           role: "user",

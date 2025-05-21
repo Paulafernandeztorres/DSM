@@ -45,7 +45,7 @@ export default function LoginScreen({ navigation }) {
         const userData = userDoc.data();
         dispatch(
           setUser({
-            user: userCredential.user,
+            user: userCredential.user.uid,
             name: userData.name,
             email: userData.email,
             role: userData.role,
@@ -55,7 +55,7 @@ export default function LoginScreen({ navigation }) {
         // Si no existe, solo guarda el usuario
         dispatch(
           setUser({
-            user: userCredential.user,
+            user: userCredential.user.uid,
             name: null,
             email: userCredential.user.email,
             role: null,

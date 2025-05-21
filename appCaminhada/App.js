@@ -23,8 +23,8 @@ function AppContent() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(setUser(user));
-      } else {
+        dispatch(setUser(user.uid));
+      } else {r
         dispatch(clearUser());
       }
     });
