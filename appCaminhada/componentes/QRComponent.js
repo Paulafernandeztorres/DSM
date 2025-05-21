@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
-import { Pressable, View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
-const QRComponent = ({ onCodeScanned, onCancel }) => {
+const QRComponent = ({ onCodeScanned }) => {
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
   const [scanned, setScanned] = useState(false);
@@ -27,51 +26,57 @@ const QRComponent = ({ onCodeScanned, onCancel }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.cameraWrapper}>
       <CameraView
         ref={cameraRef}
-        style={{ flex: 1 }}
+        style={styles.camera}
         facing="back"
         mode="barCodeScanner"
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr"],
-        }}
+        barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
       >
-        <View style={styles.scanOverlay}>
-          <Text style={styles.scanText}>Escanea un código QR</Text>
+        <View style={styles.overlay}>
+          <Text style={styles.overlayText}>Escanea un código QR</Text>
         </View>
       </CameraView>
-      <Button title="Cancelar" onPress={onCancel} color="#f55" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  permissionContainer: {
+  cameraWrapper: {
+    height: 250,
+    borderRadius: 12,
+    overflow: "hidden",
+    marginBottom: 16,
+  },
+  camera: {
     flex: 1,
+  },
+  overlay: {
+    position: "absolute",
+    top: 10,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.3)",
+    paddingVertical: 8,
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+  permissionContainer: {
+    height: 250,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
+    borderRadius: 12,
+    marginBottom: 16,
   },
   permissionText: {
     color: "white",
     fontSize: 16,
     textAlign: "center",
-  },
-  scanOverlay: {
-    position: "absolute",
-    top: 50,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 20,
-  },
-  scanText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
 

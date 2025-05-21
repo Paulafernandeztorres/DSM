@@ -1,3 +1,4 @@
+// ScannerScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -10,12 +11,13 @@ import {
   ScrollView,
   Image,
   Alert,
+  Dimensions,
 } from "react-native";
 import QRComponent from "../../componentes/QRComponent";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { Ionicons, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 
 export default function ScannerScreen() {
@@ -34,7 +36,6 @@ export default function ScannerScreen() {
     setUserData(null);
     setProductsData([]);
     try {
-      // 1. Obtener reserva
       const resRef = doc(db, "reservations", reservationId);
       const resSnap = await getDoc(resRef);
 
@@ -47,14 +48,12 @@ export default function ScannerScreen() {
       const resData = { id: resSnap.id, ...resSnap.data() };
       setReservation(resData);
 
-      // 2. Obtener usuario
       const userRef = doc(db, "users", resData.userId);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
         setUserData(userSnap.data());
       }
 
-      // 3. Obtener productos
       if (Array.isArray(resData.items)) {
         const products = await Promise.all(
           resData.items.map(async (productId) => {
@@ -93,86 +92,98 @@ export default function ScannerScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {scanning && (
-          <QRComponent
-            onCodeScanned={(id) => handleQRCode(id)}
-            onCancel={() => setScanning(false)}
-          />
-        )}
+      {scanning ? (
+        <>
+          <View style={styles.cameraWrapper}>
+            <QRComponent
+              onCodeScanned={handleQRCode}
+              onCancel={() => setScanning(false)}
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.scanButton}
+            onPress={() => setScanning(false)}
+          >
+            <Ionicons name="close-outline" size={24} color="#fff" />
+            <Text style={styles.scanButtonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <ScrollView contentContainerStyle={styles.scrollContent}>
+            {loading && <ActivityIndicator size="large" color="#333" />}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
 
-        {loading && <ActivityIndicator size="large" color="#333" />}
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-
-        {reservation && (
-          <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut}>
-            {/* Usuario */}
-            {userData && (
-              <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Usuario</Text>
-                <Text style={styles.info}>👤 Nombre: {userData.name}</Text>
-                <Text style={styles.info}>📧 Email: {userData.email}</Text>
-              </View>
-            )}
-
-            {/* Productos */}
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Productos</Text>
-              {productsData.map((product) => (
-                <View key={product.id} style={styles.productContainer}>
-                  {product.images?.[0] && (
-                    <Image
-                      source={{ uri: product.images[0] }}
-                      style={styles.productImage}
-                    />
-                  )}
-                  <View style={styles.productInfo}>
-                    <Text style={styles.productTitle}>{product.name}</Text>
-                    <Text style={styles.info}>💬 {product.description}</Text>
-                    <Text style={styles.info}>
-                      💲 Precio: {product.price} €
-                    </Text>
-                    <Text style={styles.info}>📦 Estado: {product.status}</Text>
+            {reservation && (
+              <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut}>
+                {userData && (
+                  <View style={styles.card}>
+                    <Text style={styles.sectionTitle}>Usuario</Text>
+                    <Text style={styles.info}>👤 Nombre: {userData.name}</Text>
+                    <Text style={styles.info}>📧 Email: {userData.email}</Text>
                   </View>
+                )}
+
+                <View style={styles.card}>
+                  <Text style={styles.sectionTitle}>Productos</Text>
+                  {productsData.map((product) => (
+                    <View key={product.id} style={styles.productContainer}>
+                      {product.images?.[0] && (
+                        <Image
+                          source={{ uri: product.images[0] }}
+                          style={styles.productImage}
+                        />
+                      )}
+                      <View style={styles.productInfo}>
+                        <Text style={styles.productTitle}>{product.name}</Text>
+                        <Text style={styles.info}>
+                          💬 {product.description}
+                        </Text>
+                        <Text style={styles.info}>
+                          💲 Precio: {product.price} €
+                        </Text>
+                        <Text style={styles.info}>
+                          📦 Estado: {product.status}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
                 </View>
-              ))}
-            </View>
 
-            {/* Reserva */}
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Reserva</Text>
-              <Text style={styles.info}>🆔 ID: {reservation.id}</Text>
-              <Text style={styles.info}>
-                📅 Fecha:{" "}
-                {reservation.timestamp?.toDate?.().toLocaleString?.() ||
-                  reservation.timestamp}
-              </Text>
+                <View style={styles.card}>
+                  <Text style={styles.sectionTitle}>Reserva</Text>
+                  <Text style={styles.info}>🆔 ID: {reservation.id}</Text>
+                  <Text style={styles.info}>
+                    📅 Fecha:{" "}
+                    {reservation.timestamp?.toDate?.().toLocaleString?.() ||
+                      reservation.timestamp}
+                  </Text>
 
-              <Text style={{ marginTop: 10, marginBottom: 4 }}>
-                Cambiar estado:
-              </Text>
-              <Picker
-                selectedValue={reservation.status}
-                onValueChange={(value) => handleStatusChange(value)}
-                enabled={!updatingStatus}
-              >
-                {statusOptions.map((status) => (
-                  <Picker.Item label={status} value={status} key={status} />
-                ))}
-              </Picker>
-            </View>
-          </Animated.View>
-        )}
-      </ScrollView>
+                  <Text style={{ marginTop: 10, marginBottom: 4 }}>
+                    Cambiar estado:
+                  </Text>
+                  <Picker
+                    selectedValue={reservation.status}
+                    onValueChange={(value) => handleStatusChange(value)}
+                    enabled={!updatingStatus}
+                  >
+                    {statusOptions.map((status) => (
+                      <Picker.Item label={status} value={status} key={status} />
+                    ))}
+                  </Picker>
+                </View>
+              </Animated.View>
+            )}
+          </ScrollView>
 
-      {!scanning && (
-        <TouchableOpacity
-          style={styles.scanButton}
-          onPress={() => setScanning(true)}
-        >
-          <Ionicons name="camera-outline" size={24} color="#fff" />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.scanButton}
+            onPress={() => setScanning(true)}
+          >
+            <Ionicons name="camera-outline" size={24} color="#fff" />
+            <Text style={styles.scanButtonText}>Leer QR</Text>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
@@ -217,6 +228,7 @@ const styles = StyleSheet.create({
   },
   scanButton: {
     backgroundColor: "#007BFF",
+    flexDirection: "row",
     paddingVertical: 16,
     alignItems: "center",
     justifyContent: "center",
@@ -224,6 +236,18 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 12,
     elevation: 3,
+    gap: 8,
+  },
+  scanButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  cameraWrapper: {
+    flex: 1,
+    margin: 16,
+    borderRadius: 12,
+    overflow: "hidden",
   },
   productContainer: {
     flexDirection: "row",
