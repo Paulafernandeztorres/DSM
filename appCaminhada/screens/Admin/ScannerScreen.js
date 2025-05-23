@@ -33,6 +33,8 @@ function QRScannerTab() {
   const [loading, setLoading] = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState(false);
   const [error, setError] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
 
   const handleQRCode = async (reservationId) => {
     setLoading(true);
@@ -133,23 +135,41 @@ function QRScannerTab() {
                   <Text style={styles.sectionTitle}>Productos</Text>
                   {productsData.map((product) => (
                     <View key={product.id} style={styles.productContainer}>
-                      {product.images?.[0] && (
-                        <Image
-                          source={{ uri: product.images[0] }}
-                          style={styles.productImage}
-                        />
-                      )}
                       <View style={styles.productInfo}>
                         <Text style={styles.productTitle}>{product.name}</Text>
-                        <Text style={styles.info}>
-                          💬 {product.description}
-                        </Text>
-                        <Text style={styles.info}>
-                          💲 Precio: {product.price} €
-                        </Text>
-                        <Text style={styles.info}>
-                          📦 Estado: {product.status}
-                        </Text>
+                        {/* Galería de imágenes entre nombre y descripción */}
+                        {product.images && product.images.length > 0 && (
+                          <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            style={{ marginTop: 8, marginBottom: 8 }}
+                          >
+                            {product.images.map((img, idx) => (
+                              <TouchableOpacity
+                                key={idx}
+                                onPress={() => {
+                                  setModalImage(img);
+                                  setModalVisible(true);
+                                }}
+                              >
+                                <Image
+                                  source={{ uri: img }}
+                                  style={{
+                                    width: 80,
+                                    height: 80,
+                                    borderRadius: 8,
+                                    marginRight: 8,
+                                    borderWidth: 2,
+                                    borderColor: "#eee",
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            ))}
+                          </ScrollView>
+                        )}
+                        <Text style={styles.info}>💬 {product.description}</Text>
+                        <Text style={styles.info}>💲 Precio: {product.price} €</Text>
+                        <Text style={styles.info}>📦 Estado: {product.status}</Text>
                       </View>
                     </View>
                   ))}
@@ -189,6 +209,23 @@ function QRScannerTab() {
             <Text style={styles.scanButtonText}>Leer QR</Text>
           </TouchableOpacity>
         </>
+      )}
+
+      {/* Modal para imagen ampliada */}
+      {modalVisible && (
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Ionicons name="close-circle" size={40} color="#fff" />
+          </TouchableOpacity>
+          <Image
+            source={{ uri: modalImage }}
+            style={styles.fullImage}
+            resizeMode="contain"
+          />
+        </View>
       )}
     </View>
   );
@@ -442,5 +479,27 @@ const styles = StyleSheet.create({
     color: "#333",
     borderWidth: 1,
     borderColor: "#ddd",
+  },
+  modalOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 100,
+  },
+  fullImage: {
+    width: "90%",
+    height: "70%",
+    borderRadius: 16,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 40,
+    right: 30,
+    zIndex: 101,
   },
 });
