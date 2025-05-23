@@ -1,7 +1,8 @@
 // firebase.js
 import { initializeApp } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 // Tu configuración de Firebase
@@ -26,4 +27,7 @@ const auth = initializeAuth(app, {
 // Inicializa Firestore
 const db = getFirestore(app, "database-caminhada");
 
-export { auth, db };
+// Inicializa almacenamiento
+const storage = getStorage(app, "gs://proyectocaminhada.firebasestorage.app");
+
+export { auth, db, storage };
