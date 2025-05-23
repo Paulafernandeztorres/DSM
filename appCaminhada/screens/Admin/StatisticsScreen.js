@@ -108,7 +108,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function StatisticsScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff", paddingTop: 24 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff", paddingTop: 40 }}>
       <Tab.Navigator
         screenOptions={{
           tabBarActiveTintColor: "#4f46e5",

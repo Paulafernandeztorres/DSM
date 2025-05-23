@@ -126,8 +126,24 @@ function QRScannerTab() {
                 {userData && (
                   <View style={styles.card}>
                     <Text style={styles.sectionTitle}>Usuario</Text>
-                    <Text style={styles.info}>👤 Nombre: {userData.name}</Text>
-                    <Text style={styles.info}>📧 Email: {userData.email}</Text>
+                    <View style={styles.dataRow}>
+                      <Ionicons
+                        name="person-outline"
+                        size={20}
+                        color="#007BFF"
+                        style={styles.dataIcon}
+                      />
+                      <Text style={styles.dataText}>{userData.name}</Text>
+                    </View>
+                    <View style={styles.dataRow}>
+                      <Ionicons
+                        name="mail-outline"
+                        size={20}
+                        color="#007BFF"
+                        style={styles.dataIcon}
+                      />
+                      <Text style={styles.dataText}>{userData.email}</Text>
+                    </View>
                   </View>
                 )}
 
@@ -137,7 +153,7 @@ function QRScannerTab() {
                     <View key={product.id} style={styles.productContainer}>
                       <View style={styles.productInfo}>
                         <Text style={styles.productTitle}>{product.name}</Text>
-                        {/* Galería de imágenes entre nombre y descripción */}
+                        {/* Galería de imágenes aquí */}
                         {product.images && product.images.length > 0 && (
                           <ScrollView
                             horizontal
@@ -167,9 +183,35 @@ function QRScannerTab() {
                             ))}
                           </ScrollView>
                         )}
-                        <Text style={styles.info}>💬 {product.description}</Text>
-                        <Text style={styles.info}>💲 Precio: {product.price} €</Text>
-                        <Text style={styles.info}>📦 Estado: {product.status}</Text>
+                        <View style={styles.dataRow}>
+                          <Ionicons
+                            name="chatbubble-ellipses-outline"
+                            size={20}
+                            color="#007BFF"
+                            style={styles.dataIcon}
+                          />
+                          <Text style={styles.dataText}>
+                            {product.description}
+                          </Text>
+                        </View>
+                        <View style={styles.dataRow}>
+                          <Ionicons
+                            name="pricetag-outline"
+                            size={20}
+                            color="#007BFF"
+                            style={styles.dataIcon}
+                          />
+                          <Text style={styles.dataText}>{product.price} €</Text>
+                        </View>
+                        <View style={styles.dataRow}>
+                          <Ionicons
+                            name="cube-outline"
+                            size={20}
+                            color="#007BFF"
+                            style={styles.dataIcon}
+                          />
+                          <Text style={styles.dataText}>{product.status}</Text>
+                        </View>
                       </View>
                     </View>
                   ))}
@@ -177,12 +219,27 @@ function QRScannerTab() {
 
                 <View style={styles.card}>
                   <Text style={styles.sectionTitle}>Reserva</Text>
-                  <Text style={styles.info}>🆔 ID: {reservation.id}</Text>
-                  <Text style={styles.info}>
-                    📅 Fecha:{" "}
-                    {reservation.timestamp?.toDate?.().toLocaleString?.() ||
-                      reservation.timestamp}
-                  </Text>
+                  <View style={styles.dataRow}>
+                    <Ionicons
+                      name="finger-print-outline"
+                      size={20}
+                      color="#007BFF"
+                      style={styles.dataIcon}
+                    />
+                    <Text style={styles.dataText}>{reservation.id}</Text>
+                  </View>
+                  <View style={styles.dataRow}>
+                    <Ionicons
+                      name="calendar-outline"
+                      size={20}
+                      color="#007BFF"
+                      style={styles.dataIcon}
+                    />
+                    <Text style={styles.dataText}>
+                      {reservation.timestamp?.toDate?.().toLocaleString?.() ||
+                        reservation.timestamp}
+                    </Text>
+                  </View>
 
                   <Text style={{ marginTop: 10, marginBottom: 4 }}>
                     Cambiar estado:
@@ -376,7 +433,7 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function ScannerScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff", paddingTop: 24 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff", paddingTop: 40 }}>
       <Tab.Navigator
         screenOptions={{
           tabBarActiveTintColor: "#4f46e5",
@@ -394,7 +451,6 @@ export default function ScannerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight || 24 : 24,
     backgroundColor: "#f0f2f5",
     padding: 16,
   },
@@ -404,10 +460,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 20,
     shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
   },
   sectionTitle: {
     fontSize: 18,
@@ -501,5 +553,17 @@ const styles = StyleSheet.create({
     top: 40,
     right: 30,
     zIndex: 101,
+  },
+  dataRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  dataIcon: {
+    marginRight: 8,
+  },
+  dataText: {
+    fontSize: 15,
+    color: "#444",
   },
 });
