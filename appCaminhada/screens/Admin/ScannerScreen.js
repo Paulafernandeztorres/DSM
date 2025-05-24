@@ -171,8 +171,8 @@ function QRScannerTab() {
                                 <Image
                                   source={{ uri: img }}
                                   style={{
-                                    width: 80,
-                                    height: 80,
+                                    width: 120,
+                                    height: 120,
                                     borderRadius: 8,
                                     marginRight: 8,
                                     borderWidth: 2,
@@ -299,6 +299,8 @@ function UploadProductTab() {
     status: "Disponible",
     category: "",
   });
+  const [modalImage, setModalImage] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const pickImage = async () => {
     const result = await ImagePicker.launchCameraAsync({
@@ -368,63 +370,105 @@ function UploadProductTab() {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
-      <TouchableOpacity style={styles.scanButton} onPress={pickImage}>
-        <Ionicons name="camera-outline" size={24} color="#fff" />
-        <Text style={styles.scanButtonText}>Sacar foto</Text>
-      </TouchableOpacity>
-      <View style={{ flexDirection: "row", marginVertical: 8 }}>
-        {images.map((img, idx) => (
+    <View style={{ flex: 1 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }}>
+        <TouchableOpacity style={styles.scanButton} onPress={pickImage}>
+          <Ionicons name="camera-outline" size={24} color="#fff" />
+          <Text style={styles.scanButtonText}>Sacar foto</Text>
+        </TouchableOpacity>
+        <View style={{ flexDirection: "row", marginVertical: 8 }}>
+          {images.map((img, idx) => (
+            <View key={idx} style={{ position: "relative", marginRight: 8 }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalImage(img);
+                  setModalVisible(true);
+                }}
+              >
+                <Image
+                  source={{ uri: img }}
+                  style={{ width: 90, height: 90, borderRadius: 10 }} // <-- Cambiado aquí
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  position: "absolute",
+                  top: -8,
+                  right: -8,
+                  backgroundColor: "#fff",
+                  borderRadius: 12,
+                  padding: 2,
+                  elevation: 2,
+                }}
+                onPress={() => {
+                  setImages(images.filter((_, i) => i !== idx));
+                }}
+              >
+                <Ionicons name="trash-outline" size={18} color="#e11d48" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre"
+          value={form.name}
+          onChangeText={(v) => handleChange("name", v)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Descripción"
+          value={form.description}
+          onChangeText={(v) => handleChange("description", v)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Precio"
+          keyboardType="numeric"
+          value={form.price}
+          onChangeText={(v) => handleChange("price", v)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Estado"
+          value={form.status}
+          onChangeText={(v) => handleChange("status", v)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Categoría"
+          value={form.category}
+          onChangeText={(v) => handleChange("category", v)}
+        />
+        <TouchableOpacity
+          style={styles.scanButton}
+          onPress={handleUpload}
+          disabled={uploading}
+        >
+          <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
+          <Text style={styles.scanButtonText}>
+            {uploading ? "Cargando..." : "Subir producto"}
+          </Text>
+        </TouchableOpacity>
+        {uploading && <ActivityIndicator style={{ marginTop: 10 }} />}
+      </ScrollView>
+      {/* Modal para ver imagen en grande */}
+      {modalVisible && (
+        <View style={styles.modalOverlay}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Ionicons name="close-circle" size={40} color="#fff" />
+          </TouchableOpacity>
           <Image
-            key={idx}
-            source={{ uri: img }}
-            style={{ width: 60, height: 60, marginRight: 8, borderRadius: 8 }}
+            source={{ uri: modalImage }}
+            style={styles.fullImage}
+            resizeMode="contain"
           />
-        ))}
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre"
-        value={form.name}
-        onChangeText={(v) => handleChange("name", v)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Descripción"
-        value={form.description}
-        onChangeText={(v) => handleChange("description", v)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Precio"
-        keyboardType="numeric"
-        value={form.price}
-        onChangeText={(v) => handleChange("price", v)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Estado"
-        value={form.status}
-        onChangeText={(v) => handleChange("status", v)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Categoría"
-        value={form.category}
-        onChangeText={(v) => handleChange("category", v)}
-      />
-      <TouchableOpacity
-        style={styles.scanButton}
-        onPress={handleUpload}
-        disabled={uploading}
-      >
-        <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
-        <Text style={styles.scanButtonText}>
-          {uploading ? "Cargando..." : "Subir producto"}
-        </Text>
-      </TouchableOpacity>
-      {uploading && <ActivityIndicator style={{ marginTop: 10 }} />}
-    </ScrollView>
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -523,7 +567,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   input: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#f9fafb", 
     borderRadius: 10,
     padding: 12,
     marginBottom: 12,
