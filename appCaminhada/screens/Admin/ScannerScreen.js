@@ -215,6 +215,36 @@ function QRScannerTab() {
                       </View>
                     </View>
                   ))}
+                  {/* Total a pagar */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                      marginTop: 12,
+                      paddingTop: 8,
+                    }}
+                  >
+                    <Ionicons
+                      name="calculator-outline"
+                      size={22}
+                      color="#007BFF"
+                      style={{ marginRight: 8 }}
+                    />
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 17,
+                        color: "#222",
+                      }}
+                    >
+                      Total:{" "}
+                      {productsData
+                        .reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0)
+                        .toFixed(2)}{" "}
+                      €
+                    </Text>
+                  </View>
                 </View>
 
                 <View style={styles.card}>
@@ -567,7 +597,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   input: {
-    backgroundColor: "#f9fafb", 
+    backgroundColor: "#f9fafb",
     borderRadius: 10,
     padding: 12,
     marginBottom: 12,
