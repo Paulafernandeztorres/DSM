@@ -7,6 +7,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import AdminTabs from "./screens/AdminTabs";
 import UserTabs from "./screens/UserTabs";
+import ProductDetailsScreen from "./screens/User/ProductDetailsScreen";
 
 import { auth } from "./firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
@@ -43,7 +44,13 @@ function AppContent() {
           role === "admin" ? (
             <Stack.Screen name="AdminTabs" component={AdminTabs} />
           ) : role === "user" ? (
-            <Stack.Screen name="UserTabs" component={UserTabs} />
+            <>
+              <Stack.Screen name="UserTabs" component={UserTabs} />
+              <Stack.Screen
+                name="ProductDetails"
+                component={ProductDetailsScreen}
+              />
+            </>
           ) : null
         ) : (
           <>

@@ -49,6 +49,7 @@ export default function LoginScreen({ navigation }) {
             name: userData.name,
             email: userData.email,
             role: userData.role,
+            currentUserId: userCredential.user.uid, 
           })
         );
       } else {
@@ -58,6 +59,7 @@ export default function LoginScreen({ navigation }) {
             name: null,
             email: userCredential.user.email,
             role: null,
+            currentUserId: userCredential.user.uid,
           })
         );
       }

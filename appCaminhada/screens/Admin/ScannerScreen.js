@@ -341,6 +341,7 @@ function UploadProductTab() {
     "Material escolar",
     "Calzado",
     "Adornos",
+    "Artesanía",
     "Otro",
   ];
 
@@ -348,7 +349,7 @@ function UploadProductTab() {
 
   const pickImage = async () => {
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: [ImagePicker.MediaType.Images],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       allowsMultipleSelection: false,

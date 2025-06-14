@@ -6,6 +6,8 @@ const initialState = {
   name: null,
   email: null,
   role: null,
+  currentId: null, 
+  currentUserId: null, 
 };
 
 const authSlice = createSlice({
@@ -17,6 +19,8 @@ const authSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.role = action.payload.role;
+      state.currentId = action.payload.currentId; 
+      state.currentUserId = action.payload.currentUserId; 
       state.loading = false;
     },
     clearUser(state) {
@@ -24,6 +28,8 @@ const authSlice = createSlice({
       state.name = null;
       state.email = null;
       state.role = null;
+      state.currentId = null; 
+      state.currentUserId = null; 
       state.loading = false;
     },
   },
