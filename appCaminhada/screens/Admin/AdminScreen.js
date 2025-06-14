@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../../firebase/config";
@@ -23,28 +24,35 @@ export default function AdminScreen({ navigation }) {
     reservas: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchStats = async () => {
+    setLoading(true);
+    try {
+      const usersSnapshot = await getDocs(collection(db, "users"));
+      const productsSnapshot = await getDocs(collection(db, "products"));
+      const reservationsSnapshot = await getDocs(collection(db, "reservations"));
+
+      setStats({
+        clientes: usersSnapshot.size,
+        productos: productsSnapshot.size,
+        reservas: reservationsSnapshot.size,
+      });
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchStats = async () => {
-      setLoading(true);
-      try {
-        const usersSnapshot = await getDocs(collection(db, "users"));
-        const productsSnapshot = await getDocs(collection(db, "products"));
-        const reservationsSnapshot = await getDocs(collection(db, "reservations"));
-
-        setStats({
-          clientes: usersSnapshot.size,
-          productos: productsSnapshot.size,
-          reservas: reservationsSnapshot.size,
-        });
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      }
-      setLoading(false);
-    };
-
     fetchStats();
   }, []);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchStats();
+    setRefreshing(false);
+  };
 
   const handleLogout = async () => {
     try {
@@ -65,6 +73,9 @@ export default function AdminScreen({ navigation }) {
         paddingHorizontal: 20,
         paddingBottom: 20,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
     >
       <Text style={styles.welcomeText}>¡Bienvenido, administrador!</Text>
       <View style={styles.infoCard}>
