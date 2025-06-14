@@ -36,6 +36,14 @@ export default function RegisterScreen({ navigation }) {
       });
       return;
     }
+    if (password.length < 6) {
+      Toast.show({
+        type: "error",
+        text1: "Error de registro",
+        text2: "La contraseña debe de tener al menos 6 dígitos.",
+      });
+      return;
+    }
     if (password !== confirmPassword) {
       Toast.show({
         type: "error",
@@ -71,11 +79,19 @@ export default function RegisterScreen({ navigation }) {
       });
       navigation.goBack();
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error de registro",
-        text2: error.message,
-      });
+      if (error.code === "auth/email-already-in-use") {
+        Toast.show({
+          type: "error",
+          text1: "Error de registro",
+          text2: "Este usuario ya está registrado.",
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error de registro",
+          text2: error.message,
+        });
+      }
     }
   };
 
