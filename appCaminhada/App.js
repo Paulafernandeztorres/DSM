@@ -24,7 +24,7 @@ function AppContent() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         dispatch(setUser(user.uid));
-      } else {r
+      } else {
         dispatch(clearUser());
       }
     });
