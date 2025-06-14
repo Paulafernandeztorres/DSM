@@ -326,15 +326,29 @@ function UploadProductTab() {
     name: "",
     description: "",
     price: "",
-    status: "Disponible",
-    category: "",
+    status: "Disponible", // Default value set to "Disponible"
+    category: "Otro",
   });
   const [modalImage, setModalImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+
+  const categories = [
+    "Ropa",
+    "Juguetes",
+    "Electrónica",
+    "Material escolar",
+    "Calzado",
+    "Adornos",
+    "Otro",
+  ];
+
+  const statuses = ["Disponible", "Reservado", "No disponible"];
 
   const pickImage = async () => {
     const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: [ImagePicker.MediaType.Images],
       allowsEditing: true,
       aspect: [4, 3],
       allowsMultipleSelection: false,
@@ -389,8 +403,8 @@ function UploadProductTab() {
         name: "",
         description: "",
         price: "",
-        status: "",
-        category: "",
+        status: "Disponible",
+        category: "Otro",
       });
       setImages([]);
     } catch (e) {
@@ -417,7 +431,7 @@ function UploadProductTab() {
               >
                 <Image
                   source={{ uri: img }}
-                  style={{ width: 90, height: 90, borderRadius: 10 }} 
+                  style={{ width: 90, height: 90, borderRadius: 10 }}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -458,28 +472,76 @@ function UploadProductTab() {
           value={form.price}
           onChangeText={(v) => handleChange("price", v)}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Estado"
-          value={form.status}
-          onChangeText={(v) => handleChange("status", v)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Categoría"
-          value={form.category}
-          onChangeText={(v) => handleChange("category", v)}
-        />
         <TouchableOpacity
-          style={styles.scanButton}
-          onPress={handleUpload}
-          disabled={uploading}
+          style={[styles.input, { flexDirection: "row", alignItems: "center" }]}
+          onPress={() => setShowStatusDropdown(!showStatusDropdown)}
         >
-          <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
-          <Text style={styles.scanButtonText}>
-            {uploading ? "Cargando..." : "Subir producto"}
+          <Text style={{ flex: 1, color: "#000" }}>
+            {form.status || "Estado"}
           </Text>
+          <Ionicons
+            name={showStatusDropdown ? "chevron-up-outline" : "chevron-down-outline"}
+            size={20}
+            color="#888"
+          />
         </TouchableOpacity>
+        {showStatusDropdown && (
+          <View style={[styles.dropdown, { marginBottom: 20 }]}>
+            {statuses.map((status) => (
+              <TouchableOpacity
+                key={status}
+                style={styles.dropdownItem}
+                onPress={() => {
+                  handleChange("status", status);
+                  setShowStatusDropdown(false);
+                }}
+              >
+                <Text style={styles.dropdownText}>{status}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+        <TouchableOpacity
+          style={[styles.input, { flexDirection: "row", alignItems: "center" }]}
+          onPress={() => setShowCategoryDropdown(!showCategoryDropdown)}
+        >
+          <Text style={{ flex: 1, color: "#000" }}>
+            {form.category || "Categoría"}
+          </Text>
+          <Ionicons
+            name={showCategoryDropdown ? "chevron-up-outline" : "chevron-down-outline"}
+            size={20}
+            color="#888"
+          />
+        </TouchableOpacity>
+        {showCategoryDropdown && (
+          <View style={[styles.dropdown, { marginBottom: 20 }]}>
+            {categories.map((category) => (
+              <TouchableOpacity
+                key={category}
+                style={styles.dropdownItem}
+                onPress={() => {
+                  handleChange("category", category);
+                  setShowCategoryDropdown(false);
+                }}
+              >
+                <Text style={styles.dropdownText}>{category}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+        <View style={{ marginTop: showCategoryDropdown || showStatusDropdown ? 20 : 0 }}>
+          <TouchableOpacity
+            style={styles.scanButton}
+            onPress={handleUpload}
+            disabled={uploading}
+          >
+            <Ionicons name="cloud-upload-outline" size={24} color="#fff" />
+            <Text style={styles.scanButtonText}>
+              {uploading ? "Cargando..." : "Subir producto"}
+            </Text>
+          </TouchableOpacity>
+        </View>
         {uploading && <ActivityIndicator style={{ marginTop: 10 }} />}
       </ScrollView>
       {/* Modal para ver imagen en grande */}
@@ -639,5 +701,21 @@ const styles = StyleSheet.create({
   dataText: {
     fontSize: 15,
     color: "#444",
+  },
+  dropdown: {
+    backgroundColor: "#f9fafb",
+    borderRadius: 10,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  dropdownItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: "#333",
   },
 });
