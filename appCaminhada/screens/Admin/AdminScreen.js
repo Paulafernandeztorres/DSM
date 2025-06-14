@@ -8,41 +8,41 @@ import {
   ScrollView,
 } from "react-native";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/config";
+import { auth, db } from "../../firebase/config";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../../redux/authSlice";
-// Importa aquí tus funciones para obtener estadísticas de Firestore
-// import { getGlobalStats } from "../../firebase/stats";
+import { collection, getDocs } from "firebase/firestore";
 
-export default function UserScreen({ navigation }) {
+export default function AdminScreen({ navigation }) {
   const dispatch = useDispatch();
   const { name, email, role } = useSelector((state) => state.auth);
 
-  // Estado para estadísticas globales
   const [stats, setStats] = useState({
     clientes: 0,
     productos: 0,
     reservas: 0,
-    ingresosMes: 0,
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulación de carga de estadísticas (reemplaza por tu lógica real)
     const fetchStats = async () => {
       setLoading(true);
-      // Ejemplo: const data = await getGlobalStats();
-      // setStats(data);
-      setTimeout(() => {
+      try {
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        const productsSnapshot = await getDocs(collection(db, "products"));
+        const reservationsSnapshot = await getDocs(collection(db, "reservations"));
+
         setStats({
-          clientes: 120,
-          productos: 35,
-          reservas: 210,
-          ingresosMes: 1450,
+          clientes: usersSnapshot.size,
+          productos: productsSnapshot.size,
+          reservas: reservationsSnapshot.size,
         });
-        setLoading(false);
-      }, 1000);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+      setLoading(false);
     };
+
     fetchStats();
   }, []);
 
@@ -98,10 +98,6 @@ export default function UserScreen({ navigation }) {
             <View style={styles.statBox}>
               <Text style={styles.statNumber}>{stats.reservas}</Text>
               <Text style={styles.statLabel}>Reservas</Text>
-            </View>
-            <View style={styles.statBox}>
-              <Text style={styles.statNumber}>{stats.ingresosMes} €</Text>
-              <Text style={styles.statLabel}>Ingresos (mes)</Text>
             </View>
           </View>
         )}

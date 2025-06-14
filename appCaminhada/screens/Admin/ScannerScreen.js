@@ -417,7 +417,7 @@ function UploadProductTab() {
               >
                 <Image
                   source={{ uri: img }}
-                  style={{ width: 90, height: 90, borderRadius: 10 }} // <-- Cambiado aquí
+                  style={{ width: 90, height: 90, borderRadius: 10 }} 
                 />
               </TouchableOpacity>
               <TouchableOpacity
