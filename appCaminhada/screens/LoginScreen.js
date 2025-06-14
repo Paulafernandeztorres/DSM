@@ -52,7 +52,6 @@ export default function LoginScreen({ navigation }) {
           })
         );
       } else {
-        // Si no existe, solo guarda el usuario
         dispatch(
           setUser({
             user: userCredential.user.uid,
@@ -63,11 +62,19 @@ export default function LoginScreen({ navigation }) {
         );
       }
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Error de inicio de sesión",
-        text2: error.message,
-      });
+      if (error.code === "auth/invalid-credential") {
+        Toast.show({
+          type: "error",
+          text1: "Error de inicio de sesión",
+          text2: "Credenciales inválidas. Verifica tu correo y contraseña.",
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error de inicio de sesión",
+          text2: error.message,
+        });
+      }
     }
   };
 
