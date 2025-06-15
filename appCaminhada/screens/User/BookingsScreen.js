@@ -1,7 +1,7 @@
 // screens/HomeScreen.js
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Modal, Image } from "react-native";
-import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Modal, Image, Alert } from "react-native";
+import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import QRCode from "react-native-qrcode-svg";
@@ -58,18 +58,66 @@ export default function BookingsScreen() {
     await fetchProductDetails(reservation.items[0]);
   };
 
-  const renderReservation = ({ item }) => (
-    <TouchableOpacity
-      style={styles.reservationCard}
-      onPress={() => handleReservationClick(item)}
-    >
-      <Text style={styles.reservationTitle}>Reserva ID: {item.id}</Text>
-      <Text style={styles.reservationStatus}>Estado: {item.status}</Text>
-      <Text style={styles.reservationTimestamp}>
-        Fecha: {item.timestamp?.toDate?.().toLocaleString() || "N/A"}
-      </Text>
-    </TouchableOpacity>
-  );
+  const cancelReservation = async () => {
+    Alert.alert(
+      "Confirmación",
+      "¿Estás seguro de que quieres cancelar esta reserva?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Sí",
+          onPress: async () => {
+            try {
+              const reservationRef = doc(db, "reservations", selectedReservation.id);
+              await updateDoc(reservationRef, { status: "cancelled" }); // Use updateDoc to update the status
+              setReservations((prevReservations) =>
+                prevReservations.map((reservation) =>
+                  reservation.id === selectedReservation.id
+                    ? { ...reservation, status: "cancelled" }
+                    : reservation
+                )
+              );
+              setModalVisible(false);
+            } catch (error) {
+              console.error("Error cancelling reservation:", error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const renderReservation = ({ item }) => {
+    const isCancelled = item.status === "cancelled";
+    const statusStyle =
+      item.status === "confirmed"
+        ? styles.confirmedStatus
+        : item.status === "completed"
+        ? styles.completedStatus
+        : item.status === "cancelled"
+        ? styles.cancelledStatus
+        : null;
+
+    return (
+      <TouchableOpacity
+        style={[
+          styles.reservationCard,
+          isCancelled && styles.cancelledReservationCard, // Apply transparency for canceled reservations
+        ]}
+        onPress={() => !isCancelled && handleReservationClick(item)} // Disable interaction for canceled reservations
+        disabled={isCancelled} // Disable TouchableOpacity for canceled reservations
+      >
+        <Text style={styles.reservationTitle}>Reserva ID: {item.id}</Text>
+        <Text style={[styles.reservationStatus, statusStyle]}>Estado: {item.status}</Text>
+        <Text style={styles.reservationTimestamp}>
+          Fecha: {item.timestamp?.toDate?.().toLocaleString() || "N/A"}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -101,13 +149,19 @@ export default function BookingsScreen() {
               <Text style={styles.productName}>{product.name}</Text>
               <Text style={styles.productPrice}>{product.price} €</Text>
               <View style={styles.qrContainer}>
+                <QRCode
+                  value={selectedReservation.id}
+                  size={200}
+                  backgroundColor="white"
+                  color="black"
+                />
               </View>
-              <QRCode
-                value={selectedReservation.id}
-                size={200}
-                backgroundColor="white"
-                color="black"
-              />
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={cancelReservation}
+              >
+                <Text style={styles.cancelButtonText}>Cancelar Reserva</Text>
+              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
@@ -172,4 +226,28 @@ const styles = StyleSheet.create({
   },
   closeButton: { backgroundColor: "#e5e5e5", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 10, marginTop: 16 },
   closeButtonText: { color: "#333", fontWeight: "600", fontSize: 14 },
+  cancelButton: {
+    backgroundColor: "#ff4d4d", // Red background
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    marginTop: 16,
+  },
+  cancelButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+  cancelledReservationCard: {
+    opacity: 0.5, // Make canceled reservations transparent
+  },
+  confirmedStatus: {
+    color: "#FFA500", // Orange for confirmed
+  },
+  completedStatus: {
+    color: "#008000", // Green for completed
+  },
+  cancelledStatus: {
+    color: "#FF0000", // Red for cancelled
+  },
 });

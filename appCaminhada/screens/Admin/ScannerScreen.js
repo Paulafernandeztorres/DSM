@@ -76,6 +76,10 @@ function QRScannerTab() {
         );
         setProductsData(products.filter(Boolean));
       }
+
+      // Cambiar el estado de la reserva a "completed"
+      await updateDoc(resRef, { status: "completed" });
+      setReservation({ ...resData, status: "completed" });
     } catch (e) {
       setError("Error al cargar datos: " + e.message);
     }
@@ -97,7 +101,7 @@ function QRScannerTab() {
     setUpdatingStatus(false);
   };
 
-  const statusOptions = ["Disponible", "Reservado", "No disponible"];
+  const statusOptions = ["confirmed", "cancelled", "completed"];
 
   return (
     <View style={styles.container}>

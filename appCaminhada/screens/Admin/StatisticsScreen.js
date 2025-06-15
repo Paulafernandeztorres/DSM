@@ -6,11 +6,6 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
 // Datos de ejemplo, deberías obtenerlos de Firestore
-const reservasPorEstado = {
-  labels: ["Pendiente", "Confirmada", "Cancelada", "Completada"],
-  datasets: [{ data: [8, 15, 3, 10] }],
-};
-
 const ingresosPorMes = {
   labels: ["Ene", "Feb", "Mar", "Abr", "May"],
   datasets: [{ data: [120, 250, 180, 300, 400] }],
@@ -118,24 +113,66 @@ function ProductosCategoria() {
 }
 
 function ReservasEstado() {
+  const [reservasData, setReservasData] = useState({
+    labels: ["confirmed", "cancelled", "completed"],
+    datasets: [{ data: [0, 0, 0] }],
+  });
+  const [loading, setLoading] = useState(true);
+
+  const fetchReservas = async () => {
+    setLoading(true);
+    try {
+      const reservasSnapshot = await getDocs(collection(db, "reservations"));
+      const statusCounts = { confirmed: 0, cancelled: 0, completed: 0 };
+
+      reservasSnapshot.forEach((doc) => {
+        const reserva = doc.data();
+        const status = reserva.status || "Otro";
+        if (statusCounts[status] !== undefined) {
+          statusCounts[status]++;
+        }
+      });
+
+      setReservasData({
+        labels: Object.keys(statusCounts),
+        datasets: [{ data: Object.values(statusCounts) }],
+      });
+    } catch (error) {
+      console.error("Error fetching reservation statuses:", error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchReservas();
+  }, []);
+
   return (
     <View style={{ alignItems: "center", marginTop: 24 }}>
-      <BarChart
-        data={reservasPorEstado}
-        width={Dimensions.get("window").width - 32}
-        height={220}
-        yAxisLabel=""
-        chartConfig={{
-          backgroundColor: "#fff",
-          backgroundGradientFrom: "#fff",
-          backgroundGradientTo: "#fff",
-          decimalPlaces: 0,
-          color: (opacity = 1) => `rgba(79, 70, 229, ${opacity})`,
-          labelColor: () => "#333",
-        }}
-        style={{ borderRadius: 16 }}
-      />
-      <Text style={{ marginTop: 16 }}>Reservas por estado</Text>
+      {loading ? (
+        <Text style={{ fontSize: 16, color: "#666", marginTop: 20 }}>
+          Cargando...
+        </Text>
+      ) : (
+        <>
+          <BarChart
+            data={reservasData}
+            width={Dimensions.get("window").width - 32}
+            height={220}
+            yAxisLabel=""
+            chartConfig={{
+              backgroundColor: "#fff",
+              backgroundGradientFrom: "#fff",
+              backgroundGradientTo: "#fff",
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(79, 70, 229, ${opacity})`,
+              labelColor: () => "#333",
+            }}
+            style={{ borderRadius: 16 }}
+          />
+          <Text style={{ marginTop: 16 }}>Reservas por estado</Text>
+        </>
+      )}
     </View>
   );
 }
