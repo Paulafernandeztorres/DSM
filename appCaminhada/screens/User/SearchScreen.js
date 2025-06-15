@@ -1,9 +1,10 @@
 // screens/HomeScreen.js
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, RefreshControl, Modal, Alert } from "react-native";
-import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, getDocs, addDoc, serverTimestamp, doc, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
+import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for heart icon
 
 export default function SearchScreen() {
   const { currentUserId } = useSelector((state) => state.auth); // Get currentUserId from Redux state
@@ -12,6 +13,7 @@ export default function SearchScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [favorites, setFavorites] = useState([]); // State to track favorite products
 
   const fetchProducts = async () => {
     try {
@@ -29,8 +31,21 @@ export default function SearchScreen() {
     }
   };
 
+  const fetchFavorites = async () => {
+    try {
+      const favoritesSnapshot = await getDocs(collection(db, "favorites"));
+      const favoritesData = favoritesSnapshot.docs
+        .filter((doc) => doc.data().userId === currentUserId)
+        .map((doc) => doc.data().productId);
+      setFavorites(favoritesData);
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
+    fetchFavorites();
   }, []);
 
   const onRefresh = () => {
@@ -57,19 +72,54 @@ export default function SearchScreen() {
     }
   };
 
-  const renderProduct = ({ item }) => (
-    <TouchableOpacity
-      style={styles.productCard}
-      onPress={() => {
-        setSelectedProduct(item);
-        setModalVisible(true);
-      }}
-    >
-      <Image source={{ uri: item.images[0] }} style={styles.productImage} />
-      <Text style={styles.productName}>{item.name}</Text>
-      <Text style={styles.productPrice}>{item.price} €</Text>
-    </TouchableOpacity>
-  );
+  const toggleFavorite = async (product) => {
+    try {
+      const isFavorite = favorites.includes(product.id);
+      if (isFavorite) {
+        await deleteDoc(doc(db, "favorites", `${currentUserId}_${product.id}`));
+        setFavorites(favorites.filter((id) => id !== product.id));
+      } else {
+        const favoriteData = {
+          productId: product.id,
+          userId: currentUserId,
+          timestamp: serverTimestamp(),
+        };
+        await setDoc(doc(db, "favorites", `${currentUserId}_${product.id}`), favoriteData);
+        setFavorites([...favorites, product.id]);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      Alert.alert("Error", "No se pudo actualizar favoritos. Inténtalo de nuevo.");
+    }
+  };
+
+  const renderProduct = ({ item }) => {
+    const isFavorite = favorites.includes(item.id);
+    return (
+      <View style={styles.productCard}>
+        <TouchableOpacity
+          style={styles.favoriteIcon}
+          onPress={() => toggleFavorite(item)}
+        >
+          <Ionicons
+            name={isFavorite ? "heart" : "heart-outline"}
+            size={24}
+            color={isFavorite ? "red" : "gray"}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedProduct(item);
+            setModalVisible(true);
+          }}
+        >
+          <Image source={{ uri: item.images[0] }} style={styles.productImage} />
+          <Text style={styles.productName}>{item.name}</Text>
+          <Text style={styles.productPrice}>{item.price} €</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -131,7 +181,11 @@ export default function SearchScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 8 },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 8,
+  },
   titleContainer: { marginBottom: 16, marginTop: 32 },
   title: {
     fontSize: 20,
@@ -153,7 +207,13 @@ const styles = StyleSheet.create({
     elevation: 2,
     width: "45%",
   },
-  productImage: { width: 80, height: 80, borderRadius: 8, marginBottom: 4 },
+  productImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    marginBottom: 4,
+    alignSelf: "center", 
+  },
   productName: { fontSize: 14, fontWeight: "bold", color: "#333", textAlign: "center" },
   productPrice: { fontSize: 12, color: "#666", marginTop: 2 },
   modalContainer: {
@@ -188,4 +248,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   closeButtonText: { color: "#333", fontWeight: "600", fontSize: 14 },
+  favoriteIcon: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+    zIndex: 1,
+  },
 });

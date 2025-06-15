@@ -5,6 +5,7 @@ import { collection, query, where, getDocs, doc, getDoc } from "firebase/firesto
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import QRCode from "react-native-qrcode-svg";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function BookingsScreen() {
   const { currentUserId } = useSelector((state) => state.auth); // Get currentUserId from Redux state
@@ -14,28 +15,30 @@ export default function BookingsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [product, setProduct] = useState(null);
 
-  useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        const reservationsQuery = query(
-          collection(db, "reservations"),
-          where("userId", "==", currentUserId) 
-        );
-        const reservationsSnapshot = await getDocs(reservationsQuery);
-        const reservationsData = reservationsSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setReservations(reservationsData);
-      } catch (error) {
-        console.error("Error fetching reservations:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchReservations = async () => {
+        try {
+          const reservationsQuery = query(
+            collection(db, "reservations"),
+            where("userId", "==", currentUserId)
+          );
+          const reservationsSnapshot = await getDocs(reservationsQuery);
+          const reservationsData = reservationsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setReservations(reservationsData);
+        } catch (error) {
+          console.error("Error fetching reservations:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-    fetchReservations();
-  }, [currentUserId]);
+      fetchReservations();
+    }, [currentUserId])
+  );
 
   const fetchProductDetails = async (productId) => {
     try {
