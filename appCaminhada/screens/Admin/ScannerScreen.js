@@ -67,7 +67,9 @@ function QRScannerTab() {
             const prodRef = doc(db, "products", productId);
             const prodSnap = await getDoc(prodRef);
             if (prodSnap.exists()) {
-              return { id: productId, ...prodSnap.data() };
+              // Cambiar el estado del producto a "No disponible"
+              await updateDoc(prodRef, { status: "No disponible" });
+              return { id: productId, ...prodSnap.data(), status: "No disponible" };
             }
             return null;
           })
@@ -95,7 +97,7 @@ function QRScannerTab() {
     setUpdatingStatus(false);
   };
 
-  const statusOptions = ["pending", "confirmed", "cancelled", "completed"];
+  const statusOptions = ["Disponible", "Reservado", "No disponible"];
 
   return (
     <View style={styles.container}>

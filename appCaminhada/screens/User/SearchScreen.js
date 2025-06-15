@@ -64,6 +64,12 @@ export default function SearchScreen() {
 
       await addDoc(collection(db, "reservations"), reservationData);
 
+      // Actualizar el estado del producto a 'Reservado'
+      await setDoc(doc(db, "products", selectedProduct.id), {
+        ...selectedProduct,
+        status: "Reservado",
+      });
+
       Alert.alert("Reserva realizada", `Has reservado el producto: ${selectedProduct.name}`);
       setModalVisible(false);
     } catch (error) {
@@ -95,11 +101,16 @@ export default function SearchScreen() {
 
   const renderProduct = ({ item }) => {
     const isFavorite = favorites.includes(item.id);
+    const isAvailable = item.status === "Disponible";
+    const statusColor = item.status === "Disponible" ? "green" : item.status === "Reservado" ? "orange" : "red";
+    const cardOpacity = isAvailable ? 1 : 0.5;
+
     return (
-      <View style={styles.productCard}>
+      <View style={[styles.productCard, { opacity: cardOpacity }]}>
         <TouchableOpacity
           style={styles.favoriteIcon}
           onPress={() => toggleFavorite(item)}
+          disabled={!isAvailable} // Deshabilitar interacción si no está disponible
         >
           <Ionicons
             name={isFavorite ? "heart" : "heart-outline"}
@@ -109,13 +120,19 @@ export default function SearchScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedProduct(item);
-            setModalVisible(true);
+            if (isAvailable) {
+              setSelectedProduct(item);
+              setModalVisible(true);
+            }
           }}
+          disabled={!isAvailable} // Deshabilitar interacción si no está disponible
         >
           <Image source={{ uri: item.images[0] }} style={styles.productImage} />
           <Text style={styles.productName}>{item.name}</Text>
           <Text style={styles.productPrice}>{item.price} €</Text>
+          <Text style={[styles.productStatus, { color: statusColor }]}>
+            {item.status || "Disponible"}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -201,6 +218,7 @@ const styles = StyleSheet.create({
     padding: 8,
     margin: 8,
     alignItems: "center",
+    justifyContent: "center", // Centrar contenido verticalmente
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -214,8 +232,24 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     alignSelf: "center", 
   },
-  productName: { fontSize: 14, fontWeight: "bold", color: "#333", textAlign: "center" },
-  productPrice: { fontSize: 12, color: "#666", marginTop: 2 },
+  productName: { 
+    fontSize: 14, 
+    fontWeight: "bold", 
+    color: "#333", 
+    textAlign: "center" // Centrar texto horizontalmente
+  },
+  productPrice: { 
+    fontSize: 12, 
+    color: "#666", 
+    marginTop: 2, 
+    textAlign: "center" // Centrar texto horizontalmente
+  },
+  productStatus: {
+    fontSize: 12,
+    fontWeight: "bold",
+    marginTop: 4,
+    textAlign: "center", // Centrar texto horizontalmente
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
