@@ -19,7 +19,7 @@ export default function BookingsScreen() {
       try {
         const reservationsQuery = query(
           collection(db, "reservations"),
-          where("userId", "==", currentUserId) // Filter by currentUserId
+          where("userId", "==", currentUserId) 
         );
         const reservationsSnapshot = await getDocs(reservationsQuery);
         const reservationsData = reservationsSnapshot.docs.map((doc) => ({
@@ -98,8 +98,13 @@ export default function BookingsScreen() {
               <Text style={styles.productName}>{product.name}</Text>
               <Text style={styles.productPrice}>{product.price} €</Text>
               <View style={styles.qrContainer}>
-                <QRCode value={product.name} size={150} />
               </View>
+              <QRCode
+                value={selectedReservation.id}
+                size={200}
+                backgroundColor="white"
+                color="black"
+              />
               <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setModalVisible(false)}
