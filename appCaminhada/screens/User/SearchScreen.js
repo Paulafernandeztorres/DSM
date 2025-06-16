@@ -196,40 +196,41 @@ export default function SearchScreen() {
         />
       )}
 
-      {selectedProduct && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Image
-                source={{ uri: selectedProduct.images[0] }}
-                style={styles.modalImage}
-              />
-              <Text style={styles.modalName}>{selectedProduct.name}</Text>
-              <Text style={styles.modalPrice}>{selectedProduct.price} €</Text>
-              <Text style={styles.modalDescription}>
-                {selectedProduct.description}
-              </Text>
-              <TouchableOpacity
-                style={styles.reserveButton}
-                onPress={handleReserve}
-              >
-                <Text style={styles.reserveButtonText}>Reservar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.closeButtonText}>Cerrar</Text>
-              </TouchableOpacity>
+        {selectedProduct && (
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Image
+                  source={{ uri: selectedProduct.images[0] }}
+                  style={styles.modalImage}
+                />
+                <Text style={styles.modalName}>{selectedProduct.name}</Text>
+                <Text style={styles.modalPrice}>{selectedProduct.price} €</Text>
+                <Text style={styles.modalDescription}>
+                  {selectedProduct.description}
+                </Text>
+                <TouchableOpacity
+                  style={styles.reserveButton}
+                  onPress={handleReserve}
+                >
+                  <Text style={styles.reserveButtonText}>Reservar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text style={styles.closeButtonText}>Cerrar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Modal>
-      )}
+          </Modal>
+        )}
+      </View>
     </View>
   );
 }
