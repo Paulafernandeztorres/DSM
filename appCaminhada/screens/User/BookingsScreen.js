@@ -1,11 +1,30 @@
 // screens/HomeScreen.js
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Modal, Image, Alert } from "react-native";
-import { collection, query, where, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Modal,
+  Image,
+  Alert,
+} from "react-native";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import QRCode from "react-native-qrcode-svg";
 import { useFocusEffect } from "@react-navigation/native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function BookingsScreen() {
   const { currentUserId } = useSelector((state) => state.auth); // Get currentUserId from Redux state
@@ -71,8 +90,23 @@ export default function BookingsScreen() {
           text: "Sí",
           onPress: async () => {
             try {
-              const reservationRef = doc(db, "reservations", selectedReservation.id);
-              await updateDoc(reservationRef, { status: "cancelled" }); // Use updateDoc to update the status
+              const reservationRef = doc(
+                db,
+                "reservations",
+                selectedReservation.id
+              );
+              await updateDoc(reservationRef, { status: "cancelled" }); // Actualiza el estado de la reserva
+
+              // Actualiza el estado del producto reservado a 'Disponible'
+              if (selectedReservation.items && selectedReservation.items[0]) {
+                const productRef = doc(
+                  db,
+                  "products",
+                  selectedReservation.items[0]
+                );
+                await updateDoc(productRef, { status: "Disponible" });
+              }
+
               setReservations((prevReservations) =>
                 prevReservations.map((reservation) =>
                   reservation.id === selectedReservation.id
@@ -111,7 +145,9 @@ export default function BookingsScreen() {
         disabled={isCancelled} // Disable TouchableOpacity for canceled reservations
       >
         <Text style={styles.reservationTitle}>Reserva ID: {item.id}</Text>
-        <Text style={[styles.reservationStatus, statusStyle]}>Estado: {item.status}</Text>
+        <Text style={[styles.reservationStatus, statusStyle]}>
+          Estado: {item.status}
+        </Text>
         <Text style={styles.reservationTimestamp}>
           Fecha: {item.timestamp?.toDate?.().toLocaleString() || "N/A"}
         </Text>
@@ -123,7 +159,11 @@ export default function BookingsScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Reservas realizadas por el cliente</Text>
       {loading ? (
-        <ActivityIndicator size="large" color="#4f46e5" style={styles.loadingSpinner} />
+        <ActivityIndicator
+          size="large"
+          color="#4f46e5"
+          style={styles.loadingSpinner}
+        />
       ) : reservations.length > 0 ? (
         <FlatList
           data={reservations}
@@ -132,7 +172,9 @@ export default function BookingsScreen() {
           contentContainerStyle={styles.listContainer}
         />
       ) : (
-        <Text style={styles.noReservationsText}>No tienes reservas realizadas.</Text>
+        <Text style={styles.noReservationsText}>
+          No tienes reservas realizadas.
+        </Text>
       )}
 
       {product && (
@@ -144,8 +186,21 @@ export default function BookingsScreen() {
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
+              {/* Botón de cerrar (cruz) en la esquina superior derecha */}
+              <TouchableOpacity
+                style={styles.closeIcon}
+                onPress={() => {
+                  // Al cerrar, no cancela la reserva, solo cierra el modal
+                  setModalVisible(false);
+                }}
+              >
+                <Ionicons name="close" size={28} color="#333" />
+              </TouchableOpacity>
               <Text style={styles.modalTitle}>Producto reservado:</Text>
-              <Image source={{ uri: product.images[0] }} style={styles.productImage} />
+              <Image
+                source={{ uri: product.images[0] }}
+                style={styles.productImage}
+              />
               <Text style={styles.productName}>{product.name}</Text>
               <Text style={styles.productPrice}>{product.price} €</Text>
               <View style={styles.qrContainer}>
@@ -161,12 +216,6 @@ export default function BookingsScreen() {
                 onPress={cancelReservation}
               >
                 <Text style={styles.cancelButtonText}>Cancelar Reserva</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={styles.closeButtonText}>Cerrar</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -201,8 +250,18 @@ const styles = StyleSheet.create({
   reservationTitle: { fontSize: 16, fontWeight: "bold", color: "#333" },
   reservationStatus: { fontSize: 14, color: "#666", marginTop: 4 },
   reservationTimestamp: { fontSize: 12, color: "#999", marginTop: 4 },
-  noReservationsText: { fontSize: 16, color: "#666", textAlign: "center", marginTop: 20 },
-  modalContainer: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.5)" },
+  noReservationsText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
   modalContent: {
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -218,14 +277,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   productImage: { width: 150, height: 150, borderRadius: 10, marginBottom: 16 },
-  productName: { fontSize: 18, fontWeight: "bold", color: "#333", marginBottom: 8 },
+  productName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 8,
+  },
   productPrice: { fontSize: 16, color: "#666" },
   qrContainer: {
     marginTop: 20,
     alignItems: "center",
   },
-  closeButton: { backgroundColor: "#e5e5e5", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 10, marginTop: 16 },
-  closeButtonText: { color: "#333", fontWeight: "600", fontSize: 14 },
   cancelButton: {
     backgroundColor: "#ff4d4d", // Red background
     paddingVertical: 8,
@@ -237,6 +299,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 14,
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 2,
   },
   cancelledReservationCard: {
     opacity: 0.5, // Make canceled reservations transparent

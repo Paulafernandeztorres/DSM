@@ -273,9 +273,29 @@ export default function SearchScreen() {
           >
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
-                <Image
-                  source={{ uri: selectedProduct.images[0] }}
-                  style={styles.modalImage}
+                {/* Botón de cerrar (cruz) */}
+                <TouchableOpacity
+                  style={styles.closeIcon}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Ionicons name="close" size={28} color="#333" />
+                </TouchableOpacity>
+                {/* Carrusel de imágenes */}
+                <FlatList
+                  data={selectedProduct.images}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(_, idx) => idx.toString()}
+                  renderItem={({ item }) => (
+                    <Image
+                      source={{ uri: item }}
+                      style={styles.modalImage}
+                      resizeMode="cover"
+                    />
+                  )}
+                  ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+                  style={{ marginBottom: 16 }}
                 />
                 <Text style={styles.modalName}>{selectedProduct.name}</Text>
                 <Text style={styles.modalPrice}>{selectedProduct.price} €</Text>
@@ -287,12 +307,6 @@ export default function SearchScreen() {
                   onPress={handleReserve}
                 >
                   <Text style={styles.reserveButtonText}>Reservar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.closeButtonText}>Cerrar</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -403,5 +417,11 @@ const styles = StyleSheet.create({
     top: 8,
     left: 8,
     zIndex: 1,
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    zIndex: 2,
   },
 });
