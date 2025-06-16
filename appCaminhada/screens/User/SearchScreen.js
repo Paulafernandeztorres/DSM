@@ -1,7 +1,27 @@
 // screens/HomeScreen.js
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, RefreshControl, Modal, Alert } from "react-native";
-import { collection, getDocs, addDoc, serverTimestamp, doc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  RefreshControl,
+  Modal,
+  Alert,
+  TextInput,
+} from "react-native";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  serverTimestamp,
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for heart icon
@@ -70,11 +90,17 @@ export default function SearchScreen() {
         status: "Reservado",
       });
 
-      Alert.alert("Reserva realizada", `Has reservado el producto: ${selectedProduct.name}`);
+      Alert.alert(
+        "Reserva realizada",
+        `Has reservado el producto: ${selectedProduct.name}`
+      );
       setModalVisible(false);
     } catch (error) {
       console.error("Error al realizar la reserva:", error);
-      Alert.alert("Error", "No se pudo realizar la reserva. Inténtalo de nuevo.");
+      Alert.alert(
+        "Error",
+        "No se pudo realizar la reserva. Inténtalo de nuevo."
+      );
     }
   };
 
@@ -90,19 +116,30 @@ export default function SearchScreen() {
           userId: currentUserId,
           timestamp: serverTimestamp(),
         };
-        await setDoc(doc(db, "favorites", `${currentUserId}_${product.id}`), favoriteData);
+        await setDoc(
+          doc(db, "favorites", `${currentUserId}_${product.id}`),
+          favoriteData
+        );
         setFavorites([...favorites, product.id]);
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);
-      Alert.alert("Error", "No se pudo actualizar favoritos. Inténtalo de nuevo.");
+      Alert.alert(
+        "Error",
+        "No se pudo actualizar favoritos. Inténtalo de nuevo."
+      );
     }
   };
 
   const renderProduct = ({ item }) => {
     const isFavorite = favorites.includes(item.id);
     const isAvailable = item.status === "Disponible";
-    const statusColor = item.status === "Disponible" ? "green" : item.status === "Reservado" ? "orange" : "red";
+    const statusColor =
+      item.status === "Disponible"
+        ? "green"
+        : item.status === "Reservado"
+        ? "orange"
+        : "red";
     const cardOpacity = isAvailable ? 1 : 0.5;
 
     return (
@@ -201,7 +238,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 8,
+    padding: 16,
   },
   titleContainer: { marginBottom: 16, marginTop: 32 },
   title: {
@@ -230,19 +267,19 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 8,
     marginBottom: 4,
-    alignSelf: "center", 
+    alignSelf: "center",
   },
-  productName: { 
-    fontSize: 14, 
-    fontWeight: "bold", 
-    color: "#333", 
-    textAlign: "center" // Centrar texto horizontalmente
+  productName: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#333",
+    textAlign: "center", // Centrar texto horizontalmente
   },
-  productPrice: { 
-    fontSize: 12, 
-    color: "#666", 
-    marginTop: 2, 
-    textAlign: "center" // Centrar texto horizontalmente
+  productPrice: {
+    fontSize: 12,
+    color: "#666",
+    marginTop: 2,
+    textAlign: "center", // Centrar texto horizontalmente
   },
   productStatus: {
     fontSize: 12,
@@ -264,9 +301,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalImage: { width: 150, height: 150, borderRadius: 10, marginBottom: 16 },
-  modalName: { fontSize: 20, fontWeight: "bold", color: "#333", marginBottom: 8 },
+  modalName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 8,
+  },
   modalPrice: { fontSize: 18, color: "#666", marginBottom: 8 },
-  modalDescription: { fontSize: 16, color: "#444", textAlign: "center", marginBottom: 16 },
+  modalDescription: {
+    fontSize: 16,
+    color: "#444",
+    textAlign: "center",
+    marginBottom: 16,
+  },
   reserveButton: {
     backgroundColor: "#4f46e5",
     paddingVertical: 12,
