@@ -26,9 +26,10 @@ import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for heart icon
 import { Picker } from "@react-native-picker/picker";
+import axios from "axios";
 
 export default function SearchScreen() {
-  const { currentUserId } = useSelector((state) => state.auth); // Get currentUserId from Redux state
+  const { currentUserId, email } = useSelector((state) => state.auth); // Ahora también obtenemos el email
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -82,16 +83,95 @@ export default function SearchScreen() {
         items: [selectedProduct.id],
         status: "confirmed",
         timestamp: serverTimestamp(),
-        userId: currentUserId, // Use the actual currentUserId from Redux state
+        userId: currentUserId,
       };
 
-      await addDoc(collection(db, "reservations"), reservationData);
+      // Crear la reserva y obtener el ID generado
+      const reservationRef = await addDoc(
+        collection(db, "reservations"),
+        reservationData
+      );
+      const reservationId = reservationRef.id;
 
-      // Actualizar el estado del producto a 'Reservado'
       await setDoc(doc(db, "products", selectedProduct.id), {
         ...selectedProduct,
         status: "Reservado",
       });
+
+      // Generar URL de imagen QR usando un servicio externo
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${reservationId}&size=150x150`;
+
+      // Enviar correo de confirmación al usuario
+      try {
+        const userEmail = email;
+        const MAILJET_API_KEY = "79ecbbe1af80050b7fa6cf126d96b206";
+        const MAILJET_SECRET_KEY = "ecf5faae03817006e80d80be8ce639ba";
+
+        const fecha = new Date().toLocaleString();
+        const producto = selectedProduct;
+        const nombreProducto = producto.name;
+        const descripcion = producto.description || "Sin descripción";
+        const precio = producto.price
+          ? `${producto.price} €`
+          : "Precio no disponible";
+        const categoria = producto.category || "Sin categoría";
+        const imagen =
+          producto.images && producto.images[0] ? producto.images[0] : null;
+
+        await axios.post(
+          "https://api.mailjet.com/v3.1/send",
+          {
+            Messages: [
+              {
+                From: {
+                  Email: "miguelff222@gmail.com",
+                  Name: "App Caminhada",
+                },
+                To: [
+                  {
+                    Email: userEmail,
+                    Name: "Usuario",
+                  },
+                ],
+                Subject: `¡Reserva confirmada! ${nombreProducto} - App Caminhada`,
+                TextPart: `¡Hola!\n\nTu reserva del producto ${nombreProducto} ha sido confirmada el ${fecha}.\n\nDetalles del producto:\n- Nombre: ${nombreProducto}\n- Descripción: ${descripcion}\n- Precio: ${precio}\n- Categoría: ${categoria}\n\nAdjuntamos tu código QR para recoger el producto.\n\n¡Gracias por confiar en App Caminhada!`,
+                HTMLPart: `
+                  <div style='font-family: Arial, sans-serif; color: #222;'>
+                    <h1 style='color: #4f46e5;'>¡Reserva confirmada!</h1>
+                    <p>Hola,</p>
+                    <p>Te confirmamos que tu reserva del producto <b>${nombreProducto}</b> ha sido realizada con éxito el <b>${fecha}</b>.</p>
+                    <h2 style='color: #4f46e5;'>Detalles del producto</h2>
+                    <ul style='font-size: 16px;'>
+                      <li><b>Nombre:</b> ${nombreProducto}</li>
+                      <li><b>Descripción:</b> ${descripcion}</li>
+                      <li><b>Precio:</b> ${precio}</li>
+                      <li><b>Categoría:</b> ${categoria}</li>
+                    </ul>
+                    ${
+                      imagen
+                        ? `<img src='${imagen}' alt='Imagen del producto' style='width:180px;height:auto;border-radius:10px;margin:16px 0;' />`
+                        : ""
+                    }
+                    <h2 style='color: #4f46e5;'>Tu código QR</h2>
+                    <p>Presenta este código QR al recoger tu producto:</p>
+                    <img src='${qrUrl}' alt='QR' style='width:150px;height:150px;margin:12px 0;' />
+                    <p style='margin-top:24px;'>Si tienes alguna duda, responde a este correo o contacta con nuestro equipo de soporte.</p>
+                    <p style='color:#888;font-size:13px;margin-top:32px;'>App Caminhada &copy; 2025</p>
+                  </div>
+                `,
+              },
+            ],
+          },
+          {
+            auth: {
+              username: MAILJET_API_KEY,
+              password: MAILJET_SECRET_KEY,
+            },
+          }
+        );
+      } catch (mailError) {
+        console.error("Error enviando el correo:", mailError);
+      }
 
       Alert.alert(
         "Reserva realizada",
