@@ -25,6 +25,7 @@ import {
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for heart icon
+import { Picker } from "@react-native-picker/picker";
 
 export default function SearchScreen() {
   const { currentUserId } = useSelector((state) => state.auth); // Get currentUserId from Redux state
@@ -34,6 +35,8 @@ export default function SearchScreen() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [favorites, setFavorites] = useState([]); // State to track favorite products
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Todas");
 
   const fetchProducts = async () => {
     try {
@@ -175,26 +178,91 @@ export default function SearchScreen() {
     );
   };
 
+  // Obtener categorías únicas
+  const categories = [
+    "Todas",
+    ...Array.from(new Set(products.map((p) => p.category || "Otro"))),
+  ];
+
+  // Filtrar productos por texto y categoría
+  const filteredProducts = products.filter((product) => {
+    const matchesText =
+      product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      (product.description &&
+        product.description.toLowerCase().includes(searchText.toLowerCase()));
+    const matchesCategory =
+      selectedCategory === "Todas" || product.category === selectedCategory;
+    return matchesText && matchesCategory;
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Explora nuestros productos</Text>
-      </View>
-      {loading ? (
-        <ActivityIndicator size="large" color="#4f46e5" style={styles.loadingSpinner} />
-      ) : (
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id}
-          renderItem={renderProduct}
-          numColumns={2}
-          key={2}
-          contentContainerStyle={styles.listContainer}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-      )}
+
+        {/* Buscador y filtro */}
+
+        <View style={{ marginTop: 32, marginBottom: 12 }}>
+          <TextInput
+            style={{
+              backgroundColor: "#f0f0f0",
+              borderRadius: 10,
+              padding: 10,
+              fontSize: 16,
+              marginBottom: 8,
+            }}
+            placeholder="Buscar producto..."
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+          <View
+            style={{
+              backgroundColor: "#f0f0f0",
+              borderRadius: 10,
+              marginBottom: 8,
+            }}
+          >
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+              style={{ height: 50, width: "100%" }}
+              dropdownIconColor="#4f46e5"
+            >
+              {categories.map((cat) => (
+                <Picker.Item label={cat} value={cat} key={cat} />
+              ))}
+            </Picker>
+          </View>
+        </View>
+
+        {/* Lista de productos filtrados */}
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#4f46e5"
+            style={styles.loadingSpinner}
+          />
+        ) : (
+          <FlatList
+            data={filteredProducts}
+            keyExtractor={(item) => item.id}
+            renderItem={renderProduct}
+            numColumns={2}
+            key={2}
+            contentContainerStyle={styles.listContainer}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            ListEmptyComponent={
+              !loading && (
+                <Text
+                  style={{ textAlign: "center", marginTop: 40, color: "#888" }}
+                >
+                  No se encontraron productos.
+                </Text>
+              )
+            }
+          />
+        )}
 
         {selectedProduct && (
           <Modal
