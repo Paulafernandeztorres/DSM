@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  Image,
+  Alert,
+} from "react-native";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../../firebase/config";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +16,9 @@ import { collection, getDocs } from "firebase/firestore";
 
 export default function UserScreen({ navigation }) {
   const dispatch = useDispatch();
-  const { name, email, role, currentUserId } = useSelector((state) => state.auth); // Include currentUserId
+  const { name, email, role, currentUserId } = useSelector(
+    (state) => state.auth
+  ); // Include currentUserId
   const [favorites, setFavorites] = useState([]);
 
   const fetchFavorites = async () => {
@@ -104,16 +114,16 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   welcomeText: {
-    fontSize: 18, 
+    fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
-    marginTop: 10,
+    marginTop: 35,
     marginBottom: 10,
   },
   userCard: {
     backgroundColor: "#fff",
     marginHorizontal: 16,
-    marginTop: -20,
+    marginTop: -10,
     padding: 16,
     borderRadius: 10,
     shadowColor: "#000",
