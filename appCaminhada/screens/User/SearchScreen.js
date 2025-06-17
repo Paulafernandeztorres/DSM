@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   loadingSpinner: { flex: 1, justifyContent: "center", alignItems: "center" },
-  listContainer: { paddingBottom: 16 },
+  listContainer: { paddingBottom: 150 },
   productCard: {
     backgroundColor: "#f9fafb",
     borderRadius: 10,
