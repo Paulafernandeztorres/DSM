@@ -58,7 +58,6 @@ export default function AdminScreen({ navigation }) {
     try {
       await signOut(auth);
       dispatch(clearUser());
-      navigation.replace("Login");
     } catch (error) {
       alert(error.message);
     }
