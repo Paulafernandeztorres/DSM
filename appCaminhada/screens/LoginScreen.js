@@ -46,9 +46,9 @@ export default function LoginScreen({ navigation }) {
         dispatch(
           setUser({
             user: userCredential.user.uid,
-            name: userData.name,
-            email: userData.email,
-            role: userData.role,
+            name: userData.name || null,
+            email: userData.email || userCredential.user.email,
+            role: userData.role || null,
             currentUserId: userCredential.user.uid, 
           })
         );

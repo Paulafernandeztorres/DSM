@@ -78,12 +78,16 @@ export default function SearchScreen() {
   };
 
   const handleReserve = async () => {
+    if (!currentUserId) {
+      Alert.alert("Error", "No se pudo identificar al usuario.");
+      return;
+    }
     try {
       const reservationData = {
         items: [selectedProduct.id],
         status: "confirmed",
         timestamp: serverTimestamp(),
-        userId: currentUserId,
+        userId: currentUserId, 
       };
 
       // Crear la reserva y obtener el ID generado

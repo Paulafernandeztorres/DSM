@@ -37,10 +37,16 @@ export default function BookingsScreen() {
   useFocusEffect(
     React.useCallback(() => {
       const fetchReservations = async () => {
+        if (!currentUserId) {
+          console.error("Error: currentUserId is undefined. Redirecting to login.");
+          Alert.alert("Error", "No se pudo identificar al usuario. Por favor, inicia sesión nuevamente.");
+          navigation.navigate("Login"); 
+          return;
+        }
         try {
           const reservationsQuery = query(
             collection(db, "reservations"),
-            where("userId", "==", currentUserId)
+            where("userId", "==", currentUserId) 
           );
           const reservationsSnapshot = await getDocs(reservationsQuery);
           const reservationsData = reservationsSnapshot.docs.map((doc) => ({
