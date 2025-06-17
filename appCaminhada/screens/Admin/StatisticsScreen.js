@@ -118,6 +118,7 @@ function ReservasEstado() {
     datasets: [{ data: [0, 0, 0] }],
   });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchReservas = async () => {
     setLoading(true);
@@ -143,37 +144,49 @@ function ReservasEstado() {
     setLoading(false);
   };
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchReservas();
+    setRefreshing(false);
+  };
+
   useEffect(() => {
     fetchReservas();
   }, []);
 
   return (
-    <View style={{ alignItems: "center", marginTop: 24 }}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+    >
       {loading ? (
-        <Text style={{ fontSize: 16, color: "#666", marginTop: 20 }}>
-          Cargando...
-        </Text>
+        <Text style={styles.loadingText}>Cargando...</Text>
       ) : (
         <>
-          <BarChart
-            data={reservasData}
-            width={Dimensions.get("window").width - 32}
-            height={220}
-            yAxisLabel=""
-            chartConfig={{
-              backgroundColor: "#fff",
-              backgroundGradientFrom: "#fff",
-              backgroundGradientTo: "#fff",
-              decimalPlaces: 0,
-              color: (opacity = 1) => `rgba(79, 70, 229, ${opacity})`,
-              labelColor: () => "#333",
-            }}
-            style={{ borderRadius: 16 }}
-          />
+          <View style={styles.chartContainer}>
+            <BarChart
+              data={reservasData}
+              width={Dimensions.get("window").width - 32}
+              height={220}
+              fromZero={true}
+              showValuesOnTopOfBars={true}
+              chartConfig={{
+                backgroundColor: "#fff",
+                backgroundGradientFrom: "#fff",
+                backgroundGradientTo: "#fff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(79, 70, 229, ${opacity})`,
+                labelColor: () => "#333",
+              }}
+              style={{ borderRadius: 16 }}
+            />
+          </View>
           <Text style={{ marginTop: 16 }}>Reservas por estado</Text>
         </>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
