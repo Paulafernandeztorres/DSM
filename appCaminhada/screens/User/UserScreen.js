@@ -18,7 +18,7 @@ export default function UserScreen({ navigation }) {
   const dispatch = useDispatch();
   const { name, email, role, currentUserId } = useSelector(
     (state) => state.auth
-  ); // Include currentUserId
+  );
   const [favorites, setFavorites] = useState([]);
 
   const fetchFavorites = async () => {
@@ -46,7 +46,7 @@ export default function UserScreen({ navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      fetchFavorites(); // Refresh the page when entering the screen
+      fetchFavorites();
     });
     return unsubscribe;
   }, [navigation]);

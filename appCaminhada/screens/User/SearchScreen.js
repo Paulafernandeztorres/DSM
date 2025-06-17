@@ -1,4 +1,3 @@
-// screens/HomeScreen.js
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -24,20 +23,20 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for heart icon
+import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
 export default function SearchScreen() {
-  const { currentUserId, email } = useSelector((state) => state.auth); // Ahora también obtenemos el email
+  const { currentUserId, email } = useSelector((state) => state.auth);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [favorites, setFavorites] = useState([]); // State to track favorite products
+  const [favorites, setFavorites] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
-  const [menuVisible, setMenuVisible] = useState(false); // State for menu visibility
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -87,10 +86,9 @@ export default function SearchScreen() {
         items: [selectedProduct.id],
         status: "confirmed",
         timestamp: serverTimestamp(),
-        userId: currentUserId, 
+        userId: currentUserId,
       };
 
-      // Crear la reserva y obtener el ID generado
       const reservationRef = await addDoc(
         collection(db, "reservations"),
         reservationData
@@ -102,10 +100,8 @@ export default function SearchScreen() {
         status: "Reservado",
       });
 
-      // Generar URL de imagen QR usando un servicio externo
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${reservationId}&size=150x150`;
 
-      // Enviar correo de confirmación al usuario
       try {
         const userEmail = email;
         const MAILJET_API_KEY = "79ecbbe1af80050b7fa6cf126d96b206";
@@ -234,7 +230,7 @@ export default function SearchScreen() {
         <TouchableOpacity
           style={styles.favoriteIcon}
           onPress={() => toggleFavorite(item)}
-          disabled={!isAvailable} // Deshabilitar interacción si no está disponible
+          disabled={!isAvailable}
         >
           <Ionicons
             name={isFavorite ? "heart" : "heart-outline"}
@@ -249,7 +245,7 @@ export default function SearchScreen() {
               setModalVisible(true);
             }
           }}
-          disabled={!isAvailable} // Deshabilitar interacción si no está disponible
+          disabled={!isAvailable}
         >
           <Image source={{ uri: item.images[0] }} style={styles.productImage} />
           <Text style={styles.productName}>{item.name}</Text>
@@ -262,13 +258,11 @@ export default function SearchScreen() {
     );
   };
 
-  // Obtener categorías únicas
   const categories = [
     "Todas",
     ...Array.from(new Set(products.map((p) => p.category || "Otro"))),
   ];
 
-  // Filtrar productos por texto y categoría
   const filteredProducts = products.filter((product) => {
     const matchesText =
       product.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -290,9 +284,6 @@ export default function SearchScreen() {
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Explora nuestros productos</Text>
-
-        {/* Buscador y filtro */}
-
         <View style={{ marginTop: 32, marginBottom: 12 }}>
           <TextInput
             style={{
@@ -321,7 +312,6 @@ export default function SearchScreen() {
             <Ionicons name="chevron-down" size={20} color="#4f46e5" />
           </TouchableOpacity>
         </View>
-
         <Modal
           transparent={true}
           visible={menuVisible}
@@ -362,8 +352,6 @@ export default function SearchScreen() {
             </View>
           </TouchableOpacity>
         </Modal>
-
-        {/* Lista de productos filtrados */}
         {loading ? (
           <ActivityIndicator
             size="large"
@@ -391,7 +379,6 @@ export default function SearchScreen() {
             }
           />
         )}
-
         {selectedProduct && (
           <Modal
             animationType="slide"
@@ -401,14 +388,12 @@ export default function SearchScreen() {
           >
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
-                {/* Botón de cerrar (cruz) */}
                 <TouchableOpacity
                   style={styles.closeIcon}
                   onPress={() => setModalVisible(false)}
                 >
                   <Ionicons name="close" size={28} color="#333" />
                 </TouchableOpacity>
-                {/* Carrusel de imágenes */}
                 <FlatList
                   data={selectedProduct.images}
                   horizontal
@@ -466,7 +451,7 @@ const styles = StyleSheet.create({
     padding: 8,
     margin: 8,
     alignItems: "center",
-    justifyContent: "center", // Centrar contenido verticalmente
+    justifyContent: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -484,19 +469,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: "#333",
-    textAlign: "center", // Centrar texto horizontalmente
+    textAlign: "center",
   },
   productPrice: {
     fontSize: 12,
     color: "#666",
     marginTop: 2,
-    textAlign: "center", // Centrar texto horizontalmente
+    textAlign: "center",
   },
   productStatus: {
     fontSize: 12,
     fontWeight: "bold",
     marginTop: 4,
-    textAlign: "center", // Centrar texto horizontalmente
+    textAlign: "center",
   },
   modalContainer: {
     flex: 1,
@@ -538,6 +523,21 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 10,
+  },
+  closeButtonText: { color: "#333", fontWeight: "600", fontSize: 14 },
+  favoriteIcon: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+    zIndex: 1,
+  },
+  closeIcon: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    zIndex: 2,
+  },
+});
   },
   closeButtonText: { color: "#333", fontWeight: "600", fontSize: 14 },
   favoriteIcon: {

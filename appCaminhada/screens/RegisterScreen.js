@@ -71,7 +71,7 @@ export default function RegisterScreen({ navigation }) {
           name,
           email,
           role: "user",
-          currentUserId: userCredential.user.uid, // Ensure currentUserId is set in Redux
+          currentUserId: userCredential.user.uid, 
         })
       );
       Toast.show({
@@ -79,7 +79,7 @@ export default function RegisterScreen({ navigation }) {
         text1: "Registro exitoso",
         text2: `Cuenta creada para ${email}`,
       });
-      navigation.navigate("Login"); // Navigate to Login after registration
+      navigation.navigate("Login"); 
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         Toast.show({
