@@ -25,7 +25,6 @@ import {
 import { db } from "../../firebase/config";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for heart icon
-import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 
 export default function SearchScreen() {
@@ -38,6 +37,7 @@ export default function SearchScreen() {
   const [favorites, setFavorites] = useState([]); // State to track favorite products
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
+  const [menuVisible, setMenuVisible] = useState(false); // State for menu visibility
 
   const fetchProducts = async () => {
     try {
@@ -279,6 +279,13 @@ export default function SearchScreen() {
     return matchesText && matchesCategory;
   });
 
+  const showMenu = () => setMenuVisible(true);
+  const hideMenu = () => setMenuVisible(false);
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    hideMenu();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -299,25 +306,62 @@ export default function SearchScreen() {
             value={searchText}
             onChangeText={setSearchText}
           />
-          <View
+          <TouchableOpacity
             style={{
               backgroundColor: "#f0f0f0",
               borderRadius: 10,
-              marginBottom: 8,
+              padding: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
+            onPress={showMenu}
           >
-            <Picker
-              selectedValue={selectedCategory}
-              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-              style={{ height: 50, width: "100%" }}
-              dropdownIconColor="#4f46e5"
+            <Text style={{ fontSize: 16 }}>{selectedCategory}</Text>
+            <Ionicons name="chevron-down" size={20} color="#4f46e5" />
+          </TouchableOpacity>
+        </View>
+
+        <Modal
+          transparent={true}
+          visible={menuVisible}
+          animationType="fade"
+          onRequestClose={hideMenu}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={hideMenu}
+          >
+            <View
+              style={{
+                backgroundColor: "#fff",
+                borderRadius: 10,
+                padding: 16,
+                width: "80%",
+              }}
             >
               {categories.map((cat) => (
-                <Picker.Item label={cat} value={cat} key={cat} />
+                <TouchableOpacity
+                  key={cat}
+                  style={{
+                    paddingVertical: 12,
+                    borderBottomWidth:
+                      cat !== categories[categories.length - 1] ? 1 : 0,
+                    borderBottomColor: "#ddd",
+                  }}
+                  onPress={() => handleCategorySelect(cat)}
+                >
+                  <Text style={{ fontSize: 16, color: "#333" }}>{cat}</Text>
+                </TouchableOpacity>
               ))}
-            </Picker>
-          </View>
-        </View>
+            </View>
+          </TouchableOpacity>
+        </Modal>
 
         {/* Lista de productos filtrados */}
         {loading ? (
